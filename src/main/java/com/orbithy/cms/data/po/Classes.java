@@ -42,7 +42,7 @@ public class Classes {
     private LocalDateTime updateTime;
 
     @TableField(exist = false)
-    private Set<String> timeSet;
+    private Set<Integer> timeSet;
 
     // 处理 MySQL SET 类型，转换为 Java Set<Integer>
     public Set<Integer> getTimeSet() {
@@ -117,7 +117,9 @@ public class Classes {
      */
     public void convertTimeSetToString() {
         if (timeSet != null && !timeSet.isEmpty()) {
-            this.time = String.join(",", timeSet);
+            this.time = timeSet.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
         }
     }
 
@@ -126,7 +128,9 @@ public class Classes {
      */
     public void convertStringToTimeSet() {
         if (time != null && !time.isEmpty()) {
-            this.timeSet = new HashSet<>(Arrays.asList(time.split(",")));
+            this.timeSet = Arrays.stream(time.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toSet());
         }
     }
 
@@ -138,29 +142,8 @@ public class Classes {
             return false;
         }
 
-        // 时间段格式：星期-节次（如：1-1表示周一第1节）
-        // 星期范围：1-7
-        // 节次范围：1-12
-        for (String timeSlot : timeSet) {
-            String[] parts = timeSlot.split("-");
-            if (parts.length != 2) {
-                return false;
-            }
-
-            try {
-                int day = Integer.parseInt(parts[0]);
-                int period = Integer.parseInt(parts[1]);
-                
-                // 验证星期和节次的范围
-                if (day < 1 || day > 7 || period < 1 || period > 12) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-
-        return true;
+        // 验证时间是否在0-24之间
+        return timeSet.stream().allMatch(t -> t >= 0 && t <= 24);
     }
 
     /**
@@ -183,6 +166,6 @@ public class Classes {
     public boolean isValidWeeks() {
         return weekStart != null && weekEnd != null && 
                weekStart > 0 && weekEnd >= weekStart && 
-               weekEnd <= 20; // 假设最多20周
+               weekEnd <= 17;
     }
 }
