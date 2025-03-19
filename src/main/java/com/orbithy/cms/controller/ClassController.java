@@ -27,8 +27,8 @@ public class ClassController {
      */
     @Auth
     @PostMapping("/create")
-    public ResponseEntity<Result> createCourse(@RequestBody CreateCourseDTO courseDTO) {
-        String userId = (String) request.getAttribute("userId");
+    public ResponseEntity<Result> createCourse(@RequestHeader("userId") String userId,
+                                             @RequestBody CreateCourseDTO courseDTO) {
         return classService.createCourse(userId, courseDTO);
     }
 
@@ -41,23 +41,25 @@ public class ClassController {
      */
     @Auth
     @PostMapping("/approve/{courseId}")
-    public ResponseEntity<Result> approveCourse(
-            @PathVariable Integer courseId,
-            @RequestParam Integer status) {
-        String userId = (String) request.getAttribute("userId");
-        return classService.approveCourse(userId, courseId, status);
+    public ResponseEntity<Result> approveCourse(@RequestHeader("userId") String userId,
+                                              @PathVariable Integer courseId,
+                                              @RequestParam Integer status,
+                                              @RequestParam(required = false) String classNum) {
+        return classService.approveCourse(userId, courseId, status, classNum);
     }
 
     /**
      * 获取课程列表
+     * 支持按学期筛选
      *
+     * @param term 学期（可选，格式：YYYY-YYYY-S，例如：2023-2024-1）
      * @return ResponseEntity<Result>
      */
     @Auth
     @GetMapping("/list")
-    public ResponseEntity<Result> getCourseList() {
-        String userId = (String) request.getAttribute("userId");
-        return classService.getCourseList(userId);
+    public ResponseEntity<Result> getCourseList(@RequestHeader("userId") String userId,
+                                              @RequestParam(required = false) String term) {
+        return classService.getCourseList(userId, term);
     }
 
     /**
@@ -68,8 +70,9 @@ public class ClassController {
      */
     @Auth
     @GetMapping("/detail/{courseId}")
-    public ResponseEntity<Result> getCourseDetail(@PathVariable Integer courseId) {
-        return classService.getCourseDetail(courseId);
+    public ResponseEntity<Result> getCourseDetail(@RequestHeader("userId") String userId,
+                                                @PathVariable Integer courseId) {
+        return classService.getCourseDetail(userId, courseId);
     }
 
     /**
@@ -81,10 +84,9 @@ public class ClassController {
      */
     @Auth
     @PostMapping("/update/{courseId}")
-    public ResponseEntity<Result> updateCourse(
-            @PathVariable Integer courseId,
-            @RequestBody CreateCourseDTO courseDTO) {
-        String userId = (String) request.getAttribute("userId");
+    public ResponseEntity<Result> updateCourse(@RequestHeader("userId") String userId,
+                                             @PathVariable Integer courseId,
+                                             @RequestBody CreateCourseDTO courseDTO) {
         return classService.updateCourse(userId, courseId, courseDTO);
     }
 
@@ -96,8 +98,8 @@ public class ClassController {
      */
     @Auth
     @PostMapping("/delete/{courseId}")
-    public ResponseEntity<Result> deleteCourse(@PathVariable Integer courseId) {
-        String userId = (String) request.getAttribute("userId");
+    public ResponseEntity<Result> deleteCourse(@RequestHeader("userId") String userId,
+                                             @PathVariable Integer courseId) {
         return classService.deleteCourse(userId, courseId);
     }
 }

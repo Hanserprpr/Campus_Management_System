@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 
 @Getter
 @Setter
@@ -19,18 +21,18 @@ public class Classes {
 
     private String name;
     private String category;
-    private Byte point;
+    private Integer point;
     private Integer teacherId;
     private String classroom;
-    private Byte weekStart;
-    private Byte weekEnd;
-    private Byte period;
+    private Integer weekStart;
+    private Integer weekEnd;
+    private Integer period;
     private String time;
     private String college;
     private String term;
     private String classNum;
     private CourseType type;
-    private Byte capacity;
+    private Integer capacity;
     private CourseStatus status;
 
     @TableField(fill = FieldFill.INSERT)
@@ -38,6 +40,9 @@ public class Classes {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    @TableField(exist = false)
+    private Set<String> timeSet;
 
     // 处理 MySQL SET 类型，转换为 Java Set<Integer>
     public Set<Integer> getTimeSet() {
@@ -59,68 +64,125 @@ public class Classes {
     // 课程类型枚举
     @Getter
     public enum CourseType {
-        MANDATORY("必修"),
+        REQUIRED("必修"),
         LIMITED("限选"),
         ELECTIVE("任选");
 
-        @EnumValue  // 标记存储到数据库的字段
-        private final String value;
+        private final String description;
 
-        CourseType(String value) {
-            this.value = value;
+        CourseType(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
         }
     }
 
     // 课程状态枚举
     @Getter
     public enum CourseStatus {
-        PENDING(0, "申请中"),
+        PENDING(0, "待审批"),
         APPROVED(1, "已通过"),
-        REJECTED(2, "已拒绝"),
-        COMPLETED(3, "已结课");
+        REJECTED(2, "已拒绝");
 
-        @EnumValue
-        private final Integer code;
+        private final int code;
         private final String description;
 
-        CourseStatus(Integer code, String description) {
+        CourseStatus(int code, String description) {
             this.code = code;
             this.description = description;
         }
 
-        public static CourseStatus fromCode(Integer code) {
-            for (CourseStatus status : CourseStatus.values()) {
-                if (status.getCode().equals(code)) {
+        public int getCode() {
+            return code;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public static CourseStatus fromCode(int code) {
+            for (CourseStatus status : values()) {
+                if (status.code == code) {
                     return status;
                 }
             }
-            throw new IllegalArgumentException("Invalid course status code: " + code);
+            throw new IllegalArgumentException("Invalid status code: " + code);
         }
     }
 
-    // 验证课程时间是否合理
+    /**
+     * 将时间集合转换为逗号分隔的字符串
+     */
+    public void convertTimeSetToString() {
+        if (timeSet != null && !timeSet.isEmpty()) {
+            this.time = String.join(",", timeSet);
+        }
+    }
+
+    /**
+     * 将逗号分隔的字符串转换为时间集合
+     */
+    public void convertStringToTimeSet() {
+        if (time != null && !time.isEmpty()) {
+            this.timeSet = new HashSet<>(Arrays.asList(time.split(",")));
+        }
+    }
+
+    /**
+     * 验证时间段是否合法
+     */
     public boolean isValidTime() {
-        if (weekStart == null || weekEnd == null || weekStart > weekEnd) {
+        if (timeSet == null || timeSet.isEmpty()) {
             return false;
         }
-        if (period == null || period <= 0) {
-            return false;
+
+        // 时间段格式：星期-节次（如：1-1表示周一第1节）
+        // 星期范围：1-7
+        // 节次范围：1-12
+        for (String timeSlot : timeSet) {
+            String[] parts = timeSlot.split("-");
+            if (parts.length != 2) {
+                return false;
+            }
+
+            try {
+                int day = Integer.parseInt(parts[0]);
+                int period = Integer.parseInt(parts[1]);
+                
+                // 验证星期和节次的范围
+                if (day < 1 || day > 7 || period < 1 || period > 12) {
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                return false;
+            }
         }
-        Set<Integer> timeSet = getTimeSet();
-        return !timeSet.isEmpty() && timeSet.stream().allMatch(t -> t >= 0 && t <= 24);
+
+        return true;
     }
 
-    // 验证课程容量是否合理
+    /**
+     * 验证课程容量是否合法
+     */
     public boolean isValidCapacity() {
         return capacity != null && capacity > 0;
     }
 
-    // 验证学期格式是否正确
+    /**
+     * 验证学期格式是否合法
+     */
     public boolean isValidTerm() {
-        if (term == null || term.isEmpty()) {
-            return false;
-        }
-        // 格式：YYYY-YYYY-S，例如：2023-2024-1
-        return term.matches("\\d{4}-\\d{4}-[12]");
+        return term != null && term.matches("\\d{4}-\\d{4}-[12]");
+    }
+
+    /**
+     * 验证周次是否合法
+     */
+    public boolean isValidWeeks() {
+        return weekStart != null && weekEnd != null && 
+               weekStart > 0 && weekEnd >= weekStart && 
+               weekEnd <= 20; // 假设最多20周
     }
 }

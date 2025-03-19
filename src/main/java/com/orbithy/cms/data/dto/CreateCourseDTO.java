@@ -16,7 +16,6 @@ public class CreateCourseDTO {
     private Set<String> time;      // 上课时间段
     private String college;        // 开课学院
     private String term;           // 开课学期
-    private String classNum;       // 课序号
     private String type;           // 课程类型（必修/限选/任选）
     private Integer capacity;      // 课程容量
 }
