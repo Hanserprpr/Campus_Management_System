@@ -28,4 +28,9 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT id, class_num, name FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
     List<Classes> getTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
+
+    @Select("SELECT * FROM classes WHERE (class_num LIKE CONCAT('%', #{keyword}, '%') " +
+            "OR name LIKE CONCAT('%', #{keyword}, '%')) " +
+            "AND status = #{status.code}")
+    List<Classes> searchCourses(@Param("keyword") String keyword);
 }

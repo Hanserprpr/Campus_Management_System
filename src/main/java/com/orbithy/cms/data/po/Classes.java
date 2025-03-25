@@ -74,9 +74,6 @@ public class Classes {
             this.description = description;
         }
 
-        public String getDescription() {
-            return description;
-        }
     }
 
     // 课程状态枚举
@@ -92,14 +89,6 @@ public class Classes {
         CourseStatus(int code, String description) {
             this.code = code;
             this.description = description;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getDescription() {
-            return description;
         }
 
         public static CourseStatus fromCode(int code) {
