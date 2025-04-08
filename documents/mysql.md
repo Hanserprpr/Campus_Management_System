@@ -66,7 +66,7 @@ CREATE TABLE user (
 |-----------|------------------------------|--------------------------|-----------------------------|
 | **id**    | `INT`                         | 外键，关联 `user` 表     | 对应用户 ID                 |
 | **grade** | `TINYINT NOT NULL`            | 非空                     | 年级                        |
-| **section** | `TINYINT DEFAULT 0 NOT NULL`  | 默认值 0，非空，关联班级表     | 班级                        |
+| **section** | `TINYINT`  | 关联班级表     | 班级                        |
 | **status** | `TINYINT NOT NULL DEFAULT 0` | 非空，默认0'             | 学籍状态 (`0` 在读 / `1` 休学 / `2` 降转 / `3` 退学) |
 | **admission** | `INT`  | 非空     | 入学时间                        |
 | **graduation** | `INT` | 非空             | 毕业时间                |
@@ -79,7 +79,7 @@ CREATE TABLE user (
 CREATE TABLE status(
     id INT NOT NULL,
     grade TINYINT NOT NULL COMMENT '年级',
-    section INT DEFAULT 0 NOT NULL COMMENT '班级',
+    section INT COMMENT '班级',
     status TINYINT NOT NULl DEFAULT 0 COMMENT '学生状态(`0` 在读 / `1` 休学 / `2` 降转 / `3` 退学)',
     admission INT NOT NULL COMMENT '入学时间',
     graduation INT NOT NULL COMMENT '毕业时间',
@@ -211,7 +211,6 @@ CREATE TABLE grade(
 | **number**   | `TINYINT NOT NULL`              | 非空                                  | 班级号                                  |
 | **major**    | `ENUM('0', '1', '2', '3') NOT NULL` | 非空                              | 专业 (`0` 软工 / `1` 树莓 / `2` 大数据 / `3` AI) |
 | **advisor_id** | `INT`                         | 外键，关联 `user` 表                  | 班主任 ID                              |
-
 
 ---
 
