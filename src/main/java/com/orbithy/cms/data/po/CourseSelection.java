@@ -18,9 +18,9 @@ public class CourseSelection {
     private Integer courseId;
     private String classNum;
 
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
+//    @TableField(fill = FieldFill.INSERT)
+//    private LocalDateTime createTime;
+//
+//    @TableField(fill = FieldFill.INSERT_UPDATE)
+//    private LocalDateTime updateTime;
 } 

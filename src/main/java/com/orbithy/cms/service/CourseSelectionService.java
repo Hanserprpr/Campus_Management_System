@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.orbithy.cms.annotation.Admin;
+import com.orbithy.cms.config.CourseSelectionConfig;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.po.CourseSelection;
 import com.orbithy.cms.data.vo.Result;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -24,32 +26,73 @@ public class CourseSelectionService {
     private ClassMapper classMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CourseSelectionConfig courseSelectionConfig;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 开始选课
      */
     @Admin
     public ResponseEntity<Result> startSelection(String term) {
-        // 验证学期格式
-        if (!term.matches("\\d{4}-\\d{4}-[12]")) {
-            return ResponseUtil.build(Result.error(400, "无效的学期格式"));
-        }
+        try {
+            // 验证学期格式
+            if (!term.matches("\\d{4}-\\d{4}-[12]")) {
+                return ResponseUtil.build(Result.error(400, "无效的学期格式"));
+            }
 
-        // 检查是否已有选课记录
-        List<CourseSelection> existingSelections = courseSelectionMapper.selectList(null);
-        if (!existingSelections.isEmpty()) {
-            return ResponseUtil.build(Result.error(400, "选课系统已经启动"));
-        }
+            // 检查是否已有选课记录
+            CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
+            if (status != null && status.isOpen()) {
+                return ResponseUtil.build(Result.error(400, "选课系统已经启动"));
+            }
 
-        return ResponseUtil.build(Result.success(null, "选课系统启动成功"));
+            // 创建或更新系统状态
+            CourseSelectionConfig.SystemStatus newStatus = new CourseSelectionConfig.SystemStatus();
+            newStatus.setOpen(true);
+            newStatus.setStatus("OPEN");
+            newStatus.setStatusDescription("开放");
+            newStatus.setUpdateTime(LocalDateTime.now().format(formatter));
+            
+            courseSelectionConfig.getTerms().put(term, newStatus);
+
+            return ResponseUtil.build(Result.success(null, "选课系统启动成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "启动选课系统失败：" + e.getMessage()));
+        }
     }
 
     /**
      * 结束选课
      */
     @Admin
-    public ResponseEntity<Result> endSelection() {
-        return ResponseUtil.build(Result.success(null, "选课系统关闭成功"));
+    public ResponseEntity<Result> endSelection(String term) {
+        try {
+            // 检查系统状态
+            CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
+            if (status == null || !status.isOpen()) {
+                return ResponseUtil.build(Result.error(400, "选课系统未启动"));
+            }
+
+            // 更新系统状态
+            status.setOpen(false);
+            status.setStatus("CLOSED");
+            status.setStatusDescription("关闭");
+            status.setUpdateTime(LocalDateTime.now().format(formatter));
+
+            return ResponseUtil.build(Result.success(null, "选课系统关闭成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "关闭选课系统失败：" + e.getMessage()));
+        }
+    }
+
+    /**
+     * 获取选课系统状态
+     */
+    public boolean isSelectionOpen(String term) {
+        CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
+        return status != null && status.isOpen();
     }
 
     /**

@@ -31,8 +31,8 @@ public class CourseSelectionController {
      */
     @Admin
     @PostMapping("/end")
-    public ResponseEntity<Result> endSelection() {
-        return courseSelectionService.endSelection();
+    public ResponseEntity<Result> endSelection(@RequestParam String term) {
+        return courseSelectionService.endSelection(term);
     }
 
     /**
