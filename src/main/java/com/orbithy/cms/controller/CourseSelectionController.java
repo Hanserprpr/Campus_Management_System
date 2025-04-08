@@ -55,6 +55,16 @@ public class CourseSelectionController {
     }
 
     /**
+     * 退选课程
+     */
+    @Auth
+    @PostMapping("/drop/{courseId}")
+    public ResponseEntity<Result> dropCourse(@PathVariable Integer courseId) {
+        String userId = request.getHeader("userId");
+        return courseSelectionService.dropCourse(Integer.parseInt(userId), courseId);
+    }
+
+    /**
      * 查询选课结果
      */
     @Auth

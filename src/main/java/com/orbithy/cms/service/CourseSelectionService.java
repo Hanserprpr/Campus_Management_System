@@ -190,4 +190,34 @@ public class CourseSelectionService {
             return ResponseUtil.build(Result.error(500, "查询失败：" + e.getMessage()));
         }
     }
+
+    /**
+     * 退选课程
+     */
+    public ResponseEntity<Result> dropCourse(Integer studentId, Integer courseId) {
+        try {
+            // 验证课程是否存在
+            Classes course = classMapper.getCourseById(courseId);
+            if (course == null) {
+                return ResponseUtil.build(Result.error(404, "课程不存在"));
+            }
+
+            // 检查选课记录是否存在
+            CourseSelection selection = courseSelectionMapper.getSelection(studentId, courseId);
+            if (selection == null) {
+                return ResponseUtil.build(Result.error(404, "未选择该课程"));
+            }
+
+            // 检查选课系统是否开放
+            if (!isSelectionOpen(course.getTerm())) {
+                return ResponseUtil.build(Result.error(400, "选课系统未开放，无法退选"));
+            }
+
+            // 删除选课记录
+            courseSelectionMapper.deleteById(selection.getId());
+            return ResponseUtil.build(Result.success(null, "退选成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "退选失败：" + e.getMessage()));
+        }
+    }
 } 
