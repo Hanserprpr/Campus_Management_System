@@ -93,4 +93,16 @@ public class UserController {
         String userId = (String) request.getAttribute("userId");
         return userService.updateEmail(userId, email);
     }
+
+    /**
+     * 获取学籍卡片
+     *
+     * @return ResponseEntity<Result>
+     */
+    @Auth
+    @PostMapping("/getStatusCard")
+    public ResponseEntity<Result> getStatusCard() {
+        String userId = (String) request.getAttribute("userId");
+        return userService.getStudentCard(userId);
+    }
 }

@@ -1,12 +1,10 @@
 package com.orbithy.cms.data.po;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @TableName("status")
 public class Status {
@@ -14,12 +12,17 @@ public class Status {
     private Integer id;
 
     @TableField(value = "grade")
-    private Byte grade;
+    private Integer grade;
 
     @TableField(value = "section")
-    private Byte section;
+    private Integer section;
 
     @EnumValue
     @TableField(value = "status")
     private StudentStatus status;
+
+    @TableField(value = "admission")
+    private Integer admission;
+    @TableField(value = "graduation")
+    private Integer graduation;
 }

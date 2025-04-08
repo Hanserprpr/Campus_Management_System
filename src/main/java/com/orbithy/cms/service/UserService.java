@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.orbithy.cms.cache.IGlobalCache;
+import com.orbithy.cms.data.dto.StudentCardDTO;
 import com.orbithy.cms.data.po.StudentStatus;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
@@ -113,6 +114,29 @@ public class UserService {
             return ResponseUtil.build(Result.success(null, "邮箱更新成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "更新失败：" + e.getMessage()));
+        }
+    }
+
+    /**
+     * 获取用户学籍卡片
+     *
+     * @param userId 用户ID
+     * @return 学籍卡片信息
+     */
+    public ResponseEntity<Result> getStudentCard(String userId) {
+        try {
+            // 获取用户学籍信息
+            Status status = StatusMapper.getStatusById(userId);
+            if (status == null) {
+                return ResponseUtil.build(Result.error(404, "用户不存在"));
+            }
+            User user = userMapper.getUserInfo(userId);
+            StudentCardDTO userCardDTO = new StudentCardDTO();
+            userCardDTO.setUser(user);
+            userCardDTO.setStatus(status);
+            return ResponseUtil.build(Result.success(userCardDTO, "获取成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "获取失败：" + e.getMessage()));
         }
     }
 }
