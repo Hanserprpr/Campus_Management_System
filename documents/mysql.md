@@ -163,7 +163,7 @@ CREATE TABLE course_reg(
     course_id INT NOT NULL COMMENT '课程id',
     class_num VARCHAR(50) NOT NULL COMMENT '课序号',
     FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE,
-    FOREIGN KEY (class_num) REFERENCES class_num(class_num) ON DELETE CASCADE,
+    FOREIGN KEY (class_num) REFERENCES classes(class_num) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES classes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='选课结果表';
 ```
@@ -221,7 +221,7 @@ CREATE TABLE grade(
 CREATE TABLE section (
     id INT AUTO_INCREMENT PRIMARY KEY COMMENT '班级唯一ID',
     grade TINYINT NOT NULL COMMENT '年级',
-    number TINYINT NOT NULL COMMENT '班级号'，
+    number TINYINT NOT NULL COMMENT '班级号',
     major ENUM('0', '1', '2', '3') NOT NULL COMMENT '专业0软工/1树莓/2大数据/3AI',
     advisor_id INT COMMENT '导员ID',
     UNIQUE KEY unique_grade_number (grade, number),
