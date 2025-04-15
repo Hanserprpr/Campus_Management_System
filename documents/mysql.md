@@ -162,7 +162,7 @@ CREATE TABLE classes(
 | **id**       | `INT AUTO_INCREMENT PRIMARY KEY` | 主键，自动递增                             | 选课唯一 ID   |
 | **student_id** | `INT NOT NULL`                | 非空，外键，关联 `user` 表                 | 学生 ID      |
 | **course_id** | `INT NOT NULL`                | 非空，外键，关联 `classes` 表                | 课程 ID      |
-| **class_num** | `VARCHAR(50) NOT NULL`        | 非空，外键，关联 `class_num` 表            | 课序号       |
+| **class_num** | `VARCHAR(50) NOT NULL`        | 非空，关联 `class_num` 表            | 课序号       |
 
 ---
 
@@ -175,7 +175,6 @@ CREATE TABLE course_reg(
     course_id INT NOT NULL COMMENT '课程id',
     class_num VARCHAR(50) NOT NULL COMMENT '课序号',
     FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE,
-    FOREIGN KEY (class_num) REFERENCES classes(class_num) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES classes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='选课结果表';
 ```
