@@ -17,6 +17,9 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Update("UPDATE classes SET status = #{status}, class_num = #{classNum} WHERE id = #{courseId}")
     int updateCourseStatusAndClassNum(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("classNum") String classNum);
 
+    @Select("SELECT * FROM classes")
+    List<Classes> getAllClasses();
+
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     Classes getCourseById(@Param("courseId") Integer courseId);
 

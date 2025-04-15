@@ -100,7 +100,8 @@ public class CourseSelectionService {
      */
     public ResponseEntity<Result> searchCourses(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            return ResponseUtil.build(Result.error(400, "搜索关键词不能为空"));
+            List<Classes> courses = classMapper.getAllClasses();
+            return ResponseUtil.build(Result.success(courses,"搜索成功" ));
         }
 
         List<Classes> courses = classMapper.searchCourses(keyword);
