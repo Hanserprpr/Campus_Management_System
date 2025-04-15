@@ -146,7 +146,7 @@ CREATE TABLE classes(
     regular_ratio DECIMAL(3,2) NOT NULL COMMENT '平时分占比',
     final_ratio   DECIMAL(3,2) NOT NULL COMMENT '期末分占比',
     intro VARCHAR(50) NOT NULL COMMENT '课程简介',
-    examination TINYINT(1) NOT NULL '考核方式，考查0 考核1',
+    examination TINYINT(1) NOT NULL COMMENT '考核方式，考查0 考核1',
     FOREIGN KEY (teacher_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程表';
 ```
