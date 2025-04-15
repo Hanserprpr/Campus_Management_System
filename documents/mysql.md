@@ -94,24 +94,30 @@ CREATE TABLE status(
 
 ---
 
-| 字段名        | 数据类型                                         | 约束                                        | 描述               |
-|--------------|------------------------------------------------|--------------------------------------------|------------------|
-| **id**       | `INT AUTO_INCREMENT PRIMARY KEY`               | 主键，自动递增                             | 课程唯一ID        |
-| **name**     | `VARCHAR(100) NOT NULL`                        | 非空                                      | 课程名称         |
-| **category** | `VARCHAR(100)`                                 | 可为空                                    | 课程类别（如体育小项） |
-| **point**    | `TINYINT NOT NULL`                             | 非空                                      | 学分            |
-| **teacher_id** | `INT NOT NULL`                                | 非空，外键，关联 `user` 表                 | 教师ID          |
-| **classroom** | `VARCHAR(50)`                                 | 可为空                                    | 上课教室         |
-| **week_start** | `TINYINT DEFAULT 1 NOT NULL`                 | 默认值 1，非空                             | 起始周          |
-| **week_end** | `TINYINT DEFAULT 17 NOT NULL`                  | 默认值 17，非空                            | 结束周          |
-| **period**   | `TINYINT NOT NULL`                             | 非空                                      | 课时            |
-| **time**     | `SET('0', '1', ..., '24')`                     | 非空                                      | 上课时间段       |
-| **college**  | `VARCHAR(50)`                                  | 可为空                                    | 开课学院        |
-| **term**     | `VARCHAR(15) NOT NULL`                         | 非空                                      | 开课学期        |
-| **class_num** | `VARCHAR(50) NOT NULL`                        | 无特殊约束            | 课序号          |
-| **type**     | `ENUM('必修', '限选', '任选') NOT NULL`         | 非空                                      | 课程类型        |
-| **capacity** | `TINYINT NOT NULL`                             | 非空                                      | 课程容量        |
-| **status** | `TINYINT` | 非空，默认为0 | 课程状态（0申请、1审批通过、2拒绝、3已结课） |
+| 字段名           | 数据类型                                                    | 约束                                       | 描述                         |
+|------------------|-----------------------------------------------------------|-------------------------------------------|------------------------------|
+| **id**           | `INT AUTO_INCREMENT PRIMARY KEY`                          | 主键，自动递增                            | 课程唯一ID                   |
+| **name**         | `VARCHAR(100) NOT NULL`                                   | 非空                                     | 课程名称                     |
+| **category**     | `VARCHAR(100)`                                            | 可为空                                   | 课程类别（如体育小项）       |
+| **point**        | `TINYINT NOT NULL`                                        | 非空                                     | 学分                         |
+| **teacher_id**   | `INT NOT NULL`                                            | 非空，外键，关联 `user` 表               | 教师ID                       |
+| **classroom**    | `VARCHAR(50)`                                             | 可为空                                   | 上课教室                     |
+| **week_start**   | `TINYINT DEFAULT 1 NOT NULL`                              | 默认值 1，非空                            | 起始周                       |
+| **week_end**     | `TINYINT DEFAULT 17 NOT NULL`                             | 默认值 17，非空                           | 结束周                       |
+| **period**       | `TINYINT NOT NULL`                                        | 非空                                     | 课时                         |
+| **time**         | `SET('0', '1', ..., '24')`                                | 非空                                     | 上课时间段                   |
+| **college**      | `VARCHAR(50)`                                             | 可为空                                   | 开课学院                     |
+| **term**         | `VARCHAR(15) NOT NULL`                                    | 非空                                     | 开课学期                     |
+| **class_num**    | `VARCHAR(50) NOT NULL`                                    | 无特殊约束                              | 课序号                       |
+| **type**         | `ENUM('必修', '限选', '任选') NOT NULL`                   | 非空                                     | 课程类型                     |
+| **capacity**     | `TINYINT NOT NULL`                                        | 非空                                     | 课程容量                     |
+| **status**       | `TINYINT DEFAULT 0 NOT NULL`                              | 默认 0，非空                              | 课程状态（0申请、1审批通过、2拒绝、3已结课） |
+| **f_reason**     | `VARCHAR(50)`                                             | 可为空                                   | 退回原因                     |
+| **published**    | `BOOLEAN DEFAULT 0`                                       | 默认 0                                   | 成绩是否发布                 |
+| **regular_ratio**| `DECIMAL(3,2) NOT NULL`                                   | 非空                                     | 平时分占比                   |
+| **final_ratio**  | `DECIMAL(3,2) NOT NULL`                                   | 非空                                     | 期末分占比                   |
+| **intro**        | `VARCHAR(50) NOT NULL`                                    | 非空                                     | 课程简介                     |
+| **examination**  | `TINYINT(1) NOT NULL`                                     | 非空                                     | 考核方式（考查0，考试1）     |
 
 ---
 
@@ -131,10 +137,16 @@ CREATE TABLE classes(
     time SET('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24') COMMENT '上课时间段',
     college VARCHAR(50) COMMENT '开课学院',
     term VARCHAR(15) NOT NULL COMMENT '开课学期',
-    class_num VARCHAR(50) UNIQUE NOT NULL COMMENT '课序号',
+    class_num VARCHAR(50) NOT NULL COMMENT '课序号',
     type ENUM('必修', '限选', '任选') NOT NULL COMMENT '课程类型',
     capacity TINYINT NOT NULL COMMENT '课容量',
     status TINYINT DEFAULT 0  NOT NULL COMMENT '课程状态',
+    f_reason VARCAHR(50) COMMENT '退回原因',
+    published BOOLEAN DEFAULT 0 COMMENT '成绩是否发布',
+    regular_ratio DECIMAL(3,2) NOT NULL COMMENT '平时分占比',
+    final_ratio   DECIMAL(3,2) NOT NULL COMMENT '期末分占比',
+    intro VARCHAR(50) NOT NULL COMMENT '课程简介',
+    examination TINYINT(1) NOT NULL '考核方式，考查0 考核1',
     FOREIGN KEY (teacher_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程表';
 ```
@@ -192,6 +204,8 @@ CREATE TABLE grade(
     id INT AUTO_INCREMENT PRIMARY KEY COMMENT '成绩唯一ID',
     student_id INT NOT NULL COMMENT '学生id',
     course_id INT NOT NULL COMMENT '课程id',
+    regular INT NOT NULL COMMENT '平时分',
+    final INT NOT NULL COMMENT '期末分',
     grade TINYINT NOT NULL COMMENT '成绩',
     term VARCHAR(15) NOT NULL COMMENT '开课学期',
     rank TINYINT NOT NULL COMMENT '排名',
