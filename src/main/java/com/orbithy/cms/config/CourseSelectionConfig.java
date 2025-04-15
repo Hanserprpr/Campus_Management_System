@@ -1,5 +1,6 @@
 package com.orbithy.cms.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,9 @@ public class CourseSelectionConfig {
     public static class SystemStatus {
         private boolean isOpen;
         private String status;
+        @JsonProperty("status-description")
         private String statusDescription;
+        @JsonProperty("update-time")
         private String updateTime;
     }
 } 
