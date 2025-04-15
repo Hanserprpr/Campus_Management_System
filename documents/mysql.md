@@ -141,7 +141,7 @@ CREATE TABLE classes(
     type ENUM('必修', '限选', '任选') NOT NULL COMMENT '课程类型',
     capacity TINYINT NOT NULL COMMENT '课容量',
     status TINYINT DEFAULT 0  NOT NULL COMMENT '课程状态',
-    f_reason VARCAHR(50) COMMENT '退回原因',
+    f_reason VARCHAR(50) COMMENT '退回原因',
     published BOOLEAN DEFAULT 0 COMMENT '成绩是否发布',
     regular_ratio DECIMAL(3,2) NOT NULL COMMENT '平时分占比',
     final_ratio   DECIMAL(3,2) NOT NULL COMMENT '期末分占比',
