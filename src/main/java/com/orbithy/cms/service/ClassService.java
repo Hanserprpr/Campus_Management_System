@@ -66,7 +66,7 @@ public class ClassService {
     /**
      * 教务审批课程
      */
-    public ResponseEntity<Result> approveCourse(String adminId, Integer courseId, Integer status, String classNum) {
+    public ResponseEntity<Result> approveCourse(String adminId, Integer courseId, Integer status, String classNum, String reason) {
         try {
             // 验证教务权限
             if (userMapper.getPermission(adminId) != 0) {
@@ -101,13 +101,15 @@ public class ClassService {
                 if (classMapper.selectCount(queryWrapper) > 0) {
                     return ResponseUtil.build(Result.error(400, "该学期已存在相同课序号"));
                 }
-
-                // 设置课序号
-                course.setClassNum(classNum);
             }
 
-            // 更新课程状态和课序号
-            classMapper.updateCourseStatusAndClassNum(courseId, status, classNum);
+            // 如果拒绝，验证拒绝理由
+            if (status == 2 && (reason == null || reason.trim().isEmpty())) {
+                return ResponseUtil.build(Result.error(400, "拒绝时必须提供拒绝理由"));
+            }
+
+            // 更新课程状态、课序号和拒绝理由
+            classMapper.updateCourseStatusAndClassNum(courseId, status, classNum, reason);
             String message = status == 1 ? "课程审批通过" : "课程审批拒绝";
             return ResponseUtil.build(Result.success(null, message));
         } catch (Exception e) {
@@ -245,6 +247,23 @@ public class ClassService {
             return ResponseUtil.build(Result.success(null, "删除成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "删除课程失败：" + e.getMessage()));
+        }
+    }
+
+    /**
+     * 获取待批准的课程列表
+     */
+    public ResponseEntity<Result> getPendingCourses(String adminId) {
+        try {
+            // 验证教务权限
+            if (userMapper.getPermission(adminId) != 0) {
+                return ResponseUtil.build(Result.error(403, "无权限查看待批准课程"));
+            }
+
+            List<Classes> pendingCourses = classMapper.getPendingCourses();
+            return ResponseUtil.build(Result.success(pendingCourses, "获取待批准课程成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "获取待批准课程失败：" + e.getMessage()));
         }
     }
 }

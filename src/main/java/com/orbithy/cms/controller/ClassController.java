@@ -20,9 +20,9 @@ public class ClassController {
     private HttpServletRequest request;
 
     /**
-     * æ•™å¸ˆåˆ›å»ºè¯¾ç¨‹
+     * ½ÌÊ¦´´½¨¿Î³Ì
      *
-     * @param courseDTO è¯¾ç¨‹ä¿¡æ¯
+     * @param courseDTO ¿Î³ÌĞÅÏ¢
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -33,26 +33,29 @@ public class ClassController {
     }
 
     /**
-     * æ•™åŠ¡å®¡æ‰¹è¯¾ç¨‹
+     * ½ÌÎñÉóÅú¿Î³Ì
      *
-     * @param courseId è¯¾ç¨‹ID
-     * @param status å®¡æ‰¹çŠ¶æ€ï¼ˆ1é€šè¿‡ï¼Œ2æ‹’ç»ï¼‰
+     * @param courseId ¿Î³ÌID
+     * @param status ÉóÅú×´Ì¬£¨1Í¨¹ı£¬2¾Ü¾ø£©
+     * @param classNum ¿ÎĞòºÅ£¨Í¨¹ıÊ±±ØÌî£©
+     * @param reason ¾Ü¾øÀíÓÉ£¨¾Ü¾øÊ±±ØÌî£©
      * @return ResponseEntity<Result>
      */
     @Auth
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
                                               @RequestParam Integer status,
-                                              @RequestParam(required = false) String classNum) {
+                                              @RequestParam(required = false) String classNum,
+                                              @RequestParam(required = false) String reason) {
         String userId = request.getHeader("userId");
-        return classService.approveCourse(userId, courseId, status, classNum);
+        return classService.approveCourse(userId, courseId, status, classNum, reason);
     }
 
     /**
-     * è·å–è¯¾ç¨‹åˆ—è¡¨
-     * æ”¯æŒæŒ‰å­¦æœŸç­›é€‰
+     * »ñÈ¡¿Î³ÌÁĞ±í
+     * Ö§³Ö°´Ñ§ÆÚÉ¸Ñ¡
      *
-     * @param term å­¦æœŸï¼ˆå¯é€‰ï¼Œæ ¼å¼ï¼šYYYY-YYYY-Sï¼Œä¾‹å¦‚ï¼š2023-2024-1ï¼‰
+     * @param term Ñ§ÆÚ£¨¿ÉÑ¡£¬¸ñÊ½£ºYYYY-YYYY-S£¬ÀıÈç£º2023-2024-1£©
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -63,9 +66,9 @@ public class ClassController {
     }
 
     /**
-     * è·å–è¯¾ç¨‹è¯¦æƒ…
+     * »ñÈ¡¿Î³ÌÏêÇé
      *
-     * @param courseId è¯¾ç¨‹ID
+     * @param courseId ¿Î³ÌID
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -76,10 +79,10 @@ public class ClassController {
     }
 
     /**
-     * æ•™å¸ˆä¿®æ”¹è¯¾ç¨‹ä¿¡æ¯
+     * ½ÌÊ¦ĞŞ¸Ä¿Î³ÌĞÅÏ¢
      *
-     * @param courseId è¯¾ç¨‹ID
-     * @param courseDTO è¯¾ç¨‹ä¿¡æ¯
+     * @param courseId ¿Î³ÌID
+     * @param courseDTO ¿Î³ÌĞÅÏ¢
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -91,9 +94,9 @@ public class ClassController {
     }
 
     /**
-     * æ•™å¸ˆåˆ é™¤è¯¾ç¨‹
+     * ½ÌÊ¦É¾³ı¿Î³Ì
      *
-     * @param courseId è¯¾ç¨‹ID
+     * @param courseId ¿Î³ÌID
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -101,5 +104,15 @@ public class ClassController {
     public ResponseEntity<Result> deleteCourse(@PathVariable Integer courseId) {
         String userId = request.getHeader("userId");
         return classService.deleteCourse(userId, courseId);
+    }
+
+    /**
+     * »ñÈ¡´ıÅú×¼µÄ¿Î³ÌÁĞ±í
+     */
+    @Auth
+    @GetMapping("/pending")
+    public ResponseEntity<Result> getPendingCourses() {
+        String userId = request.getHeader("userId");
+        return classService.getPendingCourses(userId);
     }
 }

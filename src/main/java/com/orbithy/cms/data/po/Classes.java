@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.EnumValue;
+
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
@@ -34,6 +36,13 @@ public class Classes {
     private CourseType type;
     private Integer capacity;
     private CourseStatus status;
+    private String intro;
+    private Integer examination;
+    private String f_reason;
+    private Boolean published;
+    private BigDecimal regularRatio;
+    private BigDecimal finalRatio;
+
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -73,7 +82,6 @@ public class Classes {
         CourseType(String description) {
             this.description = description;
         }
-
     }
 
     // 课程状态枚举

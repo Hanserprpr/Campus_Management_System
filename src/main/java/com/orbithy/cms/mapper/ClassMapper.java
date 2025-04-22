@@ -14,8 +14,8 @@ public interface ClassMapper extends BaseMapper<Classes> {
             "#{period}, #{time}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code})")
     void createCourse(Classes course);
 
-    @Update("UPDATE classes SET status = #{status}, class_num = #{classNum} WHERE id = #{courseId}")
-    int updateCourseStatusAndClassNum(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("classNum") String classNum);
+    @Update("UPDATE classes SET status = #{status}, class_num = #{classNum}, f_reason = #{reason} WHERE id = #{courseId}")
+    int updateCourseStatusAndClassNum(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("classNum") String classNum, @Param("reason") String reason);
 
     @Select("SELECT * FROM classes")
     List<Classes> getAllClasses();
@@ -36,4 +36,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
             "OR name LIKE CONCAT('%', #{keyword}, '%')) " +
             "AND status = #{status.code}")
     List<Classes> searchCourses(@Param("keyword") String keyword);
+
+    @Select("SELECT * FROM classes WHERE status = 0")
+    List<Classes> getPendingCourses();
 }

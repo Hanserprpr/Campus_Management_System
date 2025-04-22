@@ -2,6 +2,7 @@ package com.orbithy.cms.data.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -18,4 +19,9 @@ public class CreateCourseDTO {
     private String term;           // 开课学期
     private String type;           // 课程类型（必修/限选/任选）
     private Integer capacity;      // 课程容量
+    private String intro;
+    private Integer examination;
+    private BigDecimal regularRatio;
+    private BigDecimal finalRatio;
+    private String classNum;
 }
