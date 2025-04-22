@@ -20,9 +20,9 @@ public class ClassController {
     private HttpServletRequest request;
 
     /**
-     * ½ÌÊ¦´´½¨¿Î³Ì
+     * æ•™å¸ˆåˆ›å»ºè¯¾ç¨‹
      *
-     * @param courseDTO ¿Î³ÌĞÅÏ¢
+     * @param courseDTO è¯¾ç¨‹ä¿¡æ¯
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -33,12 +33,12 @@ public class ClassController {
     }
 
     /**
-     * ½ÌÎñÉóÅú¿Î³Ì
+     * æ•™åŠ¡å®¡æ‰¹è¯¾ç¨‹
      *
-     * @param courseId ¿Î³ÌID
-     * @param status ÉóÅú×´Ì¬£¨1Í¨¹ı£¬2¾Ü¾ø£©
-     * @param classNum ¿ÎĞòºÅ£¨Í¨¹ıÊ±±ØÌî£©
-     * @param reason ¾Ü¾øÀíÓÉ£¨¾Ü¾øÊ±±ØÌî£©
+     * @param courseId è¯¾ç¨‹ID
+     * @param status å®¡æ‰¹çŠ¶æ€ï¼ˆ1é€šè¿‡ï¼Œ2æ‹’ç»ï¼‰
+     * @param classNum è¯¾åºå·ï¼ˆé€šè¿‡æ—¶å¿…å¡«ï¼‰
+     * @param reason æ‹’ç»ç†ç”±ï¼ˆæ‹’ç»æ—¶å¿…å¡«ï¼‰
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -52,10 +52,10 @@ public class ClassController {
     }
 
     /**
-     * »ñÈ¡¿Î³ÌÁĞ±í
-     * Ö§³Ö°´Ñ§ÆÚÉ¸Ñ¡
+     * è·å–è¯¾ç¨‹åˆ—è¡¨
+     * æ”¯æŒæŒ‰å­¦æœŸç­›é€‰
      *
-     * @param term Ñ§ÆÚ£¨¿ÉÑ¡£¬¸ñÊ½£ºYYYY-YYYY-S£¬ÀıÈç£º2023-2024-1£©
+     * @param term å­¦æœŸï¼ˆå¯é€‰ï¼Œæ ¼å¼ï¼šYYYY-YYYY-Sï¼Œä¾‹å¦‚ï¼š2023-2024-1ï¼‰
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -66,9 +66,9 @@ public class ClassController {
     }
 
     /**
-     * »ñÈ¡¿Î³ÌÏêÇé
+     * è·å–è¯¾ç¨‹è¯¦æƒ…
      *
-     * @param courseId ¿Î³ÌID
+     * @param courseId è¯¾ç¨‹ID
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -79,10 +79,10 @@ public class ClassController {
     }
 
     /**
-     * ½ÌÊ¦ĞŞ¸Ä¿Î³ÌĞÅÏ¢
+     * æ•™å¸ˆä¿®æ”¹è¯¾ç¨‹ä¿¡æ¯
      *
-     * @param courseId ¿Î³ÌID
-     * @param courseDTO ¿Î³ÌĞÅÏ¢
+     * @param courseId è¯¾ç¨‹ID
+     * @param courseDTO è¯¾ç¨‹ä¿¡æ¯
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -94,9 +94,9 @@ public class ClassController {
     }
 
     /**
-     * ½ÌÊ¦É¾³ı¿Î³Ì
+     * æ•™å¸ˆåˆ é™¤è¯¾ç¨‹
      *
-     * @param courseId ¿Î³ÌID
+     * @param courseId è¯¾ç¨‹ID
      * @return ResponseEntity<Result>
      */
     @Auth
@@ -107,7 +107,7 @@ public class ClassController {
     }
 
     /**
-     * »ñÈ¡´ıÅú×¼µÄ¿Î³ÌÁĞ±í
+     * è·å–å¾…æ‰¹å‡†çš„è¯¾ç¨‹åˆ—è¡¨
      */
     @Auth
     @GetMapping("/pending")
