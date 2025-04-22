@@ -39,4 +39,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT * FROM classes WHERE status = 0")
     List<Classes> getPendingCourses();
+
+    @Select("SELECT teacher_id FROM classes WhERE id = #{courseId}")
+    Integer getTeacherIdByCourseId(@Param("courseId") String courseId);
 }

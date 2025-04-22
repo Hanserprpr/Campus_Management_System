@@ -15,8 +15,7 @@ public class Grade {
 
     private Integer studentId; // 学生ID（外键）
     private Integer courseId; // 课程ID（外键）
-    private Byte grade;
+    private Integer grade;
     private String term;
     private Byte rank;
 }
-
