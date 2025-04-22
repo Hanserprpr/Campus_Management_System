@@ -12,7 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ClassService {
@@ -21,6 +27,10 @@ public class ClassService {
     @Autowired
     private UserMapper userMapper;
 
+    // 定义每天的时间段范围
+    private static final int SLOTS_PER_DAY = 5;  // 每天5个时间段
+    private static final int DAYS = 5;           // 5个工作日
+    
     /**
      * 教师创建课程
      */
@@ -115,6 +125,9 @@ public class ClassService {
                 
                 // 更新课程状态和课序号（如果有变化）
                 classMapper.updateCourseStatusAndClassNum(courseId, status, finalClassNum, null);
+            } else if (status == 2) {
+                // 拒绝时更新状态和拒绝理由
+                classMapper.updateCourseStatusAndClassNum(courseId, status, null, reason);
             }
 
             // 如果拒绝，验证拒绝理由
@@ -276,6 +289,132 @@ public class ClassService {
             return ResponseUtil.build(Result.success(pendingCourses, "获取待批准课程成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "获取待批准课程失败：" + e.getMessage()));
+        }
+    }
+
+    /**
+     * 生成排课方案（贪心算法）
+     * 0-4: 周一的时间段
+     * 5-9: 周二的时间段
+     * 10-14: 周三的时间段
+     * 15-19: 周四的时间段
+     * 20-24: 周五的时间段
+     */
+    private boolean generateSchedule(List<Classes> courses) {
+        // 按课时数量降序排序
+        courses.sort((a, b) -> b.getPeriod() - a.getPeriod());
+
+        // 创建时间段占用表 [天数][时间段]
+        boolean[][] timeSlotOccupied = new boolean[DAYS][SLOTS_PER_DAY];
+        // 创建教师课程表 [教师ID][天数][时间段]
+        Map<Integer, boolean[][]> teacherSchedule = new HashMap<>();
+
+        for (Classes course : courses) {
+            boolean scheduled = false;
+            int teacherId = course.getTeacherId();
+            
+            // 初始化教师课程表
+            if (!teacherSchedule.containsKey(teacherId)) {
+                teacherSchedule.put(teacherId, new boolean[DAYS][SLOTS_PER_DAY]);
+            }
+
+            // 需要安排的课时数
+            int remainingPeriods = course.getPeriod();
+            Set<Integer> assignedSlots = new HashSet<>();
+
+            // 为每个课时寻找合适的时间段
+            while (remainingPeriods > 0) {
+                boolean foundSlot = false;
+
+                // 遍历每一天
+                for (int day = 0; day < DAYS && !foundSlot; day++) {
+                    // 遍历每天的时间段
+                    for (int slot = 0; slot < SLOTS_PER_DAY; slot++) {
+                        // 计算实际的时间段编号
+                        int actualSlot = day * SLOTS_PER_DAY + slot;
+                        
+                        // 检查该时间段是否可用
+                        if (!timeSlotOccupied[day][slot] && 
+                            !teacherSchedule.get(teacherId)[day][slot] &&
+                            !assignedSlots.contains(actualSlot)) {
+                            
+                            // 分配时间段
+                            timeSlotOccupied[day][slot] = true;
+                            teacherSchedule.get(teacherId)[day][slot] = true;
+                            assignedSlots.add(actualSlot);
+                            remainingPeriods--;
+                            foundSlot = true;
+                            break;
+                        }
+                    }
+                }
+
+                // 如果找不到可用时间段，排课失败
+                if (!foundSlot) {
+                    return false;
+                }
+            }
+
+            // 更新课程时间段
+            course.setTime(convertSetToString(assignedSlots));
+            classMapper.updateCourseTime(course.getId(), course.getTime());
+        }
+        
+        return true;
+    }
+
+    /**
+     * 将Set<Integer>转换为time字段的字符串格式
+     */
+    private String convertSetToString(Set<Integer> timeSlots) {
+        return timeSlots.stream()
+                       .sorted()
+                       .map(String::valueOf)
+                       .collect(Collectors.joining(","));
+    }
+
+    /**
+     * 获取时间段对应的星期和节次
+     */
+    private String getTimeSlotInfo(int slot) {
+        int day = slot / SLOTS_PER_DAY + 1;  // 1-5表示周一到周五
+        int period = slot % SLOTS_PER_DAY + 1;  // 1-5表示第几节课
+        return String.format("周%d第%d节", day, period);
+    }
+
+    /**
+     * 自动排课
+     */
+    public ResponseEntity<Result> autoSchedule(String adminId, String term) {
+        try {
+            // 验证教务权限
+            if (userMapper.getPermission(adminId) != 0) {
+                return ResponseUtil.build(Result.error(403, "无权限进行自动排课"));
+            }
+
+            // 获取需要排课的课程（状态为已通过审批的课程）
+            List<Classes> courses = classMapper.getCoursesByTermAndStatus(term, 1);
+            
+            // 执行排课
+            boolean success = generateSchedule(courses);
+            
+            if (!success) {
+                return ResponseUtil.build(Result.error(400, "无法找到合适的排课方案"));
+            }
+
+            // 生成排课结果报告
+            StringBuilder report = new StringBuilder("排课成功！\n");
+            for (Classes course : courses) {
+                report.append(String.format("课程：%s\n", course.getName()));
+                Arrays.stream(course.getTime().split(","))
+                      .map(Integer::parseInt)
+                      .forEach(slot -> report.append(getTimeSlotInfo(slot)).append("\n"));
+                report.append("\n");
+            }
+
+            return ResponseUtil.build(Result.success(report.toString(), "自动排课完成"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "自动排课失败：" + e.getMessage()));
         }
     }
 }

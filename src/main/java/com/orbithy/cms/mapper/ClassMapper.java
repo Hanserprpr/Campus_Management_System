@@ -9,9 +9,11 @@ import java.util.List;
 @Mapper
 public interface ClassMapper extends BaseMapper<Classes> {
     @Insert("INSERT INTO classes (name, category, point, teacher_id, classroom, week_start, week_end, " +
-            "period, time, college, term, class_num, type, capacity, status, intro) " +
+            "period, time, college, term, class_num, type, capacity, status, intro, examination, " +
+            "regular_ratio, final_ratio, published) " +
             "VALUES (#{name}, #{category}, #{point}, #{teacherId}, #{classroom}, #{weekStart}, #{weekEnd}, " +
-            "#{period}, #{time}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code}, #{intro})")
+            "#{period}, #{time}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code}, #{intro}, " +
+            "#{examination}, #{regularRatio}, #{finalRatio}, #{published})")
     void createCourse(Classes course);
 
     @Update("UPDATE classes SET status = #{status}, class_num = #{classNum}, f_reason = #{reason} WHERE id = #{courseId}")
@@ -42,4 +44,10 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT teacher_id FROM classes WhERE id = #{courseId}")
     Integer getTeacherIdByCourseId(@Param("courseId") String courseId);
+
+    @Update("UPDATE classes SET time = #{time} WHERE id = #{courseId}")
+    void updateCourseTime(@Param("courseId") Integer courseId, @Param("time") String time);
+
+    @Select("SELECT * FROM classes WHERE term = #{term} AND status = #{status}")
+    List<Classes> getCoursesByTermAndStatus(@Param("term") String term, @Param("status") Integer status);
 }
