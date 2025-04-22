@@ -88,19 +88,33 @@ public class ClassService {
                 return ResponseUtil.build(Result.error(400, "只能审批待审批的课程"));
             }
 
-            // 如果审批通过，验证课序号
+            // 如果审批通过
             if (status == 1) {
-                if (classNum == null || classNum.trim().isEmpty()) {
-                    return ResponseUtil.build(Result.error(400, "审批通过时必须提供课序号"));
+                // 获取当前课程的课序号
+                String existingClassNum = course.getClassNum();
+                
+                // 如果课程没有课序号，且审批时也没提供课序号
+                if ((existingClassNum == null || existingClassNum.trim().isEmpty()) 
+                    && (classNum == null || classNum.trim().isEmpty())) {
+                    return ResponseUtil.build(Result.error(400, "课程没有课序号，审批通过时必须提供课序号"));
                 }
-
-                // 验证课序号唯一性
-                QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("class_num", classNum)
+                
+                // 如果提供了新的课序号，使用新课序号；否则保留原课序号
+                String finalClassNum = (classNum != null && !classNum.trim().isEmpty()) ? classNum : existingClassNum;
+                
+                // 如果课序号发生变化，检查唯一性
+                if (!finalClassNum.equals(existingClassNum)) {
+                    // 验证课序号唯一性
+                    QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("class_num", finalClassNum)
                         .eq("term", course.getTerm());
-                if (classMapper.selectCount(queryWrapper) > 0) {
-                    return ResponseUtil.build(Result.error(400, "该学期已存在相同课序号"));
+                    if (classMapper.selectCount(queryWrapper) > 0) {
+                        return ResponseUtil.build(Result.error(400, "该学期已存在相同课序号"));
+                    }
                 }
+                
+                // 更新课程状态和课序号（如果有变化）
+                classMapper.updateCourseStatusAndClassNum(courseId, status, finalClassNum, null);
             }
 
             // 如果拒绝，验证拒绝理由
@@ -108,8 +122,6 @@ public class ClassService {
                 return ResponseUtil.build(Result.error(400, "拒绝时必须提供拒绝理由"));
             }
 
-            // 更新课程状态、课序号和拒绝理由
-            classMapper.updateCourseStatusAndClassNum(courseId, status, classNum, reason);
             String message = status == 1 ? "课程审批通过" : "课程审批拒绝";
             return ResponseUtil.build(Result.success(null, message));
         } catch (Exception e) {

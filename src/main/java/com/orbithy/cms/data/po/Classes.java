@@ -165,4 +165,8 @@ public class Classes {
                weekStart > 0 && weekEnd >= weekStart && 
                weekEnd <= 17;
     }
+
+    public boolean hasClassNum() {
+        return classNum != null && !classNum.trim().isEmpty();
+    }
 }
