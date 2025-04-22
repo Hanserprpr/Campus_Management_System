@@ -9,6 +9,9 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
@@ -23,9 +26,15 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select permission from user where id=#{id}")
     int getPermissionById(String id);
 
+    Map<Integer, String> getUsernamesByIds(@Param("ids") List<String> ids);
+
+
     @Insert("INSERT INTO user (username, password, student_id, major) VALUES (#{username}, #{password}, #{SDUId}, '0')")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addUser(User user);
+
+    @Select("SELECT username, permission FROM user WHERE id = #{Id}")
+    User getUserById(String Id);
 
     @Update("UPDATE user SET phone = #{phone} WHERE id = #{userId}")
     void updatePhone(@Param("userId") String userId, @Param("phone") String phone);

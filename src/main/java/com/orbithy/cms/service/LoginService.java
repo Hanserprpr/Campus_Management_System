@@ -1,5 +1,6 @@
 package com.orbithy.cms.service;
 
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.BcryptUtils;
@@ -39,11 +40,17 @@ public class LoginService {
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("accessToken", token);
             tokenMap.put("refreshToken", refreshToken);
-
+            User user = getDetail(id);
+            tokenMap.put("username", user.getUsername());
+            tokenMap.put("permission", user.getPermission().toString());
             return ResponseUtil.build(Result.success(tokenMap, "登陆成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, e.getMessage()));
         }
+    }
+
+    private User getDetail (String stuId) {
+        return userMapper.getUserById(stuId);
     }
 
     boolean isExisted(String stuId) {
@@ -61,6 +68,25 @@ public class LoginService {
         }
         String userId = String.valueOf(userMapper.getUserId(stuId));
         return getToken(userId);
+    }
+
+    /**
+     * 刷新token
+     * @param userId 刷新用token
+     * @return ResponseEntity<Result>
+     */
+    public ResponseEntity<Result> refresh(String userId) {
+        try {
+            String newAccessToken = jwtUtil.getToken(userId, JWTUtil.EXPIRE_TIME, JWTUtil.SECRET_KEY);
+            Map<String, String> map = new HashMap<>();
+            map.put("accessToken", newAccessToken);
+            String msg;
+            msg = "成功！已获取新accessToken";
+            return ResponseUtil.build(new Result(200, map, msg));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return ResponseUtil.build(Result.error(400, "无有效RefreshToken"));
     }
 
 }
