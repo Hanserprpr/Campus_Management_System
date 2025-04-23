@@ -18,7 +18,7 @@ COLLATE utf8mb4_bin;
 |--------------|--------------------------------|--------------------------------------------|-------------------|
 | **id**       | `INT AUTO_INCREMENT PRIMARY KEY` | 主键，自动递增                             | 用户唯一 ID       |
 | **username** | `VARCHAR(50) NOT NULL UNIQUE`   | 非空，唯一                                 | 用户名            |
-| **sex**      | `ENUM('男','女')`                | 无特殊约束                                | 性别             |
+| **sex**      | `ENUM('男','女','未设定')`                | 默认未设定                                | 性别             |
 | **email**    | `VARCHAR(100) NOT NULL UNIQUE`          | 可为空，唯一                               | 邮箱              |
 | **phone**    | `VARCHAR(11) UNIQUE`           | 可为空，唯一                               | 手机号            |
 | **password** | `CHAR(128) NOT NULL`           | 非空                                      | 加密后的密码      |
@@ -39,7 +39,7 @@ COLLATE utf8mb4_bin;
 CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY COMMENT '用户唯一ID',
     username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
-    sex ENUM('男','女') COMMENT '性别',
+    sex ENUM('男','女','未设定') COMMENT '性别',
     email VARCHAR(100) NOT NULL UNIQUE COMMENT '邮箱',
     phone VARCHAR(11) UNIQUE COMMENT '手机号',
     password CHAR(128) NOT NULL COMMENT '加密后的密码',

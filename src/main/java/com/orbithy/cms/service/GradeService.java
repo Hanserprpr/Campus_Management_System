@@ -1,16 +1,24 @@
 package com.orbithy.cms.service;
 
 import com.orbithy.cms.data.dto.CreateCourseDTO;
+import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.GradeMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GradeService {
@@ -51,6 +59,25 @@ public class GradeService {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }
         // 获取成绩列表
-        return ResponseUtil.build(Result.success(gradeMapper.getGradeList(courseId), "获取成功"));
+        List<Grade> grades = gradeMapper.getGradeByCourseId(courseId);
+        // 1. 获取所有学生 ID
+        Set<String> studentIds = grades.stream()
+                .map(Grade::getStudentId) // 返回 String 类型
+                .collect(Collectors.toSet());
+
+
+        // 2. 批量查询所有学生的用户名
+        Map<Integer, String> studentUsernameMap = userMapper.getUsernamesByIds(new ArrayList<>(studentIds));
+
+        // 3. 遍历 grades，直接从 studentUsernameMap 获取对应的 username
+        List<GradeDTO> gradeDTOList = new ArrayList<>();
+        for (Grade grade : grades) {
+            GradeDTO dto = new GradeDTO();
+            BeanUtils.copyProperties(grade, dto);
+            dto.setUsername(studentUsernameMap.get(grade.getStudentId()));  // 从 Map 中获取 username
+            gradeDTOList.add(dto);
+        }
+
+        return ResponseUtil.build(Result.success(gradeDTOList, "获取成功"));
     }
 }

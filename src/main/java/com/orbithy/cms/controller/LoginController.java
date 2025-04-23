@@ -1,5 +1,6 @@
 package com.orbithy.cms.controller;
 
+import com.orbithy.cms.annotation.refreshAuth;
 import com.orbithy.cms.data.dto.LoginRequestDTO;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.LoginService;
@@ -19,6 +20,8 @@ public class LoginController {
     private SDULogin sduLogin;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private HttpServletRequest request;
 
     @RequestMapping(value = "/SDULogin", method = {RequestMethod.POST})
     public ResponseEntity<Result> SDULogin(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginRequestDTO loginRequestDTO) {
@@ -44,5 +47,12 @@ public class LoginController {
             return ResponseUtil.build(Result.error(400,"Bad Requests"));
         }
         return loginService.login(stuId,password);
+    }
+
+    @refreshAuth
+    @PostMapping("/refreshToken")
+    public ResponseEntity<Result> refresh(){
+        String userId = (String) request.getAttribute("userId");
+        return loginService.refresh(userId);
     }
 }
