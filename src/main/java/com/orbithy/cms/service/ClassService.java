@@ -77,7 +77,7 @@ public class ClassService {
      */
     private boolean isValidCourseData(Classes course) {
         // 验证课时
-        if (course.getPeriod() <= 0 || course.getPeriod() > 10) {
+        if (course.getPeriod() <= 0 || course.getPeriod() > 120) {
             return false;
         }
 

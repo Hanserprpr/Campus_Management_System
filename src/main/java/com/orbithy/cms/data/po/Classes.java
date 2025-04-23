@@ -73,23 +73,32 @@ public class Classes {
     // 课程类型枚举
     @Getter
     public enum CourseType {
-        REQUIRED("必修"),
-        LIMITED("限选"),
-        ELECTIVE("任选");
+        必修("必修"),
+        限选("限选"),
+        任选("任选");
 
         private final String description;
 
         CourseType(String description) {
             this.description = description;
         }
+
+        public static CourseType fromDescription(String description) {
+            for (CourseType type : values()) {
+                if (type.description.equals(description)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("无效的课程类型: " + description);
+        }
     }
 
     // 课程状态枚举
     @Getter
     public enum CourseStatus {
-        PENDING(0, "待审批"),
-        APPROVED(1, "已通过"),
-        REJECTED(2, "已拒绝");
+        待审批(0, "待审批"),
+        已通过(1, "已通过"),
+        已拒绝(2, "已拒绝");
 
         private final int code;
         private final String description;
@@ -105,7 +114,16 @@ public class Classes {
                     return status;
                 }
             }
-            throw new IllegalArgumentException("Invalid status code: " + code);
+            throw new IllegalArgumentException("无效的状态码: " + code);
+        }
+
+        public static CourseStatus fromDescription(String description) {
+            for (CourseStatus status : values()) {
+                if (status.description.equals(description)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("无效的状态描述: " + description);
         }
     }
 
