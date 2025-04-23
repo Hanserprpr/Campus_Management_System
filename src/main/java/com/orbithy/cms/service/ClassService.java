@@ -458,4 +458,36 @@ public class ClassService {
             throw new CustomException("自动排课失败：" + e.getMessage(), e);
         }
     }
+
+    /**
+     * 教务删除审批过的课程
+     */
+    public ResponseEntity<Result> adminDeleteCourse(String id, Integer courseId) {
+        try {
+            // 验证教务权限
+            Integer permission = userMapper.getPermission(id);
+            if (permission == null || permission != 0) {
+                throw new CustomException("无权限删除课程");
+            }
+
+            // 获取课程信息
+            Classes course = classMapper.getCourseById(courseId);
+            if (course == null) {
+                throw new CustomException("课程不存在");
+            }
+
+            // 验证课程状态
+            if (course.getStatus() != Classes.CourseStatus.已通过) {
+                throw new CustomException("只能删除已审批通过的课程");
+            }
+
+            // 删除课程
+            classMapper.deleteById(courseId);
+            return ResponseUtil.build(Result.success(null, "删除成功"));
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException("删除课程失败：" + e.getMessage(), e);
+        }
+    }
 }
