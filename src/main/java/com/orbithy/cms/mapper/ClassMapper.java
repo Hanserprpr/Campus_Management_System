@@ -1,6 +1,7 @@
 package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.orbithy.cms.data.dto.ClassesDTO;
 import com.orbithy.cms.data.po.Classes;
 import org.apache.ibatis.annotations.*;
 

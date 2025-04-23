@@ -39,9 +39,6 @@ public class ClassService {
         try {
             // 验证教师权限
             Integer permission = userMapper.getPermission(id);
-            if (permission == null) {
-                return ResponseUtil.build(Result.error(404, "用户不存在"));
-            }
             if (permission != 1) {
                 return ResponseUtil.build(Result.error(403, "无权限创建课程"));
             }
@@ -65,7 +62,7 @@ public class ClassService {
             }
 
             // 保存课程
-            classMapper.insert(course);
+            classMapper.createCourse(course);
             return ResponseUtil.build(Result.success(null, "课程创建成功，等待排课和审批"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "创建课程失败：" + e.getMessage()));
