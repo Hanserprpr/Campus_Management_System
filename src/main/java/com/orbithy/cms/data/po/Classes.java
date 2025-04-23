@@ -43,7 +43,7 @@ public class Classes {
     private BigDecimal regularRatio;
     private BigDecimal finalRatio;
 
-    
+
 
 
     // 课程类型枚举
@@ -59,14 +59,6 @@ public class Classes {
             this.description = description;
         }
 
-        public static CourseType fromDescription(String description) {
-            for (CourseType type : values()) {
-                if (type.description.equals(description)) {
-                    return type;
-                }
-            }
-            throw new IllegalArgumentException("无效的课程类型: " + description);
-        }
     }
 
     // 课程状态枚举

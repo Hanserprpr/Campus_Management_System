@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
+import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
@@ -38,9 +39,9 @@ public class ClassService {
     public ResponseEntity<Result> createCourse(String id, CreateCourseDTO courseDTO) {
         try {
             // 验证教师权限
-            Integer permission = userMapper.getPermission(id);
+            int permission = userMapper.getPermission(id);
             if (permission != 1) {
-                return ResponseUtil.build(Result.error(403, "无权限创建课程"));
+                throw new CustomException("无权限创建课程");
             }
 
             // 创建课程对象
@@ -53,19 +54,21 @@ public class ClassService {
             try {
                 course.setType(Classes.CourseType.valueOf(courseDTO.getType()));
             } catch (IllegalArgumentException e) {
-                return ResponseUtil.build(Result.error(400, "无效的课程类型"));
+                throw new CustomException("无效的课程类型", e);
             }
 
-            // 验证课程数据（不包括时间相关的验证）
+            // 验证课程数据
             if (!isValidCourseData(course)) {
-                return ResponseUtil.build(Result.error(400, "课程信息不合法"));
+                throw new CustomException("课程信息不合法");
             }
 
             // 保存课程
             classMapper.createCourse(course);
             return ResponseUtil.build(Result.success(null, "课程创建成功，等待排课和审批"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "创建课程失败：" + e.getMessage()));
+            throw new CustomException("创建课程失败：" + e.getMessage(), e);
         }
     }
 
@@ -111,25 +114,25 @@ public class ClassService {
             // 验证教务权限
             Integer permission = userMapper.getPermission(id);
             if (permission == null) {
-                return ResponseUtil.build(Result.error(404, "用户不存在"));
+                throw new CustomException("用户不存在");
             }
             if (permission != 0) {
-                return ResponseUtil.build(Result.error(403, "无权限审批课程"));
+                throw new CustomException("无权限审批课程");
             }
 
             // 验证状态值
             if (status != 1 && status != 2) {
-                return ResponseUtil.build(Result.error(400, "无效的审批状态"));
+                throw new CustomException("无效的审批状态");
             }
 
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
-                return ResponseUtil.build(Result.error(404, "课程不存在"));
+                throw new CustomException("课程不存在");
             }
 
             // 验证课程状态
             if (course.getStatus() != Classes.CourseStatus.待审批) {
-                return ResponseUtil.build(Result.error(400, "只能审批待审批的课程"));
+                throw new CustomException("只能审批待审批的课程");
             }
 
             // 如果审批通过
@@ -140,7 +143,7 @@ public class ClassService {
                 // 如果课程没有课序号，且审批时也没提供课序号
                 if ((existingClassNum == null || existingClassNum.trim().isEmpty()) 
                     && (classNum == null || classNum.trim().isEmpty())) {
-                    return ResponseUtil.build(Result.error(400, "课程没有课序号，审批通过时必须提供课序号"));
+                    throw new CustomException("课程没有课序号，审批通过时必须提供课序号");
                 }
                 
                 // 如果提供了新的课序号，使用新课序号；否则保留原课序号
@@ -153,26 +156,28 @@ public class ClassService {
                     queryWrapper.eq("class_num", finalClassNum)
                         .eq("term", course.getTerm());
                     if (classMapper.selectCount(queryWrapper) > 0) {
-                        return ResponseUtil.build(Result.error(400, "该学期已存在相同课序号"));
+                        throw new CustomException("该学期已存在相同课序号");
                     }
                 }
                 
                 // 更新课程状态和课序号（如果有变化）
                 classMapper.updateCourseStatusAndClassNum(courseId, status, finalClassNum, null);
-            } else if (status == 2) {
+            } else {
                 // 拒绝时更新状态和拒绝理由
                 classMapper.updateCourseStatusAndClassNum(courseId, status, null, reason);
             }
 
             // 如果拒绝，验证拒绝理由
             if (status == 2 && (reason == null || reason.trim().isEmpty())) {
-                return ResponseUtil.build(Result.error(400, "拒绝时必须提供拒绝理由"));
+                throw new CustomException("拒绝时必须提供拒绝理由");
             }
 
             String message = status == 1 ? "课程审批通过" : "课程审批拒绝";
             return ResponseUtil.build(Result.success(null, message));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "审批失败：" + e.getMessage()));
+            throw new CustomException("审批失败：" + e.getMessage(), e);
         }
     }
 
@@ -183,7 +188,7 @@ public class ClassService {
         try {
             // 验证学期格式
             if (term != null && !term.matches("\\d{4}-\\d{4}-[12]")) {
-                return ResponseUtil.build(Result.error(400, "无效的学期格式"));
+                throw new CustomException("无效的学期格式");
             }
 
             int permission = userMapper.getPermission(id);
@@ -201,15 +206,14 @@ public class ClassService {
                             classMapper.getTeacherCourses(Integer.parseInt(id));
                     break;
                 default:
-                    return ResponseUtil.build(Result.error(403, "无效的用户权限"));
+                    throw new CustomException("无效的用户权限");
             }
 
-            // 转换时间段格式
-            courses.forEach(Classes::convertStringToTimeSet);
-
             return ResponseUtil.build(Result.success(courses, "获取课程列表成功"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "获取课程列表失败：" + e.getMessage()));
+            throw new CustomException("获取课程列表失败：" + e.getMessage(), e);
         }
     }
 
@@ -220,22 +224,21 @@ public class ClassService {
         try {
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
-                return ResponseUtil.build(Result.error(404, "课程不存在"));
+                throw new CustomException("课程不存在");
             }
 
             // 验证权限
             int permission = userMapper.getPermission(id);
             if (permission != 0 && // 教务
                 !course.getTeacherId().toString().equals(id)) { // 课程创建者
-                return ResponseUtil.build(Result.error(403, "无权限查看此课程"));
+                throw new CustomException("无权限查看此课程");
             }
 
-            // 转换时间段格式
-            course.convertStringToTimeSet();
-
             return ResponseUtil.build(Result.success(course, "获取成功"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "获取课程详情失败：" + e.getMessage()));
+            throw new CustomException("获取课程详情失败：" + e.getMessage(), e);
         }
     }
 
@@ -247,15 +250,15 @@ public class ClassService {
             // 验证教师权限和所有权
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
-                return ResponseUtil.build(Result.error(404, "课程不存在"));
+                throw new CustomException("课程不存在");
             }
             if (!course.getTeacherId().toString().equals(id)) {
-                return ResponseUtil.build(Result.error(403, "无权限修改此课程"));
+                throw new CustomException("无权限修改此课程");
             }
 
             // 验证课程状态
             if (course.getStatus() != Classes.CourseStatus.待审批) {
-                return ResponseUtil.build(Result.error(403, "只能修改待审批的课程"));
+                throw new CustomException("只能修改待审批的课程");
             }
 
             // 更新课程信息
@@ -263,18 +266,20 @@ public class ClassService {
             try {
                 course.setType(Classes.CourseType.valueOf(courseDTO.getType()));
             } catch (IllegalArgumentException e) {
-                return ResponseUtil.build(Result.error(400, "无效的课程类型"));
+                throw new CustomException("无效的课程类型", e);
             }
 
             // 验证课程数据
             if (!isValidCourseData(course)) {
-                return ResponseUtil.build(Result.error(400, "课程信息不合法"));
+                throw new CustomException("课程信息不合法");
             }
 
             classMapper.updateById(course);
             return ResponseUtil.build(Result.success(null, "更新成功"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "更新课程失败：" + e.getMessage()));
+            throw new CustomException("更新课程失败：" + e.getMessage(), e);
         }
     }
 
@@ -285,21 +290,23 @@ public class ClassService {
         try {
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
-                return ResponseUtil.build(Result.error(404, "课程不存在"));
+                throw new CustomException("课程不存在");
             }
             if (!course.getTeacherId().toString().equals(id)) {
-                return ResponseUtil.build(Result.error(403, "无权限删除此课程"));
+                throw new CustomException("无权限删除此课程");
             }
 
             // 验证课程状态
             if (course.getStatus() != Classes.CourseStatus.待审批) {
-                return ResponseUtil.build(Result.error(403, "只能删除待审批的课程"));
+                throw new CustomException("只能删除待审批的课程");
             }
 
             classMapper.deleteById(courseId);
             return ResponseUtil.build(Result.success(null, "删除成功"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "删除课程失败：" + e.getMessage()));
+            throw new CustomException("删除课程失败：" + e.getMessage(), e);
         }
     }
 
@@ -311,13 +318,15 @@ public class ClassService {
             // 验证教务权限
             Integer permission = userMapper.getPermission(id);
             if (permission == null || permission != 0) {
-                return ResponseUtil.build(Result.error(403, "无权限查看待批准课程"));
+                throw new CustomException("无权限查看待批准课程");
             }
 
             List<Classes> pendingCourses = classMapper.getPendingCourses();
             return ResponseUtil.build(Result.success(pendingCourses, "获取待批准课程成功"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "获取待批准课程失败：" + e.getMessage()));
+            throw new CustomException("获取待批准课程失败：" + e.getMessage(), e);
         }
     }
 
@@ -419,7 +428,7 @@ public class ClassService {
             // 验证教务权限
             Integer permission = userMapper.getPermission(id);
             if (permission == null || permission != 0) {
-                return ResponseUtil.build(Result.error(403, "无权限进行自动排课"));
+                throw new CustomException("无权限进行自动排课");
             }
 
             // 获取需要排课的课程（状态为已通过审批的课程）
@@ -429,7 +438,7 @@ public class ClassService {
             boolean success = generateSchedule(courses);
             
             if (!success) {
-                return ResponseUtil.build(Result.error(400, "无法找到合适的排课方案"));
+                throw new CustomException("无法找到合适的排课方案");
             }
 
             // 生成排课结果报告
@@ -443,8 +452,10 @@ public class ClassService {
             }
 
             return ResponseUtil.build(Result.success(report.toString(), "自动排课完成"));
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, "自动排课失败：" + e.getMessage()));
+            throw new CustomException("自动排课失败：" + e.getMessage(), e);
         }
     }
 }

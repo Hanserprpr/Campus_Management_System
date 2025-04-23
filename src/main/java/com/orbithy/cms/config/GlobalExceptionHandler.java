@@ -1,6 +1,7 @@
 package com.orbithy.cms.config;
 
 import com.orbithy.cms.data.vo.Result;
+import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,14 @@ public class GlobalExceptionHandler {
         return ResponseUtil.build(Result.error(400, "参数类型不匹配: " + ex.getName()));
     }
 
+    /**
+     * 处理业务异常
+     */
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Result> handleBusinessException(CustomException ex) {
+        log.error("业务异常: {}", ex.getMessage(), ex);
+        return ResponseUtil.build(Result.error(400, ex.getMessage()));
+    }
 
     /**
      * 捕获所有其他异常
