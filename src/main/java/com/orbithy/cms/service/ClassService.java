@@ -35,17 +35,21 @@ public class ClassService {
     /**
      * 教师创建课程
      */
-    public ResponseEntity<Result> createCourse(String userId, CreateCourseDTO courseDTO) {
+    public ResponseEntity<Result> createCourse(String id, CreateCourseDTO courseDTO) {
         try {
             // 验证教师权限
-            if (userMapper.getPermission(userId) != 1) {
+            Integer permission = userMapper.getPermission(id);
+            if (permission == null) {
+                return ResponseUtil.build(Result.error(404, "用户不存在"));
+            }
+            if (permission != 1) {
                 return ResponseUtil.build(Result.error(403, "无权限创建课程"));
             }
 
             // 创建课程对象
             Classes course = new Classes();
             BeanUtils.copyProperties(courseDTO, course);
-            course.setTeacherId(Integer.parseInt(userId));
+            course.setTeacherId(Integer.parseInt(id));
             course.setStatus(Classes.CourseStatus.PENDING);
             
             // 转换课程类型
@@ -105,10 +109,14 @@ public class ClassService {
     /**
      * 教务审批课程
      */
-    public ResponseEntity<Result> approveCourse(String adminId, Integer courseId, Integer status, String classNum, String reason) {
+    public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason) {
         try {
             // 验证教务权限
-            if (userMapper.getPermission(adminId) != 0) {
+            Integer permission = userMapper.getPermission(id);
+            if (permission == null) {
+                return ResponseUtil.build(Result.error(404, "用户不存在"));
+            }
+            if (permission != 0) {
                 return ResponseUtil.build(Result.error(403, "无权限审批课程"));
             }
 
@@ -174,14 +182,14 @@ public class ClassService {
     /**
      * 获取课程列表
      */
-    public ResponseEntity<Result> getCourseList(String userId, String term) {
+    public ResponseEntity<Result> getCourseList(String id, String term) {
         try {
             // 验证学期格式
             if (term != null && !term.matches("\\d{4}-\\d{4}-[12]")) {
                 return ResponseUtil.build(Result.error(400, "无效的学期格式"));
             }
 
-            Integer permission = userMapper.getPermission(userId);
+            Integer permission = userMapper.getPermission(id);
             List<Classes> courses;
 
             switch (permission) {
@@ -192,8 +200,8 @@ public class ClassService {
                     break;
                 case 1: // 教师
                     courses = term != null ? 
-                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(userId), term) : 
-                            classMapper.getTeacherCourses(Integer.parseInt(userId));
+                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) : 
+                            classMapper.getTeacherCourses(Integer.parseInt(id));
                     break;
                 default:
                     return ResponseUtil.build(Result.error(403, "无效的用户权限"));
@@ -211,7 +219,7 @@ public class ClassService {
     /**
      * 获取课程详情
      */
-    public ResponseEntity<Result> getCourseDetail(String userId, Integer courseId) {
+    public ResponseEntity<Result> getCourseDetail(String id, Integer courseId) {
         try {
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
@@ -219,9 +227,9 @@ public class ClassService {
             }
 
             // 验证权限
-            Integer permission = userMapper.getPermission(userId);
+            Integer permission = userMapper.getPermission(id);
             if (permission != 0 && // 教务
-                !course.getTeacherId().toString().equals(userId)) { // 课程创建者
+                !course.getTeacherId().toString().equals(id)) { // 课程创建者
                 return ResponseUtil.build(Result.error(403, "无权限查看此课程"));
             }
 
@@ -237,14 +245,14 @@ public class ClassService {
     /**
      * 更新课程
      */
-    public ResponseEntity<Result> updateCourse(String userId, Integer courseId, CreateCourseDTO courseDTO) {
+    public ResponseEntity<Result> updateCourse(String id, Integer courseId, CreateCourseDTO courseDTO) {
         try {
             // 验证教师权限和所有权
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
                 return ResponseUtil.build(Result.error(404, "课程不存在"));
             }
-            if (!course.getTeacherId().toString().equals(userId)) {
+            if (!course.getTeacherId().toString().equals(id)) {
                 return ResponseUtil.build(Result.error(403, "无权限修改此课程"));
             }
 
@@ -276,13 +284,13 @@ public class ClassService {
     /**
      * 删除课程
      */
-    public ResponseEntity<Result> deleteCourse(String userId, Integer courseId) {
+    public ResponseEntity<Result> deleteCourse(String id, Integer courseId) {
         try {
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
                 return ResponseUtil.build(Result.error(404, "课程不存在"));
             }
-            if (!course.getTeacherId().toString().equals(userId)) {
+            if (!course.getTeacherId().toString().equals(id)) {
                 return ResponseUtil.build(Result.error(403, "无权限删除此课程"));
             }
 
@@ -301,10 +309,11 @@ public class ClassService {
     /**
      * 获取待批准的课程列表
      */
-    public ResponseEntity<Result> getPendingCourses(String adminId) {
+    public ResponseEntity<Result> getPendingCourses(String id) {
         try {
             // 验证教务权限
-            if (userMapper.getPermission(adminId) != 0) {
+            Integer permission = userMapper.getPermission(id);
+            if (permission == null || permission != 0) {
                 return ResponseUtil.build(Result.error(403, "无权限查看待批准课程"));
             }
 
@@ -408,10 +417,11 @@ public class ClassService {
     /**
      * 自动排课
      */
-    public ResponseEntity<Result> autoSchedule(String adminId, String term) {
+    public ResponseEntity<Result> autoSchedule(String id, String term) {
         try {
             // 验证教务权限
-            if (userMapper.getPermission(adminId) != 0) {
+            Integer permission = userMapper.getPermission(id);
+            if (permission == null || permission != 0) {
                 return ResponseUtil.build(Result.error(403, "无权限进行自动排课"));
             }
 

@@ -50,8 +50,8 @@ public class CourseSelectionController {
     @Auth
     @PostMapping("/select/{courseId}")
     public ResponseEntity<Result> selectCourse(@PathVariable Integer courseId) {
-        String userId = request.getHeader("userId");
-        return courseSelectionService.selectCourse(Integer.parseInt(userId), courseId);
+        String userId = (String) request.getAttribute("userId");
+        return courseSelectionService.selectCourse(userId, courseId);
     }
 
     /**
@@ -60,8 +60,8 @@ public class CourseSelectionController {
     @Auth
     @PostMapping("/drop/{courseId}")
     public ResponseEntity<Result> dropCourse(@PathVariable Integer courseId) {
-        String userId = request.getHeader("userId");
-        return courseSelectionService.dropCourse(Integer.parseInt(userId), courseId);
+        String userId = (String) request.getAttribute("userId");
+        return courseSelectionService.dropCourse(userId, courseId);
     }
 
     /**
@@ -70,7 +70,7 @@ public class CourseSelectionController {
     @Auth
     @GetMapping("/results")
     public ResponseEntity<Result> getSelectionResults() {
-        String userId = request.getHeader("userId");
-        return courseSelectionService.getSelectionResults(Integer.parseInt(userId));
+        String userId = (String) request.getAttribute("userId");
+        return courseSelectionService.getSelectionResults(userId);
     }
 }

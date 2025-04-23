@@ -111,7 +111,7 @@ public class CourseSelectionService {
     /**
      * 选课
      */
-    public ResponseEntity<Result> selectCourse(Integer studentId, Integer courseId) {
+    public ResponseEntity<Result> selectCourse(String studentId, Integer courseId) {
         try {
             // 验证课程是否存在
             Classes course = classMapper.getCourseById(courseId);
@@ -125,7 +125,7 @@ public class CourseSelectionService {
             }
 
             // 检查是否已选
-            CourseSelection existingSelection = courseSelectionMapper.getSelection(studentId, courseId);
+            CourseSelection existingSelection = courseSelectionMapper.getSelection(Integer.parseInt(studentId), courseId);
             if (existingSelection != null) {
                 return ResponseUtil.build(Result.error(400, "已经选择过该课程"));
             }
@@ -137,7 +137,7 @@ public class CourseSelectionService {
             }
 
             // 检查总学分
-            Integer currentPoints = courseSelectionMapper.getTotalPoints(studentId);
+            Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId));
             if (currentPoints == null) currentPoints = 0;
             if (currentPoints + course.getPoint() > 35) {
                 return ResponseUtil.build(Result.error(400, "总学分超过35分"));
@@ -145,7 +145,7 @@ public class CourseSelectionService {
 
             // 检查时间冲突
             Set<Integer> courseTimeSet = course.getTimeSet();
-            List<CourseSelection> studentSelections = courseSelectionMapper.getStudentSelections(studentId);
+            List<CourseSelection> studentSelections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
             
             for (CourseSelection selection : studentSelections) {
                 Classes selectedCourse = classMapper.getCourseById(selection.getCourseId());
@@ -160,7 +160,7 @@ public class CourseSelectionService {
 
             // 创建选课记录
             CourseSelection selection = new CourseSelection();
-            selection.setStudentId(studentId);
+            selection.setStudentId(Integer.parseInt(studentId));
             selection.setCourseId(courseId);
             selection.setClassNum(course.getClassNum());
             
@@ -174,9 +174,9 @@ public class CourseSelectionService {
     /**
      * 查询选课结果
      */
-    public ResponseEntity<Result> getSelectionResults(Integer studentId) {
+    public ResponseEntity<Result> getSelectionResults(String studentId) {
         try {
-            List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(studentId);
+            List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
             
             // 获取课程详情
             for (CourseSelection selection : selections) {
@@ -195,7 +195,7 @@ public class CourseSelectionService {
     /**
      * 退选课程
      */
-    public ResponseEntity<Result> dropCourse(Integer studentId, Integer courseId) {
+    public ResponseEntity<Result> dropCourse(String studentId, Integer courseId) {
         try {
             // 验证课程是否存在
             Classes course = classMapper.getCourseById(courseId);
@@ -204,7 +204,7 @@ public class CourseSelectionService {
             }
 
             // 检查选课记录是否存在
-            CourseSelection selection = courseSelectionMapper.getSelection(studentId, courseId);
+            CourseSelection selection = courseSelectionMapper.getSelection(Integer.parseInt(studentId), courseId);
             if (selection == null) {
                 return ResponseUtil.build(Result.error(404, "未选择该课程"));
             }

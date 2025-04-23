@@ -28,8 +28,8 @@ public class ClassController {
     @Auth
     @PostMapping("/create")
     public ResponseEntity<Result> createCourse(@RequestBody CreateCourseDTO courseDTO) {
-        String userId = request.getHeader("userId");
-        return classService.createCourse(userId, courseDTO);
+        String id = (String) request.getAttribute("userId");
+        return classService.createCourse(id, courseDTO);
     }
 
     /**
@@ -47,8 +47,8 @@ public class ClassController {
                                               @RequestParam Integer status,
                                               @RequestParam(required = false) String classNum,
                                               @RequestParam(required = false) String reason) {
-        String userId = request.getHeader("userId");
-        return classService.approveCourse(userId, courseId, status, classNum, reason);
+        String id = (String) request.getAttribute("userId");
+        return classService.approveCourse(id, courseId, status, classNum, reason);
     }
 
     /**
@@ -61,8 +61,8 @@ public class ClassController {
     @Auth
     @GetMapping("/list")
     public ResponseEntity<Result> getCourseList(@RequestParam(required = false) String term) {
-        String userId = request.getHeader("userId");
-        return classService.getCourseList(userId, term);
+        String id = (String) request.getAttribute("userId");
+        return classService.getCourseList(id, term);
     }
 
     /**
@@ -74,8 +74,8 @@ public class ClassController {
     @Auth
     @GetMapping("/detail/{courseId}")
     public ResponseEntity<Result> getCourseDetail(@PathVariable Integer courseId) {
-        String userId = request.getHeader("userId");
-        return classService.getCourseDetail(userId, courseId);
+        String id = (String) request.getAttribute("userId");
+        return classService.getCourseDetail(id, courseId);
     }
 
     /**
@@ -89,8 +89,8 @@ public class ClassController {
     @PostMapping("/update/{courseId}")
     public ResponseEntity<Result> updateCourse(@PathVariable Integer courseId,
                                              @RequestBody CreateCourseDTO courseDTO) {
-        String userId = request.getHeader("userId");
-        return classService.updateCourse(userId, courseId, courseDTO);
+        String id = (String) request.getAttribute("userId");
+        return classService.updateCourse(id, courseId, courseDTO);
     }
 
     /**
@@ -102,8 +102,8 @@ public class ClassController {
     @Auth
     @PostMapping("/delete/{courseId}")
     public ResponseEntity<Result> deleteCourse(@PathVariable Integer courseId) {
-        String userId = request.getHeader("userId");
-        return classService.deleteCourse(userId, courseId);
+        String id = (String) request.getAttribute("userId");
+        return classService.deleteCourse(id, courseId);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ClassController {
     @Auth
     @GetMapping("/pending")
     public ResponseEntity<Result> getPendingCourses() {
-        String userId = request.getHeader("userId");
-        return classService.getPendingCourses(userId);
+        String id = (String) request.getAttribute("userId");
+        return classService.getPendingCourses(id);
     }
 }
