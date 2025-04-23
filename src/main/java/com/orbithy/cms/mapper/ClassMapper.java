@@ -9,11 +9,11 @@ import java.util.List;
 @Mapper
 public interface ClassMapper extends BaseMapper<Classes> {
     @Insert("INSERT INTO classes (name, category, point, teacher_id, classroom, week_start, week_end, " +
-            "period, time, college, term, class_num, type, capacity, status, intro, examination, " +
-            "regular_ratio, final_ratio, published) " +
+            "period, college, term, class_num, type, capacity, status, intro, examination, " +
+            "regular_ratio, final_ratio) " +
             "VALUES (#{name}, #{category}, #{point}, #{teacherId}, #{classroom}, #{weekStart}, #{weekEnd}, " +
-            "#{period}, #{time}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code}, #{intro}, " +
-            "#{examination}, #{regularRatio}, #{finalRatio}, #{published})")
+            "#{period}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code}, #{intro}, " +
+            "#{examination}, #{regularRatio}, #{finalRatio})")
     void createCourse(Classes course);
 
     @Update("UPDATE classes SET status = #{status}, class_num = #{classNum}, f_reason = #{reason} WHERE id = #{courseId}")

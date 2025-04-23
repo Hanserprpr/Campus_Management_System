@@ -14,14 +14,13 @@ public class CreateCourseDTO {
     private Integer weekStart;     // 起始周
     private Integer weekEnd;       // 结束周
     private Integer period;        // 课时
-    private Set<Integer> time;     // 上课时间段（0-24之间的整数集合）
     private String college;        // 开课学院
     private String term;           // 开课学期
     private String type;           // 课程类型（必修/限选/任选）
     private Integer capacity;      // 课程容量
-    private String intro;
-    private Integer examination;
-    private BigDecimal regularRatio;
-    private BigDecimal finalRatio;
-    private String classNum;
+    private String intro;          // 课程简介
+    private Integer examination;   // 考核方式
+    private BigDecimal regularRatio; // 平时分占比
+    private BigDecimal finalRatio;   // 期末分占比
+    private String classNum;       // 课序号
 }

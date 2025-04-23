@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,23 +55,51 @@ public class ClassService {
                 return ResponseUtil.build(Result.error(400, "无效的课程类型"));
             }
 
-            // 设置时间段
-            course.setTimeSet(courseDTO.getTime());
-
-            // 验证课程数据
-            if (!course.isValidTime() || !course.isValidCapacity() || !course.isValidTerm() || !course.isValidWeeks()) {
+            // 验证课程数据（不包括时间相关的验证）
+            if (!isValidCourseData(course)) {
                 return ResponseUtil.build(Result.error(400, "课程信息不合法"));
             }
 
-            // 转换时间段为字符串
-            course.convertTimeSetToString();
-
             // 保存课程
             classMapper.insert(course);
-            return ResponseUtil.build(Result.success(null, "课程创建成功，等待审批"));
+            return ResponseUtil.build(Result.success(null, "课程创建成功，等待排课和审批"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "创建课程失败：" + e.getMessage()));
         }
+    }
+
+    /**
+     * 验证课程数据
+     */
+    private boolean isValidCourseData(Classes course) {
+        // 验证课时
+        if (course.getPeriod() <= 0 || course.getPeriod() > 10) {
+            return false;
+        }
+
+        // 验证周数
+        if (course.getWeekStart() < 1 || course.getWeekEnd() > 17 || 
+            course.getWeekStart() > course.getWeekEnd()) {
+            return false;
+        }
+
+        // 验证容量
+        if (course.getCapacity() <= 0 || course.getCapacity() > 200) {
+            return false;
+        }
+
+        // 验证学期格式
+        if (!course.getTerm().matches("\\d{4}-\\d{4}-[12]")) {
+            return false;
+        }
+
+        // 验证成绩比例
+        if (course.getRegularRatio().add(course.getFinalRatio())
+                .compareTo(new BigDecimal("1.00")) != 0) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -232,16 +261,10 @@ public class ClassService {
                 return ResponseUtil.build(Result.error(400, "无效的课程类型"));
             }
 
-            // 设置时间段
-            course.setTimeSet(courseDTO.getTime());
-
             // 验证课程数据
-            if (!course.isValidTime() || !course.isValidCapacity() || !course.isValidTerm() || !course.isValidWeeks()) {
+            if (!isValidCourseData(course)) {
                 return ResponseUtil.build(Result.error(400, "课程信息不合法"));
             }
-
-            // 转换时间段为字符串
-            course.convertTimeSetToString();
 
             classMapper.updateById(course);
             return ResponseUtil.build(Result.success(null, "更新成功"));
