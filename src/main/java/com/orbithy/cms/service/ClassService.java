@@ -50,7 +50,7 @@ public class ClassService {
             Classes course = new Classes();
             BeanUtils.copyProperties(courseDTO, course);
             course.setTeacherId(Integer.parseInt(id));
-            course.setStatus(Classes.CourseStatus.PENDING);
+            course.setStatus(Classes.CourseStatus.待审批);
             
             // 转换课程类型
             try {
@@ -131,7 +131,7 @@ public class ClassService {
             }
 
             // 验证课程状态
-            if (course.getStatus() != Classes.CourseStatus.PENDING) {
+            if (course.getStatus() != Classes.CourseStatus.待审批) {
                 return ResponseUtil.build(Result.error(400, "只能审批待审批的课程"));
             }
 
@@ -257,7 +257,7 @@ public class ClassService {
             }
 
             // 验证课程状态
-            if (course.getStatus() != Classes.CourseStatus.PENDING) {
+            if (course.getStatus() != Classes.CourseStatus.待审批) {
                 return ResponseUtil.build(Result.error(403, "只能修改待审批的课程"));
             }
 
@@ -295,7 +295,7 @@ public class ClassService {
             }
 
             // 验证课程状态
-            if (course.getStatus() != Classes.CourseStatus.PENDING) {
+            if (course.getStatus() != Classes.CourseStatus.待审批) {
                 return ResponseUtil.build(Result.error(403, "只能删除待审批的课程"));
             }
 
