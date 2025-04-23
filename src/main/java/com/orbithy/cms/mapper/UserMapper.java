@@ -24,7 +24,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select password from user where student_id=#{SDUId}")
     String getPassword(String SDUId);
     @Select("select permission from user where id=#{id}")
-    int getPermissionById(String id);
+    Integer getPermissionById(String id);
 
     Map<Integer, String> getUsernamesByIds(@Param("ids") List<String> ids);
 

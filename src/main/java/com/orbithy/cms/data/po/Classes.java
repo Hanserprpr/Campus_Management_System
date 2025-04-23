@@ -100,6 +100,7 @@ public class Classes {
         已通过(1, "已通过"),
         已拒绝(2, "已拒绝");
 
+        @EnumValue
         private final int code;
         private final String description;
 

@@ -186,7 +186,7 @@ public class ClassService {
                 return ResponseUtil.build(Result.error(400, "无效的学期格式"));
             }
 
-            Integer permission = userMapper.getPermission(id);
+            int permission = userMapper.getPermission(id);
             List<Classes> courses;
 
             switch (permission) {
@@ -224,7 +224,7 @@ public class ClassService {
             }
 
             // 验证权限
-            Integer permission = userMapper.getPermission(id);
+            int permission = userMapper.getPermission(id);
             if (permission != 0 && // 教务
                 !course.getTeacherId().toString().equals(id)) { // 课程创建者
                 return ResponseUtil.build(Result.error(403, "无权限查看此课程"));
