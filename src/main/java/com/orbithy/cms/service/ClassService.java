@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.po.Classes;
@@ -65,7 +66,7 @@ public class ClassService {
 
             // 保存课程
             classMapper.createCourse(course);
-            return ResponseUtil.build(Result.success(null, "课程创建成功，等待排课和审批"));
+            return ResponseUtil.build(Result.ok());
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
@@ -238,7 +239,8 @@ public class ClassService {
      */
     public ResponseEntity<Result> getCourseDetail(String id, Integer courseId) {
         try {
-            Classes course = classMapper.getCourseById(courseId);
+            ClassDTO course = classMapper.getCourseDeById(courseId);
+            course.setTeacherName(userMapper.getUsernameById(id));
             if (course == null) {
                 throw new CustomException("课程不存在");
             }

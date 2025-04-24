@@ -243,9 +243,7 @@ public class CourseSelectionService {
             // 获取课程详情
             for (CourseSelection selection : selections) {
                 Classes course = classMapper.getCourseById(selection.getCourseId());
-                if (course != null) {
-                    course.convertStringToTimeSet();
-                }
+
             }
 
             return ResponseUtil.build(Result.success(selections, "查询成功"));

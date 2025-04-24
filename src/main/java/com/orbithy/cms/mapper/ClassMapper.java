@@ -2,6 +2,7 @@ package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.po.Classes;
 import org.apache.ibatis.annotations.*;
@@ -58,4 +59,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("COUNT * FROM course_reg WHERE course_id = #{courseId}")
     Integer countCourseByCourseId(@Param("courseId") Integer courseId);
+
+    @Select("SELECT * FROM classes WHERE id = #{courseId}")
+    ClassDTO getCourseDeById(@Param("courseId") Integer courseId);
 }
