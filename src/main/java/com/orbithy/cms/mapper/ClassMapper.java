@@ -57,7 +57,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT id, class_num, name, point, term FROM classes")
     List<ClassListDTO> select();
 
-    @Select("COUNT * FROM course_reg WHERE course_id = #{courseId}")
+    @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")
     Integer countCourseByCourseId(@Param("courseId") Integer courseId);
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
