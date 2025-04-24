@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
@@ -192,24 +193,34 @@ public class ClassService {
             }
 
             int permission = userMapper.getPermission(id);
-            List<Classes> courses;
+            List<ClassListDTO> ClassList;
 
             switch (permission) {
                 case 0: // 教务
-                    courses = term != null ? 
-                            classMapper.getCoursesByTerm(term) : 
-                            classMapper.selectList(null);
+
+                    ClassList = term != null ?
+                            classMapper.getCoursesByTerm(term) :
+                            classMapper.select();
+                    for (ClassListDTO classListDTO : ClassList) {
+                        int num = classListDTO.getId();
+                        classListDTO.setPeopleNum(classMapper.countCourseByCourseId(num));
+                    }
+
                     break;
                 case 1: // 教师
-                    courses = term != null ? 
-                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) : 
+                    ClassList = term != null ?
+                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) :
                             classMapper.getTeacherCourses(Integer.parseInt(id));
+                    for (ClassListDTO classListDTO : ClassList) {
+                        int num = classListDTO.getId();
+                        classListDTO.setPeopleNum(classMapper.countCourseByCourseId(num));
+                    }
                     break;
                 default:
                     throw new CustomException("无效的用户权限");
             }
 
-            return ResponseUtil.build(Result.success(courses, "获取课程列表成功"));
+            return ResponseUtil.build(Result.success(ClassList, "获取课程列表成功"));
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
