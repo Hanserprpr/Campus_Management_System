@@ -240,10 +240,10 @@ public class ClassService {
     public ResponseEntity<Result> getCourseDetail(String id, Integer courseId) {
         try {
             ClassDTO course = classMapper.getCourseDeById(courseId);
-            course.setTeacherName(userMapper.getUsernameById(id));
             if (course == null) {
                 throw new CustomException("课程不存在");
             }
+            course.setTeacherName(userMapper.getUsernameById(id));
 
             // 验证权限
             int permission = userMapper.getPermission(id);
