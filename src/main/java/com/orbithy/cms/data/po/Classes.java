@@ -43,8 +43,17 @@ public class Classes {
     private BigDecimal regularRatio;
     private BigDecimal finalRatio;
 
-
-
+    /**
+     * 将时间字符串转换为时间段集合
+     */
+    public Set<Integer> convertStringToTimeSet() {
+        if (time == null || time.trim().isEmpty()) {
+            return new HashSet<>();
+        }
+        return Arrays.stream(time.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+    }
 
     // 课程类型枚举
     @Getter

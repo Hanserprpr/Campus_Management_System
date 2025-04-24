@@ -188,8 +188,8 @@ public class ClassService {
     public ResponseEntity<Result> getCourseList(String id, String term) {
         try {
             // 验证学期格式
-            if (!term.matches("\\d{4}-\\d{1,2}")) {
-                throw new CustomException("学期格式不正确，应为yyyy-n格式");
+            if (!term.matches("^\\d{4}-\\d{4}-\\d{1,2}")) {
+                throw new CustomException("学期格式不正确，应为yyyy-yyyy-n格式");
             }
 
             // 获取用户权限
