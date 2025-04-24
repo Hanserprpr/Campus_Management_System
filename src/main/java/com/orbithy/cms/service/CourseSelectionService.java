@@ -132,6 +132,11 @@ public class CourseSelectionService {
                 throw new CustomException("课程不存在");
             }
 
+            // 验证选课系统是否开放
+            if (!isSelectionOpen(course.getTerm())) {
+                throw new CustomException("选课系统未开放");
+            }
+
             // 验证课程状态
             if (course.getStatus().getCode() != 1) { // 1表示已通过审批
                 throw new CustomException("课程未通过审批");
@@ -156,21 +161,9 @@ public class CourseSelectionService {
                 throw new CustomException("总学分超过35分");
             }
 
-            // 检查时间冲突 - 使用0-24的时间段检查
-            List<Integer> courseTimeSlots = parseTimeSlots(course.getTime());
+            // 检查时间冲突
             List<CourseSelection> studentSelections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
-            
-            for (CourseSelection selection : studentSelections) {
-                Classes selectedCourse = classMapper.getCourseById(selection.getCourseId());
-                List<Integer> selectedTimeSlots = parseTimeSlots(selectedCourse.getTime());
-                
-                // 检查时间段是否有重叠
-                for (Integer timeSlot : courseTimeSlots) {
-                    if (selectedTimeSlots.contains(timeSlot)) {
-                        throw new CustomException("存在时间冲突");
-                    }
-                }
-            }
+            checkTimeConflict(course, studentSelections);
 
             // 创建选课记录
             CourseSelection selection = new CourseSelection();
@@ -184,6 +177,46 @@ public class CourseSelectionService {
             throw e;
         } catch (Exception e) {
             throw new CustomException("选课失败：" + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 检查时间冲突
+     * 考虑课程的周次范围和时间段
+     */
+    private void checkTimeConflict(Classes newCourse, List<CourseSelection> existingSelections) {
+        // 获取新课程的时间段和周次范围
+        List<Integer> newTimeSlots = parseTimeSlots(newCourse.getTime());
+        int newStartWeek = newCourse.getWeekStart();
+        int newEndWeek = newCourse.getWeekEnd();
+
+        for (CourseSelection selection : existingSelections) {
+            Classes existingCourse = classMapper.getCourseById(selection.getCourseId());
+            if (existingCourse == null) continue;
+
+            // 检查周次是否有重叠
+            int existingStartWeek = existingCourse.getWeekStart();
+            int existingEndWeek = existingCourse.getWeekEnd();
+            
+            // 如果两个课程的周次没有重叠，则不冲突
+            if (newEndWeek < existingStartWeek || newStartWeek > existingEndWeek) {
+                continue;
+            }
+
+            // 如果周次重叠，则检查时间段是否冲突
+            List<Integer> existingTimeSlots = parseTimeSlots(existingCourse.getTime());
+            for (Integer timeSlot : newTimeSlots) {
+                if (existingTimeSlots.contains(timeSlot)) {
+                    throw new CustomException(String.format(
+                        "与课程《%s》在第%d周至第%d周的星期%d第%d节存在时间冲突",
+                        existingCourse.getName(),
+                        Math.max(newStartWeek, existingStartWeek),
+                        Math.min(newEndWeek, existingEndWeek),
+                        timeSlot / 5 + 1,
+                        timeSlot % 5 + 1
+                    ));
+                }
+            }
         }
     }
 
