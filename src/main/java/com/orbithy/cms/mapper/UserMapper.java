@@ -42,6 +42,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Update("UPDATE user SET email = #{email} WHERE id = #{userId}")
     void updateEmail(@Param("userId") String userId, @Param("email") String email);
 
-    @Select("SELECT username,FROM user WHERE id = #{Id}")
+    @Select("SELECT username FROM user WHERE id = #{userId}")
     String getUsernameById(@Param("userId") String userId);
 }
