@@ -2,7 +2,6 @@ package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orbithy.cms.data.dto.ClassesDTO;
-import com.orbithy.cms.data.dto.CourseListDTO;
 import com.orbithy.cms.data.po.Classes;
 import org.apache.ibatis.annotations.*;
 
@@ -52,18 +51,4 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = #{status}")
     List<Classes> getCoursesByTermAndStatus(@Param("term") String term, @Param("status") Integer status);
-
-    @Select("SELECT c.class_num as classNum, c.name, c.term, c.point, " +
-            "(SELECT COUNT(*) FROM class_selection cs WHERE cs.class_id = c.id) as studentCount " +
-            "FROM classes c " +
-            "WHERE c.term = #{term} " +
-            "ORDER BY c.class_num")
-    List<CourseListDTO> getCourseListByTerm(@Param("term") String term);
-
-    @Select("SELECT c.class_num as classNum, c.name, c.term, c.point, " +
-            "(SELECT COUNT(*) FROM class_selection cs WHERE cs.class_id = c.id) as studentCount " +
-            "FROM classes c " +
-            "WHERE c.term = #{term} AND c.teacher_id = #{teacherId} " +
-            "ORDER BY c.class_num")
-    List<CourseListDTO> getTeacherCourseListByTerm(@Param("term") String term, @Param("teacherId") String teacherId);
 }

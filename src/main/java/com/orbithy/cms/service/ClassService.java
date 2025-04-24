@@ -2,7 +2,6 @@ package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
-import com.orbithy.cms.data.dto.CourseListDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
@@ -188,26 +187,29 @@ public class ClassService {
     public ResponseEntity<Result> getCourseList(String id, String term) {
         try {
             // 验证学期格式
-            if (!term.matches("\\d{4}-\\d{1,2}")) {
-                throw new CustomException("学期格式不正确，应为yyyy-n格式");
+            if (term != null && !term.matches("\\d{4}-\\d{4}-[12]")) {
+                throw new CustomException("无效的学期格式");
             }
 
-            // 获取用户权限
-            Integer permission = userMapper.getPermission(id);
-            if (permission == null) {
-                throw new CustomException("用户不存在");
+            int permission = userMapper.getPermission(id);
+            List<Classes> courses;
+
+            switch (permission) {
+                case 0: // 教务
+                    courses = term != null ? 
+                            classMapper.getCoursesByTerm(term) : 
+                            classMapper.selectList(null);
+                    break;
+                case 1: // 教师
+                    courses = term != null ? 
+                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) : 
+                            classMapper.getTeacherCourses(Integer.parseInt(id));
+                    break;
+                default:
+                    throw new CustomException("无效的用户权限");
             }
 
-            List<CourseListDTO> courseList;
-            if (permission == 1) { // 教师
-                courseList = classMapper.getTeacherCourseListByTerm(term, id);
-            } else if (permission == 0) { // 管理员
-                courseList = classMapper.getCourseListByTerm(term);
-            } else {
-                throw new CustomException("无权限查看课程列表");
-            }
-
-            return ResponseUtil.build(Result.success(courseList, "获取课程列表成功"));
+            return ResponseUtil.build(Result.success(courses, "获取课程列表成功"));
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
