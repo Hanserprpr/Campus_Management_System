@@ -202,8 +202,10 @@ public class ClassService {
                             classMapper.getCoursesByTerm(term) :
                             classMapper.select();
                     for (ClassListDTO classListDTO : ClassList) {
-                        int num = classListDTO.getId();
-                        classListDTO.setPeopleNum(classMapper.countCourseByCourseId(num));
+                        Integer cla = classListDTO.getId();
+                        Integer num = classMapper.countCourseByCourseId(cla);
+                        num = num == null ? 0 : num;
+                        classListDTO.setPeopleNum(num);
                     }
 
                     break;
@@ -212,8 +214,11 @@ public class ClassService {
                             classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) :
                             classMapper.getTeacherCourses(Integer.parseInt(id));
                     for (ClassListDTO classListDTO : ClassList) {
-                        int num = classListDTO.getId();
-                        classListDTO.setPeopleNum(classMapper.countCourseByCourseId(num));
+                        Integer cla = classListDTO.getId();
+                        Integer num = classMapper.countCourseByCourseId(cla);
+                        num = num == null ? 0 : num;
+                        classListDTO.setPeopleNum(num);
+
                     }
                     break;
                 default:
