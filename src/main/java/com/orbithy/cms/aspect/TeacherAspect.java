@@ -38,6 +38,7 @@ public class TeacherAspect {
             if (userMapper.getPermissionById(userId) == 2) {
                 return ResponseUtil.build(Result.error(403, "无权限"));
             }
+            request.setAttribute("userId", userId); // 将 userId 添加到请求上下文
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(403, String.valueOf(e.getMessage())));
         }

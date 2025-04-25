@@ -23,7 +23,6 @@ public class User {
     private String email;
     private String phone;
     private String password;
-    @TableField("student_id")
     private String SDUId;
     private Integer major;
     private Integer section;
