@@ -6,7 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class ClassDTO {
+public class ClassDTO {//详细信息DTO
     private Integer id;
 
     private String name;

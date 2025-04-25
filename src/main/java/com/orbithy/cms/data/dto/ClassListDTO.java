@@ -4,7 +4,7 @@ import com.orbithy.cms.data.po.Classes;
 import lombok.Data;
 
 @Data
-public class ClassListDTO {
+public class ClassListDTO {//获取课程列表DTO
     private int id;
     private String name;
     private Integer point;
@@ -12,4 +12,5 @@ public class ClassListDTO {
     private String classNum;
     private int peopleNum;
     private Classes.CourseStatus status;
+    private String teacherName;
 }

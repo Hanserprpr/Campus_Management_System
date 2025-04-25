@@ -203,6 +203,8 @@ public class ClassService {
                             classMapper.getCoursesByTerm(term) :
                             classMapper.select();
                     for (ClassListDTO classListDTO : ClassList) {
+                        String teacherName = userMapper.getUsernameById(id);
+                        classListDTO.setTeacherName(teacherName);
                         Integer cla = classListDTO.getId();
                         Integer num = classMapper.countCourseByCourseId(cla);
                         num = num == null ? 0 : num;
@@ -215,6 +217,8 @@ public class ClassService {
                             classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) :
                             classMapper.getTeacherCourses(Integer.parseInt(id));
                     for (ClassListDTO classListDTO : ClassList) {
+                        String teacherName = userMapper.getUsernameById(id);
+                        classListDTO.setTeacherName(teacherName);
                         Integer cla = classListDTO.getId();
                         Integer num = classMapper.countCourseByCourseId(cla);
                         num = num == null ? 0 : num;
@@ -339,7 +343,11 @@ public class ClassService {
                 throw new CustomException("无权限查看待批准课程");
             }
 
-            List<Classes> pendingCourses = classMapper.getPendingCourses();
+            List<ClassDTO> pendingCourses = classMapper.getPendingCourses();
+            for (ClassDTO classDTO : pendingCourses) {
+                String teacherName = userMapper.getUsernameById(id);
+                classDTO.setTeacherName(teacherName);
+            }
             return ResponseUtil.build(Result.success(pendingCourses, "获取待批准课程成功"));
         } catch (CustomException e) {
             throw e;
