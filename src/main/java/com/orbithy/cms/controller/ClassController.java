@@ -117,4 +117,14 @@ public class ClassController {
         String id = (String) request.getAttribute("userId");
         return classService.getPendingCourses(id);
     }
+
+    /**
+     * 获取已选课成员名单
+     */
+    @Teacher
+    @GetMapping("/{courseId}/students")
+    public ResponseEntity<Result> getSelectedStudents(@PathVariable Integer courseId) {
+        String id = (String) request.getAttribute("userId");
+        return classService.getSelectedStudents(id, courseId);
+    }
 }
