@@ -22,7 +22,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Update("UPDATE classes SET status = #{status}, class_num = #{classNum}, f_reason = #{reason} WHERE id = #{courseId}")
     int updateCourseStatusAndClassNum(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("classNum") String classNum, @Param("reason") String reason);
 
-    @Select("SELECT * FROM classes")
+    @Select("SELECT * FROM classes WHERE status = 1")
     List<Classes> getAllClasses();
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
@@ -39,7 +39,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT * FROM classes WHERE (class_num LIKE CONCAT('%', #{keyword}, '%') " +
             "OR name LIKE CONCAT('%', #{keyword}, '%')) " +
-            "AND status = #{status.code}")
+            "AND status = 1")
     List<Classes> searchCourses(@Param("keyword") String keyword);
 
     @Select("SELECT * FROM classes WHERE status = 0")
