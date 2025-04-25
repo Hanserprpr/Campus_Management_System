@@ -105,14 +105,19 @@ public class CourseSelectionService {
     /**
      * 搜索课程
      */
-    public ResponseEntity<Result> searchCourses(String keyword) {
+    public ResponseEntity<Result> searchCourses(String keyword, String term) {
         try {
-            if (keyword == null || keyword.trim().isEmpty()) {
-                List<Classes> courses = classMapper.getAllClasses();
-                return ResponseUtil.build(Result.success(courses,"搜索成功" ));
+            // 如果 keyword 为空，统一处理为 null
+            if (keyword != null && keyword.trim().isEmpty()) {
+                keyword = null;
             }
 
-            List<Classes> courses = classMapper.searchCourses(keyword);
+            // 如果 term 为空串，处理为 null
+            if (term != null && term.trim().isEmpty()) {
+                term = null;
+            }
+
+            List<Classes> courses = classMapper.searchCourses(keyword, term);
             return ResponseUtil.build(Result.success(courses, "搜索成功"));
         } catch (CustomException e) {
             throw e;
@@ -120,6 +125,7 @@ public class CourseSelectionService {
             throw new CustomException("搜索课程失败：" + e.getMessage(), e);
         }
     }
+
 
     /**
      * 选课

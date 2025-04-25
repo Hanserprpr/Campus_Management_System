@@ -40,8 +40,9 @@ public class CourseSelectionController {
      */
     @Auth
     @GetMapping("/search")
-    public ResponseEntity<Result> searchCourses(@RequestParam String keyword) {
-        return courseSelectionService.searchCourses(keyword);
+    public ResponseEntity<Result> searchCourses(@RequestParam(value = "keyword", required = false) String keyword,
+                                                @RequestParam(value = "term", required = false) String term) {
+        return courseSelectionService.searchCourses(keyword, term);
     }
 
     /**

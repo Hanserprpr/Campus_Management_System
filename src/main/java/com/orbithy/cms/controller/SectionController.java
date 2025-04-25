@@ -53,13 +53,13 @@ public class SectionController {
     /**
      * 删除班级
      *
-     * @param section 班级信息
+     * @param id 班级信息
      * @return ResponseEntity<Result>
      */
     @Admin
     @PostMapping("/deleteSection")
-    public ResponseEntity<Result> deleteSection(Section section) {
-        return sectionService.deleteSection(section);
+    public ResponseEntity<Result> deleteSection(String id) {
+        return sectionService.deleteSection(id);
     }
 
     /**
