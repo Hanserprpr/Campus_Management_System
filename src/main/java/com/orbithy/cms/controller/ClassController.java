@@ -114,8 +114,7 @@ public class ClassController {
     @Admin
     @GetMapping("/pending")
     public ResponseEntity<Result> getPendingCourses() {
-        String id = (String) request.getAttribute("userId");
-        return classService.getPendingCourses(id);
+        return classService.getPendingCourses();
     }
 
     /**

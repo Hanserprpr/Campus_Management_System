@@ -109,15 +109,6 @@ public class ClassService {
      */
     public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason) {
         try {
-            // 验证教务权限
-            Integer permission = userMapper.getPermission(id);
-            if (permission == null) {
-                throw new CustomException("用户不存在");
-            }
-            if (permission != 0) {
-                throw new CustomException("无权限审批课程");
-            }
-
             // 验证状态值
             if (status != 1 && status != 2) {
                 throw new CustomException("无效的审批状态");
@@ -331,14 +322,8 @@ public class ClassService {
     /**
      * 获取待批准的课程列表
      */
-    public ResponseEntity<Result> getPendingCourses(String id) {
+    public ResponseEntity<Result> getPendingCourses() {
         try {
-            // 验证教务权限
-            Integer permission = userMapper.getPermission(id);
-            if (permission == null || permission != 0) {
-                throw new CustomException("无权限查看待批准课程");
-            }
-
             List<ClassDTO> pendingCourses = classMapper.getPendingCourses();
             for (ClassDTO classDTO : pendingCourses) {
                 String teacherName = userMapper.getUsernameById(classDTO.getTeacherId());
