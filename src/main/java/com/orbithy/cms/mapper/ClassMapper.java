@@ -23,28 +23,28 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Update("UPDATE classes SET status = #{status}, class_num = #{classNum}, f_reason = #{reason} WHERE id = #{courseId}")
     int updateCourseStatusAndClassNum(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("classNum") String classNum, @Param("reason") String reason);
 
-    @Select("SELECT * FROM classes")
+    @Select("SELECT * FROM classes WHERE status = 1")
     List<Classes> getAllClasses();
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     Classes getCourseById(@Param("courseId") Integer courseId);
 
-    @Select("SELECT id, class_num, name, point,term, status FROM classes WHERE teacher_id = #{teacherId}")
+    @Select("SELECT id, class_num, name, point,term, status, FROM classes WHERE teacher_id = #{teacherId}")
     List<ClassListDTO> getTeacherCourses(@Param("teacherId") Integer teacherId);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE term = #{term}")
+    @Select("SELECT id, class_num, name, point, term, status, FROM classes WHERE term = #{term}")
     List<ClassListDTO> getCoursesByTerm(@Param("term") String term);
 
-    @Select("SELECT id, class_num, name, point, term,status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
+    @Select("SELECT id, class_num, name, point, term,status, FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
     List<ClassListDTO> getTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
 
     @Select("SELECT * FROM classes WHERE (class_num LIKE CONCAT('%', #{keyword}, '%') " +
             "OR name LIKE CONCAT('%', #{keyword}, '%')) " +
-            "AND status = #{status.code}")
+            "AND status = 1")
     List<Classes> searchCourses(@Param("keyword") String keyword);
 
     @Select("SELECT * FROM classes WHERE status = 0")
-    List<Classes> getPendingCourses();
+    List<ClassDTO> getPendingCourses();
 
     @Select("SELECT teacher_id FROM classes WhERE id = #{courseId}")
     Integer getTeacherIdByCourseId(@Param("courseId") String courseId);
@@ -55,7 +55,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = #{status}")
     List<Classes> getCoursesByTermAndStatus(@Param("term") String term, @Param("status") Integer status);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes")
+    @Select("SELECT id, class_num, name, point, term, status,FROM classes")
     List<ClassListDTO> select();
 
     @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")
