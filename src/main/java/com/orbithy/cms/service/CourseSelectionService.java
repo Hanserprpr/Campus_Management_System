@@ -2,6 +2,7 @@ package com.orbithy.cms.service;
 
 import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.config.CourseSelectionConfig;
+import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.po.CourseSelection;
 import com.orbithy.cms.data.vo.Result;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -239,14 +241,36 @@ public class CourseSelectionService {
     public ResponseEntity<Result> getSelectionResults(String studentId) {
         try {
             List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
-            
+            List<CourseSelectionResultDTO> resultList = new ArrayList<>();
+
             // 获取课程详情
             for (CourseSelection selection : selections) {
                 Classes course = classMapper.getCourseById(selection.getCourseId());
+                if (course != null) {
+                    CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
+                    dto.setCourseId(course.getId());
+                    dto.setClassNum(course.getClassNum());
+                    dto.setName(course.getName());
+                    dto.setPoint(course.getPoint());
+                    dto.setType(String.valueOf(course.getType()));
+                    dto.setTime(course.getTime());
+                    dto.setClassroom(course.getClassroom());
+                    dto.setCapacity(course.getCapacity());
+                    dto.setCategory(course.getCategory());
 
+                    // 获取教师名称
+                    String teacherName = userMapper.getUsernameById(course.getTeacherId());
+                    dto.setTeacherName(teacherName);
+
+                    // 获取已选人数
+                    Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
+                    dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+
+                    resultList.add(dto);
+                }
             }
 
-            return ResponseUtil.build(Result.success(selections, "查询成功"));
+            return ResponseUtil.build(Result.success(resultList, "查询成功"));
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
