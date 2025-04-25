@@ -124,6 +124,7 @@ public class ClassController {
     @GetMapping("/{courseId}/students")
     public ResponseEntity<Result> getSelectedStudents(@PathVariable Integer courseId) {
         String id = (String) request.getAttribute("userId");
-        return classService.getSelectedStudents(id, courseId);
+        int permission = (int)request.getAttribute("permission");
+        return classService.getSelectedStudents(permission, id, courseId);
     }
 }

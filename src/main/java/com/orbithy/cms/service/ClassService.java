@@ -498,14 +498,16 @@ public class ClassService {
         }
     }
 
-    public ResponseEntity<Result> getSelectedStudents(String id, Integer courseId) {
+    public ResponseEntity<Result> getSelectedStudents(int permission, String id, Integer courseId) {
         // 获取课程信息
-        Integer TeacherId = classMapper.getTeacherIdByCourseId(courseId);
-        if (TeacherId == null) {
-            return ResponseUtil.build(Result.error(404,"课程不存在"));
-        }
-        if (!TeacherId.toString().equals(id)) {
-            return ResponseUtil.build(Result.error(403, "无权限查看选课学生"));
+        if (permission != 0) {
+            Integer TeacherId = classMapper.getTeacherIdByCourseId(courseId);
+            if (TeacherId == null) {
+                return ResponseUtil.build(Result.error(404, "课程不存在"));
+            }
+            if (!TeacherId.toString().equals(id)) {
+                return ResponseUtil.build(Result.error(403, "无权限查看选课学生"));
+            }
         }
 
         // 获取选课学生列表
