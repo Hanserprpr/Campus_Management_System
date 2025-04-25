@@ -75,8 +75,13 @@ public class CourseSelectionController {
         return courseSelectionService.getSelectionResults(userId);
     }
 
+    /**
+     *
+     * @param未选课程
+     * @return
+     */
     @Auth
-    @PostMapping("/unChoose")
+    @GetMapping("/unChoose")
     public ResponseEntity<Result> unChooseCourse(@RequestParam String term) {
         String userId = (String) request.getAttribute("userId");
         return courseSelectionService.getUnSelectResult(userId, term);
