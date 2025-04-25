@@ -1,5 +1,6 @@
 package com.orbithy.cms.controller;
 
+import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.annotation.Teacher;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
@@ -26,7 +27,7 @@ public class ClassController {
      * @param courseDTO 课程信息
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Teacher
     @PostMapping("/create")
     public ResponseEntity<Result> createCourse(@RequestBody CreateCourseDTO courseDTO) {
         String id = (String) request.getAttribute("userId");
@@ -42,7 +43,7 @@ public class ClassController {
      * @param reason 拒绝理由（拒绝时必填）
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Admin
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
                                               @RequestParam Integer status,
@@ -59,7 +60,7 @@ public class ClassController {
      * @param term 学期（可选，格式：YYYY-YYYY-S，例如：2023-2024-1）
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Teacher
     @GetMapping("/list")
     public ResponseEntity<Result> getCourseList(@RequestParam(required = false) String term) {
         String id = (String) request.getAttribute("userId");
@@ -72,7 +73,7 @@ public class ClassController {
      * @param courseId 课程ID
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Teacher
     @GetMapping("/detail/{courseId}")
     public ResponseEntity<Result> getCourseDetail(@PathVariable Integer courseId) {
         String id = (String) request.getAttribute("userId");
@@ -86,7 +87,7 @@ public class ClassController {
      * @param courseDTO 课程信息
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Teacher
     @PostMapping("/update/{courseId}")
     public ResponseEntity<Result> updateCourse(@PathVariable Integer courseId,
                                              @RequestBody CreateCourseDTO courseDTO) {
@@ -100,7 +101,7 @@ public class ClassController {
      * @param courseId 课程ID
      * @return ResponseEntity<Result>
      */
-    @Auth
+    @Teacher
     @PostMapping("/delete/{courseId}")
     public ResponseEntity<Result> deleteCourse(@PathVariable Integer courseId) {
         String id = (String) request.getAttribute("userId");
@@ -110,7 +111,7 @@ public class ClassController {
     /**
      * 获取待批准的课程列表
      */
-    @Auth
+    @Admin
     @GetMapping("/pending")
     public ResponseEntity<Result> getPendingCourses() {
         String id = (String) request.getAttribute("userId");
