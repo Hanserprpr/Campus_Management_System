@@ -35,10 +35,12 @@ public class TeacherAspect {
             // 校验 Token 的有效性
 
             String userId = jwtUtil.getUserId(token, JWTUtil.SECRET_KEY);
-            if (userMapper.getPermissionById(userId) == 2) {
+            int permission = userMapper.getPermissionById(userId);
+            if (permission == 2) {
                 return ResponseUtil.build(Result.error(403, "无权限"));
             }
             request.setAttribute("userId", userId); // 将 userId 添加到请求上下文
+            request.setAttribute("permission", permission);
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(403, String.valueOf(e.getMessage())));
         }
