@@ -47,8 +47,8 @@ public class SectionService {
         return ResponseUtil.build(Result.ok());
     }
 
-    public ResponseEntity<Result> deleteSection(Section section) {
-        sectionMapper.deleteById(section.getId());
+    public ResponseEntity<Result> deleteSection(String id) {
+        sectionMapper.deleteById(id);
         return ResponseUtil.build(Result.ok());
     }
 

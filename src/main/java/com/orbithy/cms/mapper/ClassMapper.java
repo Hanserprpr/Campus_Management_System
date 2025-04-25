@@ -29,6 +29,9 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE status = 1")
     List<Classes> getAllClasses();
 
+    @Select("SELECT * FROM classes WHERE status = 1 AND term = #{term}")
+    List<Classes> getRecentClasses(@Param("term") String term);
+
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     Classes getCourseById(@Param("courseId") Integer courseId);
 
@@ -41,10 +44,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT id, class_num, name, point, term,status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
     List<ClassListDTO> getTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
 
-    @Select("SELECT * FROM classes WHERE (class_num LIKE CONCAT('%', #{keyword}, '%') " +
-            "OR name LIKE CONCAT('%', #{keyword}, '%')) " +
-            "AND status = 1")
-    List<Classes> searchCourses(@Param("keyword") String keyword);
+    List<Classes> searchCourses(@Param("keyword") String keyword, String term);
 
     @Select("SELECT * FROM classes WHERE status = 0")
     List<ClassDTO> getPendingCourses();

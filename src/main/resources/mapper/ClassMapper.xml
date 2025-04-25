@@ -12,4 +12,18 @@
             #{id}
         </foreach>
     </select>
+    <select id="searchCourses" resultType="com.orbithy.cms.data.po.Classes">
+        SELECT * FROM classes
+        <where>
+            <if test="keyword != null">
+                AND name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="term != null">
+                AND term = #{term}
+            </if>
+                AND status = 1
+        </where>
+        ORDER BY id DESC
+    </select>
+
 </mapper>
