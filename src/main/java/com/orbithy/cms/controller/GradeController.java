@@ -1,5 +1,6 @@
 package com.orbithy.cms.controller;
 
+import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.vo.Result;
@@ -32,6 +33,12 @@ public class GradeController {
     public ResponseEntity<Result> getGradeList(String courseId) {
         String id = (String) request.getAttribute("userId");
         return gradeService.getGradeList(id, courseId);
+    }
+
+    @Admin
+    @PostMapping("/releaseGrade")
+    public ResponseEntity<Result> releaseGrade(String courseId) {
+        return gradeService.releaseGrade(courseId);
     }
 
 }
