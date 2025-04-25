@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.orbithy.cms.mapper.ClassMapper">
+    <select id="getStudentSectionInfo" resultType="com.orbithy.cms.data.dto.StudentSectionDTO">
+        SELECT u.id, u.username, sec.number AS sectionNumber
+        FROM cms.user u
+        JOIN cms.status s ON u.id = s.id
+        JOIN cms.section sec ON s.section = sec.id
+        WHERE u.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

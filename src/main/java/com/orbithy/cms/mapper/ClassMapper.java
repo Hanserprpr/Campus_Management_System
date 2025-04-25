@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
+import com.orbithy.cms.data.dto.StudentSectionDTO;
 import com.orbithy.cms.data.po.Classes;
 import org.apache.ibatis.annotations.*;
 
@@ -68,4 +69,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT student_id FROM course_reg WHERE course_id = #{courseId}")
     List<String> getSelectedStudents(Integer courseId);
+
+    List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids);
+
 }

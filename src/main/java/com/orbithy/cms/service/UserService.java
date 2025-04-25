@@ -47,7 +47,6 @@ public class UserService {
     }
 
     public ResponseEntity<Result> getInfo(String userId) {
-        System.out.println(userId);
         return ResponseUtil.build(Result.success(userMapper.getUserInfo(userId), "获取成功"));
     }
 

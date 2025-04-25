@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
+import com.orbithy.cms.data.dto.StudentSectionDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
@@ -16,12 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +30,7 @@ public class ClassService {
     // 定义每天的时间段范围
     private static final int SLOTS_PER_DAY = 5;  // 每天5个时间段
     private static final int DAYS = 5;           // 5个工作日
-    
+
     /**
      * 教师创建课程
      */
@@ -51,7 +47,7 @@ public class ClassService {
             BeanUtils.copyProperties(courseDTO, course);
             course.setTeacherId(Integer.parseInt(id));
             course.setStatus(Classes.CourseStatus.待审批);
-            
+
             // 转换课程类型
             try {
                 course.setType(Classes.CourseType.valueOf(courseDTO.getType()));
@@ -84,8 +80,8 @@ public class ClassService {
         }
 
         // 验证周数
-        if (course.getWeekStart() < 1 || course.getWeekEnd() > 17 || 
-            course.getWeekStart() > course.getWeekEnd()) {
+        if (course.getWeekStart() < 1 || course.getWeekEnd() > 17 ||
+                course.getWeekStart() > course.getWeekEnd()) {
             return false;
         }
 
@@ -141,27 +137,27 @@ public class ClassService {
             if (status == 1) {
                 // 获取当前课程的课序号
                 String existingClassNum = course.getClassNum();
-                
+
                 // 如果课程没有课序号，且审批时也没提供课序号
-                if ((existingClassNum == null || existingClassNum.trim().isEmpty()) 
-                    && (classNum == null || classNum.trim().isEmpty())) {
+                if ((existingClassNum == null || existingClassNum.trim().isEmpty())
+                        && (classNum == null || classNum.trim().isEmpty())) {
                     throw new CustomException("课程没有课序号，审批通过时必须提供课序号");
                 }
-                
+
                 // 如果提供了新的课序号，使用新课序号；否则保留原课序号
                 String finalClassNum = (classNum != null && !classNum.trim().isEmpty()) ? classNum : existingClassNum;
-                
+
                 // 如果课序号发生变化，检查唯一性
                 if (!finalClassNum.equals(existingClassNum)) {
                     // 验证课序号唯一性
                     QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
                     queryWrapper.eq("class_num", finalClassNum)
-                        .eq("term", course.getTerm());
+                            .eq("term", course.getTerm());
                     if (classMapper.selectCount(queryWrapper) > 0) {
                         throw new CustomException("该学期已存在相同课序号");
                     }
                 }
-                
+
                 // 更新课程状态和课序号（如果有变化）
                 classMapper.updateCourseStatusAndClassNum(courseId, status, finalClassNum, null);
             } else {
@@ -248,7 +244,7 @@ public class ClassService {
             // 验证权限
             int permission = userMapper.getPermission(id);
             if (permission != 0 && // 教务
-                !course.getTeacherId().toString().equals(id)) { // 课程创建者
+                    !course.getTeacherId().toString().equals(id)) { // 课程创建者
                 throw new CustomException("无权限查看此课程");
             }
 
@@ -368,7 +364,7 @@ public class ClassService {
         for (Classes course : courses) {
             boolean scheduled = false;
             int teacherId = course.getTeacherId();
-            
+
             // 初始化教师课程表
             if (!teacherSchedule.containsKey(teacherId)) {
                 teacherSchedule.put(teacherId, new boolean[DAYS][SLOTS_PER_DAY]);
@@ -388,12 +384,12 @@ public class ClassService {
                     for (int slot = 0; slot < SLOTS_PER_DAY; slot++) {
                         // 计算实际的时间段编号
                         int actualSlot = day * SLOTS_PER_DAY + slot;
-                        
+
                         // 检查该时间段是否可用
-                        if (!timeSlotOccupied[day][slot] && 
-                            !teacherSchedule.get(teacherId)[day][slot] &&
-                            !assignedSlots.contains(actualSlot)) {
-                            
+                        if (!timeSlotOccupied[day][slot] &&
+                                !teacherSchedule.get(teacherId)[day][slot] &&
+                                !assignedSlots.contains(actualSlot)) {
+
                             // 分配时间段
                             timeSlotOccupied[day][slot] = true;
                             teacherSchedule.get(teacherId)[day][slot] = true;
@@ -415,7 +411,7 @@ public class ClassService {
             course.setTime(convertSetToString(assignedSlots));
             classMapper.updateCourseTime(course.getId(), course.getTime());
         }
-        
+
         return true;
     }
 
@@ -424,9 +420,9 @@ public class ClassService {
      */
     private String convertSetToString(Set<Integer> timeSlots) {
         return timeSlots.stream()
-                       .sorted()
-                       .map(String::valueOf)
-                       .collect(Collectors.joining(","));
+                .sorted()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
     }
 
     /**
@@ -451,10 +447,10 @@ public class ClassService {
 
             // 获取需要排课的课程（状态为已通过审批的课程）
             List<Classes> courses = classMapper.getCoursesByTermAndStatus(term, 1);
-            
+
             // 执行排课
             boolean success = generateSchedule(courses);
-            
+
             if (!success) {
                 throw new CustomException("无法找到合适的排课方案");
             }
@@ -464,8 +460,8 @@ public class ClassService {
             for (Classes course : courses) {
                 report.append(String.format("课程：%s\n", course.getName()));
                 Arrays.stream(course.getTime().split(","))
-                      .map(Integer::parseInt)
-                      .forEach(slot -> report.append(getTimeSlotInfo(slot)).append("\n"));
+                        .map(Integer::parseInt)
+                        .forEach(slot -> report.append(getTimeSlotInfo(slot)).append("\n"));
                 report.append("\n");
             }
 
@@ -507,5 +503,25 @@ public class ClassService {
         } catch (Exception e) {
             throw new CustomException("删除课程失败：" + e.getMessage(), e);
         }
+    }
+
+    public ResponseEntity<Result> getSelectedStudents(String id, Integer courseId) {
+        // 获取课程信息
+        Integer TeacherId = classMapper.getTeacherIdByCourseId(courseId);
+        if (TeacherId == null) {
+            return ResponseUtil.build(Result.error(403,"课程不存在"));
+        }
+        if (!TeacherId.toString().equals(id)) {
+            return ResponseUtil.build(Result.error(403, "无权限查看选课学生"));
+        }
+
+        // 获取选课学生列表
+        List<String> studentIds = classMapper.getSelectedStudents(courseId);
+        List<StudentSectionDTO> result = studentIds.isEmpty()
+                ? Collections.emptyList()
+                : classMapper.getStudentSectionInfo(studentIds);
+
+        return ResponseUtil.build(Result.success(result, "获取选课学生成功"));
+
     }
 }
