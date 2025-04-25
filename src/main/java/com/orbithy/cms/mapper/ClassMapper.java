@@ -62,4 +62,10 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     ClassDTO getCourseDeById(@Param("courseId") Integer courseId);
+
+    @Select("SELECT teacher_id FROM classes WHERE id = #{courseId}")
+    Integer getTeacherIdByCourseId(@Param("courseId") Integer courseId);
+
+    @Select("SELECT student_id FROM course_reg WHERE course_id = #{courseId}")
+    List<String> getSelectedStudents(Integer courseId);
 }

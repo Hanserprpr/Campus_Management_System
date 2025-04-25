@@ -1,6 +1,7 @@
 package com.orbithy.cms.controller;
 
 import com.orbithy.cms.annotation.Auth;
+import com.orbithy.cms.annotation.Teacher;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.ClassService;
@@ -114,5 +115,15 @@ public class ClassController {
     public ResponseEntity<Result> getPendingCourses() {
         String id = (String) request.getAttribute("userId");
         return classService.getPendingCourses(id);
+    }
+
+    /**
+     * 获取已选课成员名单
+     */
+    @Teacher
+    @GetMapping("/{courseId}/students")
+    public ResponseEntity<Result> getSelectedStudents(@PathVariable Integer courseId) {
+        String id = (String) request.getAttribute("userId");
+        return classService.getSelectedStudents(id, courseId);
     }
 }
