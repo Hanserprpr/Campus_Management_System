@@ -517,7 +517,7 @@ public class ClassService {
         // 获取课程信息
         Integer TeacherId = classMapper.getTeacherIdByCourseId(courseId);
         if (TeacherId == null) {
-            return ResponseUtil.build(Result.error(403,"课程不存在"));
+            return ResponseUtil.build(Result.error(404,"课程不存在"));
         }
         if (!TeacherId.toString().equals(id)) {
             return ResponseUtil.build(Result.error(403, "无权限查看选课学生"));
