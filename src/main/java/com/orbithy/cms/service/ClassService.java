@@ -199,7 +199,7 @@ public class ClassService {
                             classMapper.getCoursesByTerm(term) :
                             classMapper.select();
                     for (ClassListDTO classListDTO : ClassList) {
-                        String teacherName = userMapper.getUsernameById(id);
+                        String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
                         classListDTO.setTeacherName(teacherName);
                         Integer cla = classListDTO.getId();
                         Integer num = classMapper.countCourseByCourseId(cla);
@@ -213,7 +213,7 @@ public class ClassService {
                             classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) :
                             classMapper.getTeacherCourses(Integer.parseInt(id));
                     for (ClassListDTO classListDTO : ClassList) {
-                        String teacherName = userMapper.getUsernameById(id);
+                        String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
                         classListDTO.setTeacherName(teacherName);
                         Integer cla = classListDTO.getId();
                         Integer num = classMapper.countCourseByCourseId(cla);
@@ -243,7 +243,7 @@ public class ClassService {
             if (course == null) {
                 throw new CustomException("课程不存在");
             }
-            course.setTeacherName(userMapper.getUsernameById(id));
+            course.setTeacherName(userMapper.getUsernameById(course.getTeacherId()));
 
             // 验证权限
             int permission = userMapper.getPermission(id);
@@ -341,7 +341,7 @@ public class ClassService {
 
             List<ClassDTO> pendingCourses = classMapper.getPendingCourses();
             for (ClassDTO classDTO : pendingCourses) {
-                String teacherName = userMapper.getUsernameById(id);
+                String teacherName = userMapper.getUsernameById(classDTO.getTeacherId());
                 classDTO.setTeacherName(teacherName);
             }
             return ResponseUtil.build(Result.success(pendingCourses, "获取待批准课程成功"));

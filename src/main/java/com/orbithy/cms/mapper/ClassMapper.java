@@ -70,6 +70,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT student_id FROM course_reg WHERE course_id = #{courseId}")
     List<String> getSelectedStudents(Integer courseId);
 
+
     List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids);
 
 }
