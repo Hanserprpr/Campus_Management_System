@@ -74,4 +74,11 @@ public class CourseSelectionController {
         String userId = (String) request.getAttribute("userId");
         return courseSelectionService.getSelectionResults(userId);
     }
+
+    @Auth
+    @PostMapping("/unChoose")
+    public ResponseEntity<Result> unChooseCourse(@RequestParam String term) {
+        String userId = (String) request.getAttribute("userId");
+        return courseSelectionService.getUnSelectResult(userId, term);
+    }
 }

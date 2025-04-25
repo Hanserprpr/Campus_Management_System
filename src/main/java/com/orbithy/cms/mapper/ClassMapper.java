@@ -76,4 +76,6 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids);
 
+    @Select("SELECT * FROM classes WHERE term = #{term}")
+    List<Classes> getCourseByTerm(String term);
 }

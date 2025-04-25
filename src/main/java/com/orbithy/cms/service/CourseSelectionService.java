@@ -315,4 +315,53 @@ public class CourseSelectionService {
             throw new CustomException("退选失败：" + e.getMessage(), e);
         }
     }
-} 
+
+    public ResponseEntity<Result> getUnSelectResult(String userId,String term ) {
+
+            try {
+                // 获取学生已选课程ID列表
+                List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(userId));
+                Set<Integer> selectedCourseIds = selections.stream()
+                        .map(CourseSelection::getCourseId)
+                        .collect(Collectors.toSet());
+
+                // 获取指定学期的所有课程
+
+                List<Classes> allCourses = classMapper.getCourseByTerm(term);
+                List<CourseSelectionResultDTO> resultList = new ArrayList<>();
+
+                // 过滤出未选课程并转换为DTO
+                for (Classes course : allCourses) {
+                    if (!selectedCourseIds.contains(course.getId())) {
+                        CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
+                        dto.setCourseId(course.getId());
+                        dto.setClassNum(course.getClassNum());
+                        dto.setName(course.getName());
+                        dto.setPoint(course.getPoint());
+                        dto.setType(String.valueOf(course.getType()));
+                        dto.setTime(course.getTime());
+                        dto.setClassroom(course.getClassroom());
+                        dto.setCapacity(course.getCapacity());
+                        dto.setCategory(course.getCategory());
+
+                        // 获取教师名称
+                        String teacherName = userMapper.getUsernameById(course.getTeacherId());
+                        dto.setTeacherName(teacherName);
+
+                        // 获取已选人数
+                        Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
+                        dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+
+                        resultList.add(dto);
+                    }
+                }
+
+                return ResponseUtil.build(Result.success(resultList, "查询成功"));
+            } catch (CustomException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new CustomException("查询失败：" + e.getMessage(), e);
+            }
+        }
+
+}
