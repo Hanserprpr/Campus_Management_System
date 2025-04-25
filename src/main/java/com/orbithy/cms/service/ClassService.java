@@ -153,7 +153,7 @@ public class ClassService {
                 classMapper.updateCourseStatusAndClassNum(courseId, status, finalClassNum, null);
             } else {
                 // 拒绝时更新状态和拒绝理由
-                classMapper.updateCourseStatusAndClassNum(courseId, status, null, reason);
+                classMapper.refuseClass(courseId, status, reason);
             }
 
             // 如果拒绝，验证拒绝理由
