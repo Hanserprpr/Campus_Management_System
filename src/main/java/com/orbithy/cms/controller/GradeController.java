@@ -27,4 +27,11 @@ public class GradeController {
         return gradeService.setGrade(id, gradeDTO);
     }
 
+    @Auth
+    @PostMapping("/getGradeList")
+    public ResponseEntity<Result> getGradeList(String courseId) {
+        String id = (String) request.getAttribute("userId");
+        return gradeService.getGradeList(id, courseId);
+    }
+
 }
