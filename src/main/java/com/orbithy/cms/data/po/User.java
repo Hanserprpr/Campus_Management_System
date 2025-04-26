@@ -29,8 +29,5 @@ public class User {
     private Byte permission;
     private String nation;
     private String ethnic;
+    private String PoliticsStatus;
 }
-
-
-
-

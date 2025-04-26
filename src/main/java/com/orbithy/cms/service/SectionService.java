@@ -94,7 +94,7 @@ public class SectionService {
         }
 
         List<SectionDTO> sectionDTOList = sectionList.stream()
-                .map(section -> new SectionDTO(section, idToNameMap.get(section.getAdvisorId())))
+                .map(section -> new SectionDTO(section.getId(), section.getMajor(), section.getAdvisorId(), section.getGrade(),  section.getNumber(), idToNameMap.get(section.getAdvisorId())))
                 .toList();
 
         return ResponseUtil.build(Result.success(sectionDTOList, "获取成功"));
