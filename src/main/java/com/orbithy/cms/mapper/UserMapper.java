@@ -45,4 +45,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Update("UPDATE user SET password = #{passwd} WHERE id = #{userId}")
     void resetPassword(String userId, String passwd);
+
+    @Select("SELECT id, username, email, SDUId FROM user WHERE permission = 1")
+    List<User> getTeacherList();
 }
