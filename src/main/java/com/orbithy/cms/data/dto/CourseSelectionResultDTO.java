@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CourseSelectionResultDTO {
-    private Integer courseId;        // 课程ID
+    private Integer id;        // 课程ID
     private String classNum;         // 课序号
     private String name;             // 课程名称
     private Integer point;           // 学分
