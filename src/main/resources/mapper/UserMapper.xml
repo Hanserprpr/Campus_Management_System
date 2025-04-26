@@ -11,4 +11,13 @@
                 </foreach>
             </if>
     </select>
+    <select id="getUserNamesByIds" resultType="com.orbithy.cms.data.po.User">
+        SELECT id, username
+        FROM user
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

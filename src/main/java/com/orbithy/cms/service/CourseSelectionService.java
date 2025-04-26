@@ -254,7 +254,7 @@ public class CourseSelectionService {
                 Classes course = classMapper.getCourseById(selection.getCourseId());
                 if (course != null) {
                     CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
-                    dto.setCourseId(course.getId());
+                    dto.setId(course.getId());
                     dto.setClassNum(course.getClassNum());
                     dto.setName(course.getName());
                     dto.setPoint(course.getPoint());
@@ -334,7 +334,7 @@ public class CourseSelectionService {
                 for (Classes course : allCourses) {
                     if (!selectedCourseIds.contains(course.getId())) {
                         CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
-                        dto.setCourseId(course.getId());
+                        dto.setId(course.getId());
                         dto.setClassNum(course.getClassNum());
                         dto.setName(course.getName());
                         dto.setPoint(course.getPoint());

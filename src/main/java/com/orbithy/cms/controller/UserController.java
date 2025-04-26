@@ -1,6 +1,7 @@
 package com.orbithy.cms.controller;
 
 
+import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.UserService;
@@ -104,5 +105,17 @@ public class UserController {
     public ResponseEntity<Result> getStatusCard() {
         String userId = (String) request.getAttribute("userId");
         return userService.getStudentCard(userId);
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param userId 用户ID
+     * @return ResponseEntity<Result>
+     */
+    @Admin
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Result> resetPassword(@RequestParam String userId) {
+        return userService.resetPassword(userId);
     }
 }
