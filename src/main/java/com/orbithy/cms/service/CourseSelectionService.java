@@ -1,7 +1,5 @@
 package com.orbithy.cms.service;
 
-import com.orbithy.cms.annotation.Admin;
-import com.orbithy.cms.config.CourseSelectionConfig;
 import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.po.CourseSelection;
@@ -15,13 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.orbithy.cms.service.TermService.getCurrentTerm;
+import static com.orbithy.cms.service.TermService.isTermOpen;
 
 @Service
 public class CourseSelectionService {
@@ -31,83 +30,16 @@ public class CourseSelectionService {
     private ClassMapper classMapper;
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private CourseSelectionConfig courseSelectionConfig;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * 开始选课
-     */
-    @Admin
-    public ResponseEntity<Result> startSelection(String term) {
-        try {
-            // 验证学期格式
-            if (!term.matches("\\d{4}-\\d{4}-[12]")) {
-                throw new CustomException("无效的学期格式");
-            }
-
-            // 检查是否已有选课记录
-            CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
-            if (status != null && status.isOpen()) {
-                throw new CustomException("选课系统已经启动");
-            }
-
-            // 创建或更新系统状态
-            CourseSelectionConfig.SystemStatus newStatus = new CourseSelectionConfig.SystemStatus();
-            newStatus.setOpen(true);
-            newStatus.setStatus("OPEN");
-            newStatus.setStatusDescription("开放");
-            newStatus.setUpdateTime(LocalDateTime.now().format(formatter));
-            
-            courseSelectionConfig.getTerms().put(term, newStatus);
-
-            return ResponseUtil.build(Result.success(null, "选课系统启动成功"));
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException("启动选课系统失败：" + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 结束选课
-     */
-    @Admin
-    public ResponseEntity<Result> endSelection(String term) {
-        try {
-            // 检查系统状态
-            CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
-            if (status == null || !status.isOpen()) {
-                throw new CustomException("选课系统未启动");
-            }
-
-            // 更新系统状态
-            status.setOpen(false);
-            status.setStatus("CLOSED");
-            status.setStatusDescription("关闭");
-            status.setUpdateTime(LocalDateTime.now().format(formatter));
-
-            return ResponseUtil.build(Result.success(null, "选课系统关闭成功"));
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException("关闭选课系统失败：" + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 获取选课系统状态
-     */
-    public boolean isSelectionOpen(String term) {
-        CourseSelectionConfig.SystemStatus status = courseSelectionConfig.getTerms().get(term);
-        return status != null && status.isOpen();
-    }
-
-    /**
      * 搜索课程
      */
-    public ResponseEntity<Result> searchCourses(String keyword, String term) {
+    public ResponseEntity<Result> searchCourses(String keyword, String term) throws IOException {
+        if (Objects.isNull(term)) {
+            term = getCurrentTerm();
+        }
         try {
             // 如果 keyword 为空，统一处理为 null
             if (keyword != null && keyword.trim().isEmpty()) {
@@ -141,7 +73,7 @@ public class CourseSelectionService {
             }
 
             // 验证选课系统是否开放
-            if (!isSelectionOpen(course.getTerm())) {
+            if (!isTermOpen(course.getTerm())) {
                 throw new CustomException("选课系统未开放");
             }
 
@@ -302,7 +234,7 @@ public class CourseSelectionService {
             }
 
             // 检查选课系统是否开放
-            if (!isSelectionOpen(course.getTerm())) {
+            if (!isTermOpen(course.getTerm())) {
                 throw new CustomException("选课系统未开放，无法退选");
             }
 
@@ -316,8 +248,8 @@ public class CourseSelectionService {
         }
     }
 
-    public ResponseEntity<Result> getUnSelectResult(String userId,String term ) {
-
+    public ResponseEntity<Result> getUnSelectResult(String userId) throws IOException {
+            String term = getCurrentTerm();
             try {
                 // 获取学生已选课程ID列表
                 List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(userId));

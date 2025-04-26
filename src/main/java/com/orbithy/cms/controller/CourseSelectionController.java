@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/course-selection")
 public class CourseSelectionController {
@@ -18,30 +20,12 @@ public class CourseSelectionController {
     private HttpServletRequest request;
 
     /**
-     * 开始选课（教务权限）
-     */
-    @Admin
-    @PostMapping("/start")
-    public ResponseEntity<Result> startSelection(@RequestParam String term) {
-        return courseSelectionService.startSelection(term);
-    }
-
-    /**
-     * 结束选课（教务权限）
-     */
-    @Admin
-    @PostMapping("/end")
-    public ResponseEntity<Result> endSelection(@RequestParam String term) {
-        return courseSelectionService.endSelection(term);
-    }
-
-    /**
      * 搜索课程
      */
     @Auth
     @GetMapping("/search")
     public ResponseEntity<Result> searchCourses(@RequestParam(value = "keyword", required = false) String keyword,
-                                                @RequestParam(value = "term", required = false) String term) {
+                                                @RequestParam(value = "term", required = false) String term) throws IOException {
         return courseSelectionService.searchCourses(keyword, term);
     }
 
@@ -76,14 +60,12 @@ public class CourseSelectionController {
     }
 
     /**
-     *
-     * @param未选课程
-     * @return
+     *获取未选课程
      */
     @Auth
     @GetMapping("/unChoose")
-    public ResponseEntity<Result> unChooseCourse(@RequestParam String term) {
+    public ResponseEntity<Result> unChooseCourse() throws IOException {
         String userId = (String) request.getAttribute("userId");
-        return courseSelectionService.getUnSelectResult(userId, term);
+        return courseSelectionService.getUnSelectResult(userId);
     }
 }
