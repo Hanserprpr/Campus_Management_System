@@ -151,4 +151,10 @@ public class UserService {
         userMapper.resetPassword(userId, passwd);
         return ResponseUtil.build(Result.ok());
     }
+
+    @Transactional
+    public ResponseEntity<Result> updateStudent(User user) {
+        userMapper.updateById(user);
+        return ResponseUtil.build(Result.ok());
+    }
 }

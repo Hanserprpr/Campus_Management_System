@@ -96,6 +96,17 @@ public class UserController {
     }
 
     /**
+     * 管理修改学生信息
+     *
+     *
+     */
+    @Admin
+    @PostMapping("/updateStudent")
+    public ResponseEntity<Result> updateStudent(User user) {
+        return userService.updateStudent(user);
+    }
+
+    /**
      * 获取学籍卡片
      *
      * @return ResponseEntity<Result>
