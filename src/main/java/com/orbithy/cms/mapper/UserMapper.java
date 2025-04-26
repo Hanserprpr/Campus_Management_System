@@ -12,7 +12,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select id from user where SDUId=#{SDUId}")
     Integer getUserId(String SDUId);
-    @Select("select id, username, email, sex, phone, SDUId, major, permission, nation, ethnic from user where id=#{id}")
+    @Select("select id, username, email, sex, phone, SDUId, major, permission, nation, ethnic, PoliticsStatus from user where id=#{id}")
     User getUserInfo(String id);
     @Select("select permission from user where id=#{id}")
     int getPermission(String id);
@@ -42,4 +42,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @MapKey("id")
     Map<Integer, User> getUserNamesByIds(@Param("ids") List<Integer> ids);
+
+    @Update("UPDATE user SET password = #{passwd} WHERE id = #{userId}")
+    void resetPassword(String userId, String passwd);
 }

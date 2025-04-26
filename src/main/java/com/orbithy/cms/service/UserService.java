@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -38,6 +39,8 @@ public class UserService {
         }
         String SDUId = user.getSDUId();
         String password = user.getPassword();
+        user.setEthnic("汉族");
+        user.setNation("China");
         if (!loginService.isExisted(SDUId)) {
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
@@ -137,5 +140,15 @@ public class UserService {
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "获取失败：" + e.getMessage()));
         }
+    }
+
+    @Value("${spring.default-password}")
+    String password;
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<Result> resetPassword(String userId) {
+        String passwd = BcryptUtils.encrypt(password);
+        userMapper.resetPassword(userId, passwd);
+        return ResponseUtil.build(Result.ok());
     }
 }
