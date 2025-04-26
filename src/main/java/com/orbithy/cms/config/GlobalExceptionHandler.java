@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.io.IOException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -110,6 +112,15 @@ public class GlobalExceptionHandler {
         log.error("参数类型不匹配: 参数名={}, 期望类型={}, 异常信息={}",
                 ex.getName(), ex.getRequiredType(), ex.getMessage(), ex);
         return ResponseUtil.build(Result.error(400, "参数类型不匹配: " + ex.getName()));
+    }
+
+    /**
+     * 捕获IO异常
+     */
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Result> handleIOException(IOException ex) {
+        log.error("文件操作异常: {}", ex.getMessage(), ex);
+        return ResponseUtil.build(Result.error(500, "服务器文件读写错误，请稍后再试"));
     }
 
     /**
