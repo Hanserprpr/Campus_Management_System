@@ -128,6 +128,9 @@ public class ClassController {
         return classService.getSelectedStudents(permission, id, courseId);
     }
 
+    /**
+     *排课
+     */
     @Admin
     @PostMapping("/autoSchedule")
     public ResponseEntity<Result> autoSchedule(@RequestParam String term) {
@@ -135,6 +138,9 @@ public class ClassController {
         return classService.autoSchedule(id, term);
     }
 
+    /**
+     *删除已审核课程
+     */
     @Admin
     @PostMapping("/deleteAd/{courseId}")
     public ResponseEntity<Result> deleteAd(@PathVariable Integer courseId) {

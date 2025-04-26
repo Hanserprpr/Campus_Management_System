@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
     
-    @Select("SELECT * FROM course_reg WHERE student_id = #{studentId}")
+    @Select("SELECT * FROM course_reg  WHERE student_id = #{studentId}")
     List<CourseSelection> getStudentSelections(@Param("studentId") Integer studentId);
 
     @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")

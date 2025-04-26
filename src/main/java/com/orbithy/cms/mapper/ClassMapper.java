@@ -44,6 +44,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT id, class_num, name, point, term,status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
     List<ClassListDTO> getTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
 
+
     List<Classes> searchCourses(@Param("keyword") String keyword, String term);
 
     @Select("SELECT * FROM classes WHERE status = 0")
@@ -76,6 +77,6 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids);
 
-    @Select("SELECT * FROM classes WHERE term = #{term}")
+    @Select("SELECT * FROM classes WHERE term = #{term} AND status = 1")
     List<Classes> getCourseByTerm(String term);
 }

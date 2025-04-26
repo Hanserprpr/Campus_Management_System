@@ -14,6 +14,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/course-selection")
 public class CourseSelectionController {
+
     @Autowired
     private CourseSelectionService courseSelectionService;
     @Autowired
@@ -25,7 +26,7 @@ public class CourseSelectionController {
     @Auth
     @GetMapping("/search")
     public ResponseEntity<Result> searchCourses(@RequestParam(value = "keyword", required = false) String keyword,
-                                                @RequestParam(value = "term", required = false) String term) throws IOException {
+            @RequestParam(value = "term", required = false) String term) throws IOException {
         return courseSelectionService.searchCourses(keyword, term);
     }
 
@@ -60,7 +61,7 @@ public class CourseSelectionController {
     }
 
     /**
-     *获取未选课程
+     * 获取未选课程
      */
     @Auth
     @GetMapping("/unChoose")
