@@ -27,6 +27,7 @@ COLLATE utf8mb4_bin;
 | **permission** | `TINYINT DEFAULT 2`          | 默认 2                                    | 权限 (`0` 教务 / `1` 教师 / `2` 学生) |
 | **nation**   | `VARCHAR(100) DEFAULT 'China' NOT NULL` | 默认 `China`，非空                     | 国籍              |
 | **ethnic**   | `VARCHAR(50) DEFAULT '汉族' NOT NULL` | 默认 `汉族`，非空                        | 民族              |
+| **PoliticsStatus**   | `VARCHAR(50) DEFAULT '群众' NOT NULL` | 默认`群众`，非空                   | 政治面貌         |
 | **created_at** | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | 自动生成，默认当前时间                   | 注册时间          |
 | **updated_at** | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` | 自动更新为当前时间 | 最后更新时间       |
 | **last_login_at** | `TIMESTAMP DEFAULT NULL`  | 可为空                                    | 最后登录时间      |
@@ -48,6 +49,7 @@ CREATE TABLE user (
     permission TINYINT DEFAULT 2 COMMENT '教务牢师0/教师1/学生2',
     nation VARCHAR(100) DEFAULT 'China' NOT NULL COMMENT '国籍',
     ethnic VARCHAR(50) DEFAULT '汉族' NOT NULL COMMENT '民族',
+    PoliticsStatus VARCHAR(50) DEFAULT '群众' NOT NULL COMMENT '政治面貌',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     last_login_at TIMESTAMP DEFAULT NULL COMMENT '最后登录时间'
