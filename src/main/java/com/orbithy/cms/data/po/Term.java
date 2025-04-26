@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class Term {
     private String term;
-    private boolean isOpen; // 是否开放选课
+    private boolean open; // 是否开放选课
 }

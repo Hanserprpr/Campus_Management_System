@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.orbithy.cms.mapper.StatusMapper">
+    <select id="getStudentCountBySectionIds" parameterType="list" resultType="map">
+        SELECT section, COUNT(*) AS student_count
+        FROM cms.status
+        WHERE section IN
+        <foreach collection="sectionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY section
+    </select>
+</mapper>

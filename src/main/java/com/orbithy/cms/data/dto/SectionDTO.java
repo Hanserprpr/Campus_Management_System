@@ -16,5 +16,5 @@ public class SectionDTO {
     private String grade;
     private String number; // 班级编号
     private String advisor;
-
+    private Integer studentCount; // 学生人数
 }

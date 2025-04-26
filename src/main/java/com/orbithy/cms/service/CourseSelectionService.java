@@ -110,7 +110,7 @@ public class CourseSelectionService {
             selection.setStudentId(Integer.parseInt(studentId));
             selection.setCourseId(courseId);
             selection.setClassNum(course.getClassNum());
-            
+
             courseSelectionMapper.insert(selection);
             return ResponseUtil.build(Result.success(null, "选课成功"));
         } catch (CustomException e) {
@@ -137,7 +137,7 @@ public class CourseSelectionService {
             // 检查周次是否有重叠
             int existingStartWeek = existingCourse.getWeekStart();
             int existingEndWeek = existingCourse.getWeekEnd();
-            
+
             // 如果两个课程的周次没有重叠，则不冲突
             if (newEndWeek < existingStartWeek || newStartWeek > existingEndWeek) {
                 continue;
@@ -148,12 +148,12 @@ public class CourseSelectionService {
             for (Integer timeSlot : newTimeSlots) {
                 if (existingTimeSlots.contains(timeSlot)) {
                     throw new CustomException(String.format(
-                        "与课程《%s》在第%d周至第%d周的星期%d第%d节存在时间冲突",
-                        existingCourse.getName(),
-                        Math.max(newStartWeek, existingStartWeek),
-                        Math.min(newEndWeek, existingEndWeek),
-                        timeSlot / 5 + 1,
-                        timeSlot % 5 + 1
+                            "与课程《%s》在第%d周至第%d周的星期%d第%d节存在时间冲突",
+                            existingCourse.getName(),
+                            Math.max(newStartWeek, existingStartWeek),
+                            Math.min(newEndWeek, existingEndWeek),
+                            timeSlot / 5 + 1,
+                            timeSlot % 5 + 1
                     ));
                 }
             }
@@ -249,51 +249,52 @@ public class CourseSelectionService {
     }
 
     public ResponseEntity<Result> getUnSelectResult(String userId) throws IOException {
-            String term = getCurrentTerm();
-            try {
-                // 获取学生已选课程ID列表
-                List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(userId));
-                Set<Integer> selectedCourseIds = selections.stream()
-                        .map(CourseSelection::getCourseId)
-                        .collect(Collectors.toSet());
+        String term = getCurrentTerm();
+        System.out.println(term);
+        try {
+            // 获取学生已选课程ID列表
+            List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(userId));
+            Set<Integer> selectedCourseIds = selections.stream()
+                    .map(CourseSelection::getCourseId)
+                    .collect(Collectors.toSet());
 
-                // 获取指定学期的所有课程
+            // 获取指定学期的所有课程
 
-                List<Classes> allCourses = classMapper.getCourseByTerm(term);
-                List<CourseSelectionResultDTO> resultList = new ArrayList<>();
+            List<Classes> allCourses = classMapper.getCourseByTerm(term);
+            List<CourseSelectionResultDTO> resultList = new ArrayList<>();
 
-                // 过滤出未选课程并转换为DTO
-                for (Classes course : allCourses) {
-                    if (!selectedCourseIds.contains(course.getId())) {
-                        CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
-                        dto.setId(course.getId());
-                        dto.setClassNum(course.getClassNum());
-                        dto.setName(course.getName());
-                        dto.setPoint(course.getPoint());
-                        dto.setType(String.valueOf(course.getType()));
-                        dto.setTime(course.getTime());
-                        dto.setClassroom(course.getClassroom());
-                        dto.setCapacity(course.getCapacity());
-                        dto.setCategory(course.getCategory());
+            // 过滤出未选课程并转换为DTO
+            for (Classes course : allCourses) {
+                if (!selectedCourseIds.contains(course.getId())) {
+                    CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
+                    dto.setId(course.getId());
+                    dto.setClassNum(course.getClassNum());
+                    dto.setName(course.getName());
+                    dto.setPoint(course.getPoint());
+                    dto.setType(String.valueOf(course.getType()));
+                    dto.setTime(course.getTime());
+                    dto.setClassroom(course.getClassroom());
+                    dto.setCapacity(course.getCapacity());
+                    dto.setCategory(course.getCategory());
 
-                        // 获取教师名称
-                        String teacherName = userMapper.getUsernameById(course.getTeacherId());
-                        dto.setTeacherName(teacherName);
+                    // 获取教师名称
+                    String teacherName = userMapper.getUsernameById(course.getTeacherId());
+                    dto.setTeacherName(teacherName);
 
-                        // 获取已选人数
-                        Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
-                        dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+                    // 获取已选人数
+                    Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
+                    dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
 
-                        resultList.add(dto);
-                    }
+                    resultList.add(dto);
                 }
-
-                return ResponseUtil.build(Result.success(resultList, "查询成功"));
-            } catch (CustomException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new CustomException("查询失败：" + e.getMessage(), e);
             }
+
+            return ResponseUtil.build(Result.success(resultList, "查询成功"));
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException("查询失败：" + e.getMessage(), e);
         }
+    }
 
 }

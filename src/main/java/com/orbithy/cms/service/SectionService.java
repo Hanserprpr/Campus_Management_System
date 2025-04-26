@@ -77,6 +77,9 @@ public class SectionService {
 
     @NotNull
     private ResponseEntity<Result> setAdvisorName(List<Section> sectionList) {
+        List<Integer> sectionIds = sectionList.stream()
+                .map(Section::getId)
+                .toList();
 
         List<Integer> advisorIds = sectionList.stream()
                 .map(Section::getAdvisorId)
@@ -84,21 +87,32 @@ public class SectionService {
                 .distinct()
                 .toList();
 
-        Map<Integer, String> idToNameMap;
-        if (advisorIds.isEmpty()) {
-            idToNameMap = new HashMap<>();
-        } else {
-            idToNameMap = userMapper.getUserNamesByIds(advisorIds)
-                    .values().stream()
-                    .collect(Collectors.toMap(User::getId, User::getUsername));
-        }
+        Map<Integer, String> idToNameMap = advisorIds.isEmpty()
+                ? new HashMap<>()
+                : userMapper.getUserNamesByIds(advisorIds)
+                .values()
+                .stream()
+                .collect(Collectors.toMap(User::getId, User::getUsername));
+
+        Map<Integer, Integer> sectionIdToStudentCount = sectionIds.isEmpty()
+                ? new HashMap<>()
+                : statusMapper.getStudentCountBySectionIds(sectionIds);
 
         List<SectionDTO> sectionDTOList = sectionList.stream()
-                .map(section -> new SectionDTO(section.getId(), section.getMajor(), section.getAdvisorId(), section.getGrade(),  section.getNumber(), idToNameMap.get(section.getAdvisorId())))
+                .map(section -> new SectionDTO(
+                        section.getId(),
+                        section.getMajor(),
+                        section.getAdvisorId(),
+                        section.getGrade(),
+                        section.getNumber(),
+                        idToNameMap.get(section.getAdvisorId()),
+                        sectionIdToStudentCount.getOrDefault(section.getId(), 0)
+                ))
                 .toList();
 
         return ResponseUtil.build(Result.success(sectionDTOList, "获取成功"));
     }
+
 
 
 }

@@ -5,6 +5,7 @@ import com.orbithy.cms.data.po.Status;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StatusMapper extends BaseMapper<Status> {
@@ -19,4 +20,8 @@ public interface StatusMapper extends BaseMapper<Status> {
 
     @Select("SELECT id, grade, section, status, admission, graduation FROM status WHERE id=#{id}")
     Status getStatusById(String id);
+
+    Map<Integer, Integer> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
+
+
 }
