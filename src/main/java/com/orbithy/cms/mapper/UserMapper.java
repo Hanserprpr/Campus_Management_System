@@ -48,4 +48,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT id, username, email, SDUId FROM user WHERE permission = 1")
     List<User> getTeacherList();
+
+    void insertBatch(@Param("list") List<User> users);
 }

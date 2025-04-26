@@ -19,5 +19,14 @@
             #{id}
         </foreach>
     </select>
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username, sex, email, phone, password, SDUId, major, section, permission, nation, ethnic, politicsStatus)
+        VALUES
+        <foreach collection="list" item="user" separator=",">
+            (#{user.username}, #{user.sex}, #{user.email}, #{user.phone},
+            #{user.password}, #{user.SDUId}, #{user.major}, #{user.section},
+            #{user.permission}, #{user.nation}, #{user.ethnic}, #{user.politicsStatus})
+        </foreach>
+    </insert>
 
 </mapper>

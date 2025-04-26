@@ -23,5 +23,5 @@ public interface StatusMapper extends BaseMapper<Status> {
 
     Map<Integer, Integer> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
 
-
+    void insertBatch(@Param("list") List<Status> list);
 }

@@ -11,4 +11,12 @@
         </foreach>
         GROUP BY section
     </select>
+    <insert id="insertBatch">
+        INSERT INTO status (id, grade, admission, graduation)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.grade}, #{item.admission}, #{item.graduation})
+        </foreach>
+    </insert>
+
 </mapper>
