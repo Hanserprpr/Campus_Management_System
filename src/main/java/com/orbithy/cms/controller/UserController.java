@@ -11,10 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -116,5 +113,26 @@ public class UserController {
     @PostMapping("/resetPassword")
     public ResponseEntity<Result> resetPassword(@RequestParam String userId) {
         return userService.resetPassword(userId);
+    }
+
+    /**
+     * 获取学生列表
+     * @param grade 年级
+     * @param major 专业
+     * @param status 状态
+     * @param pageNum 页码
+     * @param pageSize 每页大小
+     * @return 学生列表
+     */
+    @Admin
+    @GetMapping("/student/list")
+    public ResponseEntity<Result> getStudentList(
+            @RequestParam(required = false) Integer grade,
+            @RequestParam(required = false) String major,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        String id = (String) request.getAttribute("userId");
+        return userService.getStudentList(id, grade, major, status, pageNum, pageSize);
     }
 }
