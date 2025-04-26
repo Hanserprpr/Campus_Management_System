@@ -1,15 +1,21 @@
 package com.orbithy.cms.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.config.CourseSelectionConfig;
 import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
+import com.orbithy.cms.data.dto.StudentListDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.po.CourseSelection;
+import com.orbithy.cms.data.po.Status;
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.CourseSelectionMapper;
 import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
