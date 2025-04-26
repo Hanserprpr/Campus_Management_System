@@ -76,7 +76,7 @@ public class CourseSelectionController {
     }
 
     /**
-     *未选课程
+     *查询未选课程
      */
     @Auth
     @GetMapping("/unChoose")
