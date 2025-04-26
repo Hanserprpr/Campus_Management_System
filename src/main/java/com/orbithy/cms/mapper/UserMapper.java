@@ -2,12 +2,7 @@ package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orbithy.cms.data.po.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,4 +39,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT username FROM user WHERE id = #{userId}")
     String getUsernameById(@Param("userId") int userId);
+
+    @MapKey("id")
+    Map<Integer, User> getUserNamesByIds(@Param("ids") List<Integer> ids);
 }

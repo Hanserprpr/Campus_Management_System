@@ -1,16 +1,24 @@
 package com.orbithy.cms.service;
 
+import com.orbithy.cms.data.dto.SectionDTO;
 import com.orbithy.cms.data.po.Section;
 import com.orbithy.cms.data.po.Status;
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.SectionMapper;
 import com.orbithy.cms.mapper.StatusMapper;
+import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SectionService {
@@ -19,6 +27,8 @@ public class SectionService {
     private SectionMapper sectionMapper;
     @Autowired
     private StatusMapper statusMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     public ResponseEntity<Result> addSection(Section section) {
         section.setId(null);
@@ -55,13 +65,40 @@ public class SectionService {
     public ResponseEntity<Result> getSectionList(String grade, int page, int size) {
         int offset = (page - 1) * size;
         List<Section> sectionList = sectionMapper.getSectionList(grade, offset, size);
-        return ResponseUtil.build(Result.success(sectionList, "获取成功"));
+
+        return setAdvisorName(sectionList);
     }
 
     public ResponseEntity<Result> getSectionListAll(int page, int size) {
         int offset = (page - 1) * size;
         List<Section> sectionList = sectionMapper.getSectionListAll(offset, size);
-        return ResponseUtil.build(Result.success(sectionList, "获取成功"));
+        return setAdvisorName(sectionList);
     }
+
+    @NotNull
+    private ResponseEntity<Result> setAdvisorName(List<Section> sectionList) {
+
+        List<Integer> advisorIds = sectionList.stream()
+                .map(Section::getAdvisorId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+
+        Map<Integer, String> idToNameMap;
+        if (advisorIds.isEmpty()) {
+            idToNameMap = new HashMap<>();
+        } else {
+            idToNameMap = userMapper.getUserNamesByIds(advisorIds)
+                    .values().stream()
+                    .collect(Collectors.toMap(User::getId, User::getUsername));
+        }
+
+        List<SectionDTO> sectionDTOList = sectionList.stream()
+                .map(section -> new SectionDTO(section, idToNameMap.get(section.getAdvisorId())))
+                .toList();
+
+        return ResponseUtil.build(Result.success(sectionDTOList, "获取成功"));
+    }
+
 
 }
