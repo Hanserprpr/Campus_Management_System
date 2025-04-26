@@ -128,4 +128,17 @@ public class ClassController {
         return classService.getSelectedStudents(permission, id, courseId);
     }
 
+    @Admin
+    @PostMapping("/autoSchedule")
+    public ResponseEntity<Result> autoSchedule(@RequestParam String term) {
+        String id = (String) request.getAttribute("userId");
+        return classService.autoSchedule(id, term);
+    }
+
+    @Admin
+    @PostMapping("/deleteAd/{courseId}")
+    public ResponseEntity<Result> deleteAd(@PathVariable Integer courseId) {
+        String id = (String) request.getAttribute("userId");
+        return classService.adminDeleteCourse(id, courseId);
+    }
 }

@@ -432,11 +432,6 @@ public class ClassService {
      */
     public ResponseEntity<Result> autoSchedule(String id, String term) {
         try {
-            // 验证教务权限
-            Integer permission = userMapper.getPermission(id);
-            if (permission == null || permission != 0) {
-                throw new CustomException("无权限进行自动排课");
-            }
 
             // 获取需要排课的课程（状态为已通过审批的课程）
             List<Classes> courses = classMapper.getCoursesByTermAndStatus(term, 1);
@@ -471,11 +466,7 @@ public class ClassService {
      */
     public ResponseEntity<Result> adminDeleteCourse(String id, Integer courseId) {
         try {
-            // 验证教务权限
-            Integer permission = userMapper.getPermission(id);
-            if (permission == null || permission != 0) {
-                throw new CustomException("无权限删除课程");
-            }
+
 
             // 获取课程信息
             Classes course = classMapper.getCourseById(courseId);
