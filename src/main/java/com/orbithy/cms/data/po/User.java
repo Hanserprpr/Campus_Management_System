@@ -30,5 +30,6 @@ public class User {
     private Byte permission;
     private String nation;
     private String ethnic;
+    @TableField("PoliticsStatus")
     private String PoliticsStatus;
 }
