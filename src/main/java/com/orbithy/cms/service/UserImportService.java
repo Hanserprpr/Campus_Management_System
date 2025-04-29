@@ -62,7 +62,7 @@ public class UserImportService {
             List<Status> statusList = users.stream()
                     .map(user -> {
                         if (user.getId() == null) throw new RuntimeException("User ID is null");
-                        Integer grade = Integer.valueOf(user.getSDUId().substring(2, 4));
+                        Integer grade = Integer.valueOf(user.getSDUId().substring(0, 4));
                         Status status = new Status();
                         status.setId(user.getId());
                         status.setGrade(grade);

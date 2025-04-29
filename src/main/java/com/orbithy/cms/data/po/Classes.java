@@ -23,7 +23,7 @@ public class Classes {
 
     private String name;
     private String category;
-    private Integer point;
+    private float point;
     private Integer teacherId;
     private String classroom;
     private Integer weekStart;
