@@ -50,4 +50,7 @@ public interface UserMapper extends BaseMapper<User> {
     List<User> getTeacherList();
 
     void insertBatch(@Param("list") List<User> users);
+
+    @Select("SELECT * FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission}")
+    List<User> searchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission);
 }
