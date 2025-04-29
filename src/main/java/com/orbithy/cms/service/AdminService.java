@@ -37,16 +37,7 @@ public class AdminService {
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("permission", 2); // 只查询学生
 
-            // 添加筛选条件
-            if (grade != null) {
-                queryWrapper.eq("grade", grade);
-            }
-            if (major != null && !major.isEmpty()) {
-                queryWrapper.eq("major", major);
-            }
-            if (status != null) {
-                queryWrapper.eq("status", status);
-            }
+
 
             // 分页查询
             Page<User> page = new Page<>(pageNum, pageSize);
@@ -70,6 +61,21 @@ public class AdminService {
                         }
 
                         return dto;
+
+
+                    })
+                    .filter(dto -> {
+                        // 应用过滤条件
+                        if (grade != null && !grade.equals(dto.getGrade())) {
+                            return false;
+                        }
+                        if (major != null && !major.isEmpty() && !major.equals(dto.getMajor())) {
+                            return false;
+                        }
+                        if (status != null && !status.equals(dto.getStatus())) {//TODO
+                            return false;
+                        }
+                        return true;
                     })
                     .collect(Collectors.toList());
 
