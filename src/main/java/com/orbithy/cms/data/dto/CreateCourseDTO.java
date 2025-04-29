@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class CreateCourseDTO {
     private String name;           // 课程名称
     private String category;       // 课程类别
-    private Integer point;         // 学分
+    private float point;         // 学分
     private String classroom;      // 上课教室
     private Integer weekStart;     // 起始周
     private Integer weekEnd;       // 结束周
