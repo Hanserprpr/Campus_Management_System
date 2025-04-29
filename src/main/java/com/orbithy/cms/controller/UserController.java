@@ -115,24 +115,4 @@ public class UserController {
         return userService.resetPassword(userId);
     }
 
-    /**
-     * 获取学生列表
-     * @param grade 年级
-     * @param major 专业
-     * @param status 状态
-     * @param pageNum 页码
-     * @param pageSize 每页大小
-     * @return 学生列表
-     */
-    @Admin
-    @GetMapping("/student/list")
-    public ResponseEntity<Result> getStudentList(
-            @RequestParam(required = false) Integer grade,
-            @RequestParam(required = false) String major,
-            @RequestParam(required = false) Integer status,
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize) {
-        String id = (String) request.getAttribute("userId");
-        return userService.getStudentList(id, grade, major, status, pageNum, pageSize);
-    }
 }

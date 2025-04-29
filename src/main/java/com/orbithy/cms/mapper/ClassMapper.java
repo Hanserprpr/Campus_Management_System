@@ -63,13 +63,13 @@ public interface ClassMapper extends BaseMapper<Classes> {
     List<ClassListDTO> select();
 
     @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")
-    Integer countCourseByCourseId(@Param("courseId") Integer courseId);
+    Integer countCourseByCourseId(Integer courseId);
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
-    ClassDTO getCourseDeById(@Param("courseId") Integer courseId);
+    ClassDTO getCourseDeById(Integer courseId);
 
     @Select("SELECT teacher_id FROM classes WHERE id = #{courseId}")
-    Integer getTeacherIdByCourseId(@Param("courseId") Integer courseId);
+    Integer getTeacherIdByCourseId(Integer courseId);
 
     @Select("SELECT student_id FROM course_reg WHERE course_id = #{courseId}")
     List<String> getSelectedStudents(Integer courseId);
