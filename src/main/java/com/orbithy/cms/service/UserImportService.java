@@ -31,6 +31,7 @@ public class UserImportService {
         Sheet sheet = workbook.getSheetAt(0);
 
         List<User> users = new ArrayList<>();
+        List<Status> statusList = new ArrayList<>();
 
         for (int i = 1; i <= sheet.getLastRowNum(); i++) { // 跳过标题行
             Row row = sheet.getRow(i);
@@ -44,7 +45,9 @@ public class UserImportService {
             user.setPassword(getCellValue(row.getCell(4)));
             user.setSDUId(getCellValue(row.getCell(5)));
             user.setMajor(parseInteger(row.getCell(6)));
-            user.setSection(parseInteger(row.getCell(7)));
+
+            Integer section = parseInteger(row.getCell(7)); // 先单独取出来
+
             Byte permission = parseByte(row.getCell(8));
             if (permission != null && permission == 0) {
                 throw new IllegalArgumentException("第 " + (i + 1) + " 行的权限(permission)不能为0！");
@@ -55,28 +58,36 @@ public class UserImportService {
             user.setPoliticsStatus(getCellValue(row.getCell(11)));
 
             users.add(user);
+
+            Status status = new Status();
+            status.setSection(section);
+            statusList.add(status);
         }
 
         if (!users.isEmpty()) {
             userMapper.insertBatch(users);
-            List<Status> statusList = users.stream()
-                    .map(user -> {
-                        if (user.getId() == null) throw new RuntimeException("User ID is null");
-                        Integer grade = Integer.valueOf(user.getSDUId().substring(2, 4));
-                        Status status = new Status();
-                        status.setId(user.getId());
-                        status.setGrade(grade);
-                        status.setAdmission(grade);
-                        status.setGraduation(grade + 4);
-                        return status;
-                    })
-                    .toList();
+
+            // 把生成的用户ID设置到 status 里面
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i);
+                Status status = statusList.get(i);
+
+                if (user.getId() == null) {
+                    throw new RuntimeException("User ID is null");
+                }
+                Integer grade = Integer.valueOf(user.getSDUId().substring(2, 4));
+                status.setId(user.getId());
+                status.setGrade(grade);
+                status.setAdmission(grade);
+                status.setGraduation(grade + 4);
+            }
 
             statusMapper.insertBatch(statusList);
         }
 
         workbook.close();
     }
+
 
 
     private String getCellValue(Cell cell) {

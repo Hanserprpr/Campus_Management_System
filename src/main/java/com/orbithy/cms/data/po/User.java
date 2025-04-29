@@ -25,7 +25,6 @@ public class User {
     private String password;
     private String SDUId;
     private Integer major;
-    private Integer section;
     private Byte permission;
     private String nation;
     private String ethnic;
