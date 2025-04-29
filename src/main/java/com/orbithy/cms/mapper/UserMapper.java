@@ -53,4 +53,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT * FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission}")
     List<User> searchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission);
+
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 2")
+    int getStudentNum();
+
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
+    int getTeacherNum();
 }

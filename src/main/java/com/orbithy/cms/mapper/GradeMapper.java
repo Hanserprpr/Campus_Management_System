@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper
 public interface GradeMapper extends BaseMapper<Grade> {
     @Select("SELECT student_id, course_id, grade, rank FROM grade WHERE course_id = #{courseId}")
-    List<Grade> getGradeByCourseId(String courseId);
+    List<Grade> getGradeByCourseId(int courseId);
 
     @Update("UPDATE classes SET published = true WHERE id = #{courseId}")
-    void releaseGrade(String courseId);
+    void releaseGrade(int courseId);
 }

@@ -30,14 +30,14 @@ public class GradeController {
 
     @Auth
     @PostMapping("/getGradeList")
-    public ResponseEntity<Result> getGradeList(String courseId) {
+    public ResponseEntity<Result> getGradeList(int courseId) {
         String id = (String) request.getAttribute("userId");
         return gradeService.getGradeList(id, courseId);
     }
 
     @Admin
     @PostMapping("/releaseGrade")
-    public ResponseEntity<Result> releaseGrade(String courseId) {
+    public ResponseEntity<Result> releaseGrade(int courseId) {
         return gradeService.releaseGrade(courseId);
     }
 

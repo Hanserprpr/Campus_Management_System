@@ -50,7 +50,7 @@ public class GradeService {
     /**
      * 获取成绩列表
      */
-    public ResponseEntity<Result> getGradeList(String id, String courseId) {
+    public ResponseEntity<Result> getGradeList(String id, int courseId) {
         // 检查教师权限
         if (userMapper.getPermission(id) == 0) {
             return ResponseUtil.build(Result.error(401, "无权限"));
@@ -84,7 +84,7 @@ public class GradeService {
     /**
      * 发布成绩
      */
-    public ResponseEntity<Result> releaseGrade(String courseId) {
+    public ResponseEntity<Result> releaseGrade(int courseId) {
         if (classMapper.getTeacherIdByCourseId(courseId) == null) {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }

@@ -97,4 +97,16 @@ public class AdminService {
             return ResponseUtil.build(Result.error(500, "搜索失败：" + e.getMessage()));
         }
     }
+
+    public ResponseEntity<Result> getPeopleNum(int permission) {
+        if (permission == 1) {
+            return ResponseUtil.build(Result.success(userMapper.getTeacherNum(), "获取教师数量成功"));
+        }
+        else if (permission == 2) {
+            return ResponseUtil.build(Result.success(userMapper.getStudentNum(), "获取学生数量成功"));
+        }
+        else {
+            return ResponseUtil.build(Result.error(400, ""));
+        }
+    }
 }

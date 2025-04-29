@@ -74,4 +74,13 @@ public class AdminController {
             @RequestParam(required = false, defaultValue = "0") Integer permission) {
         return adminService.searchUsers(keyword, permission);
     }
+
+    /**
+     * 获取学生、教师人数
+     */
+    @Admin
+    @GetMapping("/getNum")
+    public ResponseEntity<Result> getNum(int permission) {
+        return adminService.getPeopleNum(permission);
+    }
 }
