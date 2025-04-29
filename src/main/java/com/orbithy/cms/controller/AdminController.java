@@ -64,12 +64,12 @@ public class AdminController {
      * 搜索用户
      *
      * @param keyword    搜索关键词（学工号或姓名）
-     * @param permission 用户权限（0为学生，1为教师）
+     * @param permission 用户权限（12）
      * @return 用户列表
      */
     @Admin
-    @GetMapping("/search")
-    public ResponseEntity<Result> searchUsers(
+    @GetMapping("/searchSdu")
+    public ResponseEntity<Result> searchUser(
             @RequestParam String keyword,
             @RequestParam(required = false, defaultValue = "0") Integer permission) {
         return adminService.searchUsers(keyword, permission);
