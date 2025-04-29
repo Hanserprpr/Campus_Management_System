@@ -50,4 +50,10 @@ public interface UserMapper extends BaseMapper<User> {
     List<User> getTeacherList();
 
     void insertBatch(@Param("list") List<User> users);
+
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 2")
+    int getStudentNum();
+
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
+    int getTeacherNum();
 }

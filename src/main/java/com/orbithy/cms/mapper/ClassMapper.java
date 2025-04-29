@@ -50,9 +50,6 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE status = 0")
     List<ClassDTO> getPendingCourses();
 
-    @Select("SELECT teacher_id FROM classes WhERE id = #{courseId}")
-    Integer getTeacherIdByCourseId(@Param("courseId") String courseId);
-
     @Update("UPDATE classes SET time = #{time} WHERE id = #{courseId}")
     void updateCourseTime(@Param("courseId") Integer courseId, @Param("time") String time);
 
@@ -68,7 +65,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     ClassDTO getCourseDeById(Integer courseId);
 
-    @Select("SELECT teacher_id FROM classes WHERE id = #{courseId}")
+    @Select("SELECT teacher_id FROM classes WHERE id = #{courseId, javaType=java.lang.Integer}")
     Integer getTeacherIdByCourseId(Integer courseId);
 
     @Select("SELECT student_id FROM course_reg WHERE course_id = #{courseId}")

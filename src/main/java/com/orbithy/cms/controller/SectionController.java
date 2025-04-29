@@ -88,4 +88,14 @@ public class SectionController {
     public ResponseEntity<Result> getSectionList(int page, int size) {
         return sectionService.getSectionListAll(page, size);
     }
+
+    /**
+     * 搜索班级
+     *
+     */
+    @Admin
+    @GetMapping("/search")
+    public ResponseEntity<Result> searchSection(String sectionName, int page, int size) {
+        return sectionService.searchSection(sectionName, page, size);
+    }
 }

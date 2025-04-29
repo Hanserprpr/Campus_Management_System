@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class ClassDTO {//详细信息DTO
-    private Integer id;
+    private String id;
 
     private String name;
     private String category;

@@ -114,5 +114,7 @@ public class SectionService {
     }
 
 
-
+    public ResponseEntity<Result> searchSection(String sectionName, int page, int size) {
+        return null;
+    }
 }

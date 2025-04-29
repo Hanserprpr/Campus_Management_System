@@ -57,4 +57,13 @@ public class AdminController {
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return adminService.getStudentList(grade, major, status, pageNum, pageSize);
     }
+
+    /**
+     * 获取学生、教师人数
+     */
+    @Admin
+    @GetMapping("/getNum")
+    public ResponseEntity<Result> getNum(int permission) {
+        return adminService.getPeopleNum(permission);
+    }
 }
