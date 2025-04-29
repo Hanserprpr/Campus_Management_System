@@ -46,7 +46,7 @@ public class UserImportService {
             user.setSDUId(getCellValue(row.getCell(5)));
             user.setMajor(parseInteger(row.getCell(6)));
 
-            Integer section = parseInteger(row.getCell(7)); // 先单独取出来
+            Integer section = parseInteger(row.getCell(7));
 
             Byte permission = parseByte(row.getCell(8));
             if (permission != null && permission == 0) {
@@ -91,14 +91,49 @@ public class UserImportService {
 
 
     private String getCellValue(Cell cell) {
-        if (cell == null) return "";
-        if (cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue().trim();
-        } else if (cell.getCellType() == CellType.NUMERIC) {
-            return String.valueOf((int) cell.getNumericCellValue());
+        if (cell == null) {
+            return null;
         }
-        return "";
+
+        FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
+
+        switch (cell.getCellType()) {
+            case FORMULA:
+                CellValue evaluatedValue = evaluator.evaluate(cell);
+                if (evaluatedValue == null) {
+                    return null;
+                }
+                switch (evaluatedValue.getCellType()) {
+                    case STRING:
+                        return evaluatedValue.getStringValue().trim();
+                    case NUMERIC:
+                        double num = evaluatedValue.getNumberValue();
+                        if (Math.floor(num) == num) {
+                            return String.valueOf((long) num); // 整数，不带小数点
+                        } else {
+                            return String.valueOf(num);
+                        }
+                    case BOOLEAN:
+                        return String.valueOf(evaluatedValue.getBooleanValue());
+                    default:
+                        return null;
+                }
+            case STRING:
+                return cell.getStringCellValue().trim();
+            case NUMERIC:
+                double num = cell.getNumericCellValue();
+                if (Math.floor(num) == num) {
+                    return String.valueOf((long) num);
+                } else {
+                    return String.valueOf(num);
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return null;
+        }
     }
+
 
     private Integer parseInteger(Cell cell) {
         try {
