@@ -7,7 +7,7 @@ public class CourseSelectionResultDTO {
     private Integer id;        // 课程ID
     private String classNum;         // 课序号
     private String name;             // 课程名称
-    private Integer point;           // 学分
+    private float point;           // 学分
     private String type;             // 课程属性
     private String teacherName;      // 教师名称
     private String time;             // 上课时间
