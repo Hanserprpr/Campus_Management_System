@@ -58,6 +58,23 @@ public class AdminController {
         return adminService.getStudentList(grade, major, status, pageNum, pageSize);
     }
 
+
+
+    /**
+     * 搜索用户
+     *
+     * @param keyword    搜索关键词（学工号或姓名）
+     * @param permission 用户权限（12）
+     * @return 用户列表
+     */
+    @Admin
+    @GetMapping("/searchSdu")
+    public ResponseEntity<Result> searchUser(
+            @RequestParam String keyword,
+            @RequestParam(required = false, defaultValue = "0") Integer permission) {
+        return adminService.searchUsers(keyword, permission);
+    }
+
     /**
      * 获取学生、教师人数
      */

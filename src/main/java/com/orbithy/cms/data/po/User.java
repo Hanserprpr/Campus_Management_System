@@ -23,6 +23,7 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    @TableField("SDUId")
     private String SDUId;
     private Integer major;
     private Byte permission;

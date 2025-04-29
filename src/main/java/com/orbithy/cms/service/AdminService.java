@@ -87,6 +87,17 @@ public class AdminService {
         }
     }
 
+
+
+    public ResponseEntity<Result> searchUsers(String keyword, Integer permission) {
+        try {
+            List<User> users = userMapper.searchUsers(keyword, permission);
+            return ResponseUtil.build(Result.success(users, "搜索成功"));
+        } catch (Exception e) {
+            return ResponseUtil.build(Result.error(500, "搜索失败：" + e.getMessage()));
+        }
+    }
+
     public ResponseEntity<Result> getPeopleNum(int permission) {
         if (permission == 1) {
             return ResponseUtil.build(Result.success(userMapper.getTeacherNum(), "获取教师数量成功"));
