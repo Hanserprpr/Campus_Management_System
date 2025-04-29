@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<app.version>${project.version}</app.version>
 	</properties>
 	<dependencies>
 		<dependency>
