@@ -22,4 +22,6 @@ public interface SectionMapper extends BaseMapper<Section> {
     @Select("SELECT * FROM section LIMIT #{size} OFFSET #{offset}")
     List<Section> getSectionListAll(int offset, int size);
 
+    @Select("SELECT * FROM section WHERE grade = #{grade} AND major = #{major}")
+    List<Section> searchSection(String grade, int major);
 }

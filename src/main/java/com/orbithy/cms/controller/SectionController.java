@@ -95,7 +95,7 @@ public class SectionController {
      */
     @Admin
     @GetMapping("/search")
-    public ResponseEntity<Result> searchSection(String sectionName, int page, int size) {
-        return sectionService.searchSection(sectionName, page, size);
+    public ResponseEntity<Result> searchSection(String grade, int major) {
+        return sectionService.searchSection(grade, major);
     }
 }

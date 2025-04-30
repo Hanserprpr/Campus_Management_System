@@ -113,8 +113,7 @@ public class SectionService {
         return ResponseUtil.build(Result.success(sectionDTOList, "获取成功"));
     }
 
-
-    public ResponseEntity<Result> searchSection(String sectionName, int page, int size) {
-        return null;
+    public ResponseEntity<Result> searchSection(String grade ,int major) {
+        return ResponseUtil.build(Result.success(sectionMapper.searchSection(grade, major), "获取成功"));
     }
 }
