@@ -3,6 +3,7 @@ import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.utils.BcryptUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class UserImportService {
             user.setSex(getCellValue(row.getCell(1)));
             user.setEmail(getCellValue(row.getCell(2)));
             user.setPhone(getCellValue(row.getCell(3)));
-            user.setPassword(getCellValue(row.getCell(4)));
+            user.setPassword(BcryptUtils.encrypt(getCellValue(row.getCell(4))));
             user.setSDUId(getCellValue(row.getCell(5)));
             user.setMajor(parseInteger(row.getCell(6)));
             Byte permission = parseByte(row.getCell(7));
@@ -52,7 +53,7 @@ public class UserImportService {
             user.setNation(getCellValue(row.getCell(8)));
             user.setEthnic(getCellValue(row.getCell(9)));
             user.setPoliticsStatus(getCellValue(row.getCell(10)));
-            user.setCampus(getCellValue(row.getCell(11)));
+            user.setCollege(getCellValue(row.getCell(11)));
             users.add(user);
 
         }
