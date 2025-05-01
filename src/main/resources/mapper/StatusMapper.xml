@@ -2,8 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.orbithy.cms.mapper.StatusMapper">
-    <select id="getStudentCountBySectionIds" parameterType="list" resultType="map">
-        SELECT section, COUNT(*) AS student_count
+    <select id="getStudentCountBySectionIds"
+            resultType="com.orbithy.cms.data.dto.SectionCountDTO"
+            parameterType="list">
+        SELECT section, COUNT(*) AS studentCount
         FROM cms.status
         WHERE section IN
         <foreach collection="sectionIds" item="id" open="(" separator="," close=")">
@@ -11,6 +13,7 @@
         </foreach>
         GROUP BY section
     </select>
+
     <insert id="insertBatch">
         INSERT INTO status (id, grade, admission, graduation)
         VALUES

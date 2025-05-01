@@ -1,5 +1,6 @@
 package com.orbithy.cms.service;
 
+import com.orbithy.cms.data.dto.SectionCountDTO;
 import com.orbithy.cms.data.dto.SectionDTO;
 import com.orbithy.cms.data.po.Section;
 import com.orbithy.cms.data.po.Status;
@@ -94,9 +95,13 @@ public class SectionService {
                 .stream()
                 .collect(Collectors.toMap(User::getId, User::getUsername));
 
-        Map<Integer, Integer> sectionIdToStudentCount = sectionIds.isEmpty()
-                ? new HashMap<>()
-                : statusMapper.getStudentCountBySectionIds(sectionIds);
+        Map<Integer, Integer> sectionIdToStudentCount =
+                statusMapper.getStudentCountBySectionIds(sectionIds)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                SectionCountDTO::getSection,
+                                SectionCountDTO::getStudentCount
+                        ));
 
         List<SectionDTO> sectionDTOList = sectionList.stream()
                 .map(section -> new SectionDTO(

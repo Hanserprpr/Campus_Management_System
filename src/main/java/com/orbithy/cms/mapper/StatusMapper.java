@@ -1,6 +1,7 @@
 package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.orbithy.cms.data.dto.SectionCountDTO;
 import com.orbithy.cms.data.po.Status;
 import org.apache.ibatis.annotations.*;
 
@@ -21,7 +22,7 @@ public interface StatusMapper extends BaseMapper<Status> {
     @Select("SELECT id, grade, section, status, admission, graduation FROM status WHERE id=#{id}")
     Status getStatusById(String id);
 
-    Map<Integer, Integer> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
+    List<SectionCountDTO> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
 
     void insertBatch(@Param("list") List<Status> list);
 }
