@@ -31,4 +31,5 @@ public class User {
     private String ethnic;
     @TableField("PoliticsStatus")
     private String PoliticsStatus;
+    private String campus;
 }

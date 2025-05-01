@@ -52,7 +52,7 @@ public class UserImportService {
             user.setNation(getCellValue(row.getCell(8)));
             user.setEthnic(getCellValue(row.getCell(9)));
             user.setPoliticsStatus(getCellValue(row.getCell(10)));
-
+            user.setCampus(getCellValue(row.getCell(11)));
             users.add(user);
 
         }
