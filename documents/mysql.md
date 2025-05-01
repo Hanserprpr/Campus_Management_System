@@ -69,7 +69,7 @@ CREATE TABLE user (
 | 字段名     | 数据类型                     | 约束                     | 描述                        |
 |-----------|------------------------------|--------------------------|-----------------------------|
 | **id**    | `INT`                         | 外键，关联 `user` 表     | 对应用户 ID                 |
-| **grade** | `TINYINT NOT NULL`            | 非空                     | 年级                        |
+| **grade** | `VARCHAR(4) NOT NULL`            | 非空                     | 年级                        |
 | **section** | `TINYINT`  | 关联班级表     | 班级                        |
 | **status** | `TINYINT NOT NULL DEFAULT 0` | 非空，默认0'             | 学籍状态 (`0` 在读 / `1` 休学 / `2` 降转 / `3` 退学) |
 | **admission** | `INT`  | 非空     | 入学时间                        |
@@ -82,7 +82,7 @@ CREATE TABLE user (
 ```sql
 CREATE TABLE status(
     id INT NOT NULL,
-    grade TINYINT NOT NULL COMMENT '年级',
+    grade VARCHAR(4) NOT NULL COMMENT '年级',
     section INT COMMENT '班级',
     status TINYINT NOT NULl DEFAULT 0 COMMENT '学生状态(`0` 在读 / `1` 休学 / `2` 降转 / `3` 退学)',
     admission INT NOT NULL COMMENT '入学时间',
