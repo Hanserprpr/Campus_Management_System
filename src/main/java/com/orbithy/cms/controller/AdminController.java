@@ -26,8 +26,10 @@ public class AdminController {
      */
     @Admin
     @RequestMapping("/getTeacherList")
-    public ResponseEntity<Result> getTeacherList() {
-        return adminService.getTeacherList();
+    public ResponseEntity<Result> getTeacherList(@RequestParam(required = false) String college,
+                                                 @RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(required = false, defaultValue = "10") int limit) {
+        return adminService.getTeacherList(college, page, limit);
     }
 
     @Admin

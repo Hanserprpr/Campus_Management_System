@@ -26,8 +26,12 @@ public class AdminService {
     @Autowired
     private StatusMapper statusMapper;
 
-    public ResponseEntity<Result> getTeacherList() {
-        return ResponseUtil.build(Result.success(userMapper.getTeacherList(), "获取教师列表成功"));
+    public ResponseEntity<Result> getTeacherList(String college, int page, int limit) {
+        int offset = (page - 1) * limit;
+        if (college == null || college.isEmpty()) {
+            return ResponseUtil.build(Result.success(userMapper.getTeacherListAll(offset, limit), "获取教师列表成功"));
+        }
+        return ResponseUtil.build(Result.success(userMapper.getTeacherList(college, offset, limit), "获取教师列表成功"));
     }
 
     public ResponseEntity<Result> getStudentList(Integer grade, String major, Integer status, Integer pageNum, Integer pageSize) {

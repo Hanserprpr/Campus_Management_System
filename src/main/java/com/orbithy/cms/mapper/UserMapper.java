@@ -46,8 +46,11 @@ public interface UserMapper extends BaseMapper<User> {
     @Update("UPDATE user SET password = #{passwd} WHERE id = #{userId}")
     void resetPassword(String userId, String passwd);
 
-    @Select("SELECT id, username, email, SDUId FROM user WHERE permission = 1")
-    List<User> getTeacherList();
+    @Select("SELECT id, username,sex , email, SDUId, college FROM user WHERE permission = 1 AND college = #{college} LIMIT #{offset} ,#{size}")
+    List<User> getTeacherList(String college, @Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT id, username,sex , email, SDUId, college FROM user WHERE permission = 1 LIMIT #{offset} ,#{size}")
+    List<User> getTeacherListAll(@Param("offset") int offset, @Param("size") int size);
 
     void insertBatch(@Param("list") List<User> users);
 
