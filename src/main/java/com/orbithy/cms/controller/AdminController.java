@@ -126,4 +126,13 @@ public class AdminController {
                                              @RequestParam Status status) {
         return adminService.updateUser(user, status);
     }
+
+    /**
+     * 添加用户
+     */
+    @Admin
+    @PostMapping("/addUser")
+    public ResponseEntity<Result> addUser(@RequestParam User user) {
+        return adminService.addUser(user);
+    }
 }

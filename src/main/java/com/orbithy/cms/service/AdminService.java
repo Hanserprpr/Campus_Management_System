@@ -11,6 +11,7 @@ import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.utils.BcryptUtils;
 import com.orbithy.cms.utils.ResponseUtil;
 import com.orbithy.cms.utils.WrapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class AdminService {
     @Autowired
     private StatusMapper statusMapper;
     @Autowired
-    private GsonBuilderCustomizer gsonBuilderCustomizer;
+    private LoginService loginService;
 
     public ResponseEntity<Result> getTeacherList(String college, int page, int limit) {
         int offset = (page - 1) * limit;
@@ -163,6 +164,17 @@ public class AdminService {
         userMapper.update(null, updateWrapper);
         UpdateWrapper<Status> statusUpdateWrapper = WrapperUtil.buildNonNullUpdateWrapper(status, "id", status.getId());
         statusMapper.update(null, statusUpdateWrapper);
+        return ResponseUtil.build(Result.ok());
+    }
+
+    public ResponseEntity<Result> addUser(User user) {
+        String SDUId = user.getSDUId();
+        String password = user.getPassword();
+        if (!loginService.isExisted(SDUId)) {
+            String passwd = BcryptUtils.encrypt(password);
+            user.setPassword(passwd);
+            userMapper.insert(user);
+        }
         return ResponseUtil.build(Result.ok());
     }
 }
