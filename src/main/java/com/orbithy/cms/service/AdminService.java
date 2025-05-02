@@ -2,6 +2,7 @@ package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.orbithy.cms.data.dto.StudentCardDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
 import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
@@ -40,7 +41,6 @@ public class AdminService {
             // 构建查询条件
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("permission", 2); // 只查询学生
-
 
 
             // 分页查询
@@ -98,7 +98,6 @@ public class AdminService {
     }
 
 
-
     public ResponseEntity<Result> searchUsers(String keyword, Integer permission) {
         try {
             List<User> users = userMapper.searchUsers(keyword, permission);
@@ -111,12 +110,33 @@ public class AdminService {
     public ResponseEntity<Result> getPeopleNum(int permission) {
         if (permission == 1) {
             return ResponseUtil.build(Result.success(userMapper.getTeacherNum(), "获取教师数量成功"));
-        }
-        else if (permission == 2) {
+        } else if (permission == 2) {
             return ResponseUtil.build(Result.success(userMapper.getStudentNum(), "获取学生数量成功"));
-        }
-        else {
+        } else {
             return ResponseUtil.build(Result.error(400, ""));
         }
+    }
+
+    public ResponseEntity<Result> deleteUser(String userId) {
+        if (userMapper.getPermission(userId) == 0) {
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+        userMapper.deleteById(userId);
+        return ResponseUtil.build(Result.ok());
+    }
+
+    public ResponseEntity<Result> getUserInfo(String userId) {
+        User user = userMapper.getUserInfo(userId);
+        if (user == null) {
+            return ResponseUtil.build(Result.error(404, "用户不存在"));
+        }
+        else if  (user.getPermission() == 0) {
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+        Status status = statusMapper.getStatusById(userId);
+        StudentCardDTO userCardDTO = new StudentCardDTO();
+        userCardDTO.setUser(user);
+        userCardDTO.setStatus(status);
+        return ResponseUtil.build(Result.success(userCardDTO, "获取成功"));
     }
 }

@@ -4,9 +4,7 @@ import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.AdminService;
 import com.orbithy.cms.service.UserImportService;
-import com.orbithy.cms.service.UserService;
 import com.orbithy.cms.utils.ResponseUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,5 +82,23 @@ public class AdminController {
     @GetMapping("/getNum")
     public ResponseEntity<Result> getNum(int permission) {
         return adminService.getPeopleNum(permission);
+    }
+
+    /**
+     * 删除用户
+     */
+    @Admin
+    @PostMapping("/deleteUser")
+    public ResponseEntity<Result> deleteUser(@RequestParam String userId) {
+        return adminService.deleteUser(userId);
+    }
+
+    /**
+     * 获取用户信息
+     */
+    @Admin
+    @GetMapping("/getUserInfo")
+    public ResponseEntity<Result> getUserInfo(@RequestParam String userId) {
+        return adminService.getUserInfo(userId);
     }
 }

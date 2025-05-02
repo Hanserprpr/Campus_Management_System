@@ -2,7 +2,6 @@ package com.orbithy.cms.service;
 
 import com.orbithy.cms.data.po.Term;
 import com.orbithy.cms.data.vo.Result;
-import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.utils.JsonUtil;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.http.ResponseEntity;
