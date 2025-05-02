@@ -126,4 +126,9 @@ public class TermService {
                 .anyMatch(Term::isOpen);
     }
 
+    public ResponseEntity<Result> getTerms() throws IOException {
+        List<Term> terms = JsonUtil.readTerms();
+        return ResponseUtil.build(Result.success(terms, "获取学期列表成功"));
+    }
+
 }

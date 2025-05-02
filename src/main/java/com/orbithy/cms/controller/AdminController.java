@@ -3,12 +3,16 @@ package com.orbithy.cms.controller;
 import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.AdminService;
+import com.orbithy.cms.service.TermService;
 import com.orbithy.cms.service.UserImportService;
+import com.orbithy.cms.service.UserService;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -18,6 +22,8 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private UserImportService userImportService;
+    @Autowired
+    private TermService termService;
 
     /**
      * 获取教师列表
@@ -57,8 +63,6 @@ public class AdminController {
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return adminService.getStudentList(grade, major, status, pageNum, pageSize);
     }
-
-
 
     /**
      * 搜索用户
@@ -100,5 +104,14 @@ public class AdminController {
     @GetMapping("/getUserInfo")
     public ResponseEntity<Result> getUserInfo(@RequestParam String userId) {
         return adminService.getUserInfo(userId);
+    }
+
+    /**
+     * 获取学期列表
+     */
+    @Admin
+    @GetMapping("/getTermList")
+    public ResponseEntity<Result> getTermList() throws IOException {
+        return termService.getTerms();
     }
 }
