@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orbithy.cms.data.dto.StudentCardDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
+import com.orbithy.cms.data.dto.UserListDTO;
 import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
@@ -30,9 +31,19 @@ public class AdminService {
     public ResponseEntity<Result> getTeacherList(String college, int page, int limit) {
         int offset = (page - 1) * limit;
         if (college == null || college.isEmpty()) {
-            return ResponseUtil.build(Result.success(userMapper.getTeacherListAll(offset, limit), "获取教师列表成功"));
+            int count = userMapper.countAllTeachers();
+            int pages = count / limit + (count % limit == 0 ? 0 : 1);
+            UserListDTO userListDTO = new UserListDTO();
+            userListDTO.setUser(userMapper.getTeacherListAll(offset, limit));
+            userListDTO.setPage(pages);
+            return ResponseUtil.build(Result.success(userListDTO, "获取教师列表成功"));
         }
-        return ResponseUtil.build(Result.success(userMapper.getTeacherList(college, offset, limit), "获取教师列表成功"));
+        int count = userMapper.countTeachersByCollege(college);
+        int pages = count / limit + (count % limit == 0 ? 0 : 1);
+        UserListDTO userListDTO = new UserListDTO();
+        userListDTO.setUser(userMapper.getTeacherList(college, offset, limit));
+        userListDTO.setPage(pages);
+        return ResponseUtil.build(Result.success(userListDTO, "获取教师列表成功"));
     }
 
     public ResponseEntity<Result> getStudentList(Integer grade, String major, Integer status, Integer pageNum, Integer pageSize) {

@@ -52,6 +52,12 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT id, username,sex , email, SDUId, college FROM user WHERE permission = 1 LIMIT #{offset} ,#{size}")
     List<User> getTeacherListAll(@Param("offset") int offset, @Param("size") int size);
 
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
+    int countAllTeachers();
+
+    @Select("SELECT COUNT(*) FROM user WHERE permission = 1 AND college = #{college}")
+    int countTeachersByCollege(@Param("college") String college);
+
     void insertBatch(@Param("list") List<User> users);
 
     @Select("SELECT * FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission}")
