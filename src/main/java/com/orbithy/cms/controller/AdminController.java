@@ -1,6 +1,8 @@
 package com.orbithy.cms.controller;
 
 import com.orbithy.cms.annotation.Admin;
+import com.orbithy.cms.data.po.Status;
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.AdminService;
 import com.orbithy.cms.service.TermService;
@@ -113,5 +115,15 @@ public class AdminController {
     @GetMapping("/getTermList")
     public ResponseEntity<Result> getTermList() throws IOException {
         return termService.getTerms();
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @Admin
+    @PostMapping("/updateUser")
+    public ResponseEntity<Result> updateUser(@RequestParam User user,
+                                             @RequestParam Status status) {
+        return adminService.updateUser(user, status);
     }
 }

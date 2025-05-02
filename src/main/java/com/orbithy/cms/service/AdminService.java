@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orbithy.cms.data.dto.StudentCardDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
@@ -11,9 +12,12 @@ import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
+import com.orbithy.cms.utils.WrapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +31,8 @@ public class AdminService {
     private UserMapper userMapper;
     @Autowired
     private StatusMapper statusMapper;
+    @Autowired
+    private GsonBuilderCustomizer gsonBuilderCustomizer;
 
     public ResponseEntity<Result> getTeacherList(String college, int page, int limit) {
         int offset = (page - 1) * limit;
@@ -149,5 +155,14 @@ public class AdminService {
         userCardDTO.setUser(user);
         userCardDTO.setStatus(status);
         return ResponseUtil.build(Result.success(userCardDTO, "获取成功"));
+    }
+
+    @Transactional
+    public ResponseEntity<Result> updateUser(User user, Status status) {
+        UpdateWrapper<User> updateWrapper = WrapperUtil.buildNonNullUpdateWrapper(user, "id", user.getId());
+        userMapper.update(null, updateWrapper);
+        UpdateWrapper<Status> statusUpdateWrapper = WrapperUtil.buildNonNullUpdateWrapper(status, "id", status.getId());
+        statusMapper.update(null, statusUpdateWrapper);
+        return ResponseUtil.build(Result.ok());
     }
 }
