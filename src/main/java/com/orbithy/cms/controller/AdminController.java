@@ -122,8 +122,8 @@ public class AdminController {
      */
     @Admin
     @PostMapping("/updateUser")
-    public ResponseEntity<Result> updateUser(@RequestParam User user,
-                                             @RequestParam Status status) {
+    public ResponseEntity<Result> updateUser(@ModelAttribute User user,
+                                             @ModelAttribute Status status) {
         return adminService.updateUser(user, status);
     }
 
