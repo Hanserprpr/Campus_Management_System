@@ -36,12 +36,7 @@ public class ClassService {
      */
     public ResponseEntity<Result> createCourse(String id, CreateCourseDTO courseDTO) {
         try {
-            // 验证教师权限
-            int permission = userMapper.getPermission(id);
-            if (permission != 1) {
-                throw new CustomException("无权限创建课程");
-            }
-
+            
             // 创建课程对象
             Classes course = new Classes();
             BeanUtils.copyProperties(courseDTO, course);
