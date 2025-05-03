@@ -11,7 +11,7 @@ public class ClassDTO {//详细信息DTO
 
     private String name;
     private String category;
-    private Integer point;
+    private Float point;
     private Integer teacherId;
     private String teacherName;
     private String classroom;
