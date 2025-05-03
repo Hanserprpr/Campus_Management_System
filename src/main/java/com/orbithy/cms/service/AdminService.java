@@ -116,10 +116,17 @@ public class AdminService {
     }
 
 
-    public ResponseEntity<Result> searchUsers(String keyword, Integer permission) {
+    public ResponseEntity<Result> searchUsers(String keyword, Integer permission, int pageNum, int pageSize) {
         try {
-            List<User> users = userMapper.searchUsers(keyword, permission);
-            return ResponseUtil.build(Result.success(users, "搜索成功"));
+            int offset = (pageNum - 1) * pageSize;
+            List<User> users = userMapper.searchUsers(keyword, permission, offset, pageSize);
+            int total = userMapper.countSearchUsers(keyword, permission);
+            Map<String, Object> result = new HashMap<>();
+            result.put("list", users);
+            result.put("total", total);
+            result.put("pageNum", pageNum);
+            result.put("pageSize", pageSize);
+            return ResponseUtil.build(Result.success(result, "搜索成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "搜索失败：" + e.getMessage()));
         }

@@ -65,20 +65,23 @@ public class AdminController {
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return adminService.getStudentList(grade, major, status, pageNum, pageSize);
     }
-
     /**
      * 搜索用户
      *
      * @param keyword    搜索关键词（学工号或姓名）
      * @param permission 用户权限（12）
+     * @param pageNum    页码
+     * @param pageSize   每页大小
      * @return 用户列表
      */
     @Admin
     @GetMapping("/searchSdu")
     public ResponseEntity<Result> searchUser(
             @RequestParam String keyword,
-            @RequestParam(required = false, defaultValue = "0") Integer permission) {
-        return adminService.searchUsers(keyword, permission);
+            @RequestParam(required = false, defaultValue = "0") Integer permission,
+            @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return adminService.searchUsers(keyword, permission, pageNum, pageSize);
     }
 
     /**
