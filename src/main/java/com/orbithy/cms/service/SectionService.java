@@ -66,18 +66,21 @@ public class SectionService {
     public ResponseEntity<Result> getSectionList(String grade, int page, int size) {
         int offset = (page - 1) * size;
         List<Section> sectionList = sectionMapper.getSectionList(grade, offset, size);
-
-        return setAdvisorName(sectionList);
+        int count = sectionMapper.getSectionCount(grade);
+        int pages = count / size + (count % size == 0 ? 0 : 1);
+        return setAdvisorName(sectionList, pages);
     }
 
     public ResponseEntity<Result> getSectionListAll(int page, int size) {
         int offset = (page - 1) * size;
         List<Section> sectionList = sectionMapper.getSectionListAll(offset, size);
-        return setAdvisorName(sectionList);
+        int count = sectionMapper.getSectionCountAll();
+        int pages = count / size + (count % size == 0 ? 0 : 1);
+        return setAdvisorName(sectionList, pages);
     }
 
     @NotNull
-    private ResponseEntity<Result> setAdvisorName(List<Section> sectionList) {
+    private ResponseEntity<Result> setAdvisorName(List<Section> sectionList, int pages) {
         List<Integer> sectionIds = sectionList.stream()
                 .map(Section::getId)
                 .toList();
@@ -114,8 +117,10 @@ public class SectionService {
                         sectionIdToStudentCount.getOrDefault(section.getId(), 0)
                 ))
                 .toList();
-
-        return ResponseUtil.build(Result.success(sectionDTOList, "获取成功"));
+        Map<String, Object> result = new HashMap<>();
+        result.put("section", sectionDTOList);
+        result.put("page", pages);
+        return ResponseUtil.build(Result.success(result, "获取成功"));
     }
 
     public ResponseEntity<Result> searchSection(String grade ,int major) {
