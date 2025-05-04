@@ -3,7 +3,7 @@
 
 <mapper namespace="com.orbithy.cms.mapper.ClassMapper">
     <select id="getStudentSectionInfo" resultType="com.orbithy.cms.data.dto.StudentSectionDTO">
-        SELECT u.id, u.username, sec.number AS sectionNumber
+        SELECT u.id, u.username, u.SDUId, sec.number AS sectionNumber
         FROM cms.user u
         JOIN cms.status s ON u.id = s.id
         JOIN cms.section sec ON s.section = sec.id
