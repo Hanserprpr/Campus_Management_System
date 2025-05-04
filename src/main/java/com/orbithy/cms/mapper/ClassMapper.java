@@ -76,4 +76,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = 1")
     List<Classes> getCourseByTerm(String term);
+
+    @Select("SELECT f_reason FROM classes WHERE id = #{courseId}")
+    String getRefuseReasonByCourseId(Integer courseId);
 }
