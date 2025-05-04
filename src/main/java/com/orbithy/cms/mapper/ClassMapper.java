@@ -38,7 +38,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT id, class_num, name, point,term, status FROM classes WHERE teacher_id = #{teacherId}")
     List<ClassListDTO> getTeacherCourses(@Param("teacherId") Integer teacherId);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE term = #{term}")
+    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE term = #{term} AND status = 1")
     List<ClassListDTO> getCoursesByTerm(@Param("term") String term);
 
     @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
@@ -56,7 +56,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = #{status}")
     List<Classes> getCoursesByTermAndStatus(@Param("term") String term, @Param("status") Integer status);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes")
+    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE status = 1")
     List<ClassListDTO> select();
 
     @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")
