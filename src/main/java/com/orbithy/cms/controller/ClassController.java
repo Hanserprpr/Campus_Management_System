@@ -62,9 +62,11 @@ public class ClassController {
      */
     @Teacher
     @GetMapping("/list")
-    public ResponseEntity<Result> getCourseList(@RequestParam(required = false) String term) {
+    public ResponseEntity<Result> getCourseList(@RequestParam(required = false) String term,
+                                                @RequestParam(defaultValue = "1") Integer pageNum,
+                                                @RequestParam(defaultValue = "10") Integer pageSize) {
         String id = (String) request.getAttribute("userId");
-        return classService.getCourseList(id, term);
+        return classService.getCourseList(id, term, pageNum, pageSize);
     }
 
     /**

@@ -168,51 +168,55 @@ public class ClassService {
     /**
      * 获取课程列表
      */
-    public ResponseEntity<Result> getCourseList(String id, String term) {
+    public ResponseEntity<Result> getCourseList(String id, String term, Integer pageNum, Integer pageSize) {
         try {
-            // 验证学期格式
             if (term != null && !term.matches("\\d{4}-\\d{4}-[12]")) {
                 throw new CustomException("无效的学期格式");
             }
-
             int permission = userMapper.getPermission(id);
-            List<ClassListDTO> ClassList;
+            List<ClassListDTO> classList;
+            int total = 0;
+            int offset = (pageNum - 1) * pageSize;
 
             switch (permission) {
                 case 0: // 教务
-
-                    ClassList = term != null ?
-                            classMapper.getCoursesByTerm(term) :
-                            classMapper.select();
-                    for (ClassListDTO classListDTO : ClassList) {
-                        String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
-                        classListDTO.setTeacherName(teacherName);
-                        Integer cla = classListDTO.getId();
-                        Integer num = classMapper.countCourseByCourseId(cla);
-                        num = num == null ? 0 : num;
-                        classListDTO.setPeopleNum(num);
+                    if (term != null) {
+                        classList = classMapper.getCoursesByTermByPage(term, offset, pageSize);
+                        total = classMapper.countCoursesByTerm(term);
+                    } else {
+                        classList = classMapper.getAllCoursesByPage(offset, pageSize);
+                        total = classMapper.countAllCourses();
                     }
-
                     break;
                 case 1: // 教师
-                    ClassList = term != null ?
-                            classMapper.getTeacherCoursesByTerm(Integer.parseInt(id), term) :
-                            classMapper.getTeacherCourses(Integer.parseInt(id));
-                    for (ClassListDTO classListDTO : ClassList) {
-                        String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
-                        classListDTO.setTeacherName(teacherName);
-                        Integer cla = classListDTO.getId();
-                        Integer num = classMapper.countCourseByCourseId(cla);
-                        num = num == null ? 0 : num;
-                        classListDTO.setPeopleNum(num);
-
+                    if (term != null) {
+                        classList = classMapper.getTeacherCoursesByTermByPage(Integer.parseInt(id), term, offset, pageSize);
+                        total = classMapper.countTeacherCoursesByTerm(Integer.parseInt(id), term);
+                    } else {
+                        classList = classMapper.getTeacherCoursesByPage(Integer.parseInt(id), offset, pageSize);
+                        total = classMapper.countTeacherCourses(Integer.parseInt(id));
                     }
                     break;
                 default:
                     throw new CustomException("无效的用户权限");
             }
 
-            return ResponseUtil.build(Result.success(ClassList, "获取课程列表成功"));
+            for (ClassListDTO classListDTO : classList) {
+                String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
+                classListDTO.setTeacherName(teacherName);
+                Integer cla = classListDTO.getId();
+                Integer num = classMapper.countCourseByCourseId(cla);
+                num = num == null ? 0 : num;
+                classListDTO.setPeopleNum(num);
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("list", classList);
+            result.put("total", total);
+            result.put("pageNum", pageNum);
+            result.put("pageSize", pageSize);
+
+            return ResponseUtil.build(Result.success(result, "获取课程列表成功"));
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

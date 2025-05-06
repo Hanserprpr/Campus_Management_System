@@ -73,14 +73,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
     int getTeacherNum();
 
-    @Select("SELECT u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status " +
-            "FROM user u " +
-            "LEFT JOIN status s ON u.id = s.id " +
-            "WHERE u.permission = 2 " +
-            "AND (#{major} IS NULL OR u.major = #{major}) " +
-            "AND (#{grade} IS NULL OR s.grade = #{grade}) " +
-            "AND (#{status} IS NULL OR s.status = #{status}) " +
-            "LIMIT #{offset}, #{size}")
     List<com.orbithy.cms.data.dto.StudentListDTO> getStudentListByPage(
             @Param("grade") Integer grade,
             @Param("major") String major,
@@ -88,13 +80,6 @@ public interface UserMapper extends BaseMapper<User> {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    @Select("SELECT COUNT(*) " +
-            "FROM user u " +
-            "LEFT JOIN status s ON u.id = s.id " +
-            "WHERE u.permission = 2 " +
-            "AND (#{major} IS NULL OR u.major = #{major}) " +
-            "AND (#{grade} IS NULL OR s.grade = #{grade}) " +
-            "AND (#{status} IS NULL OR s.status = #{status})")
     int countStudentList(
             @Param("grade") Integer grade,
             @Param("major") String major,

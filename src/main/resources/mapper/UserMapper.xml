@@ -29,4 +29,37 @@
         </foreach>
     </insert>
 
+    <select id="getStudentListByPage" resultType="com.orbithy.cms.data.dto.StudentListDTO">
+        SELECT u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status
+        FROM user u
+        LEFT JOIN status s ON u.id = s.id
+        WHERE u.permission = 2
+        <if test="major != null and major != ''">
+            AND u.major = #{major}
+        </if>
+        <if test="grade != null">
+            AND s.grade = #{grade}
+        </if>
+        <if test="status != null">
+            AND s.status = #{status}
+        </if>
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="countStudentList" resultType="int">
+        SELECT COUNT(*)
+        FROM user u
+        LEFT JOIN status s ON u.id = s.id
+        WHERE u.permission = 2
+        <if test="major != null and major != ''">
+            AND u.major = #{major}
+        </if>
+        <if test="grade != null">
+            AND s.grade = #{grade}
+        </if>
+        <if test="status != null">
+            AND s.status = #{status}
+        </if>
+    </select>
+
 </mapper>

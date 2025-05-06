@@ -26,23 +26,10 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Update("UPDATE classes SET status = #{status}, f_reason = #{reason} WHERE id = #{courseId}")
     void refuseClass(@Param("courseId") Integer courseId, @Param("status") Integer status, @Param("reason") String reason);
 
-    @Select("SELECT * FROM classes WHERE status = 1")
-    List<Classes> getAllClasses();
 
-    @Select("SELECT * FROM classes WHERE status = 1 AND term = #{term}")
-    List<Classes> getRecentClasses(@Param("term") String term);
 
     @Select("SELECT * FROM classes WHERE id = #{courseId}")
     Classes getCourseById(@Param("courseId") Integer courseId);
-
-    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE teacher_id = #{teacherId}")
-    List<ClassListDTO> getTeacherCourses(@Param("teacherId") Integer teacherId);
-
-    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE term = #{term} AND status = 1")
-    List<ClassListDTO> getCoursesByTerm(@Param("term") String term);
-
-    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
-    List<ClassListDTO> getTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
 
 
     List<Classes> searchCourses(@Param("keyword") String keyword, String term);
@@ -79,4 +66,29 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT f_reason FROM classes WHERE id = #{courseId}")
     String getRefuseReasonByCourseId(Integer courseId);
+
+
+    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE term = #{term} LIMIT #{offset}, #{size}")
+    List<ClassListDTO> getCoursesByTermByPage(@Param("term") String term, @Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM classes WHERE term = #{term}")
+    int countCoursesByTerm(@Param("term") String term);
+
+    @Select("SELECT id, class_num, name, point, term, status FROM classes LIMIT #{offset}, #{size}")
+    List<ClassListDTO> getAllCoursesByPage(@Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM classes")
+    int countAllCourses();
+
+    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE teacher_id = #{teacherId} LIMIT #{offset}, #{size}")
+    List<ClassListDTO> getTeacherCoursesByPage(@Param("teacherId") Integer teacherId, @Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId}")
+    int countTeacherCourses(@Param("teacherId") Integer teacherId);
+
+    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term} LIMIT #{offset}, #{size}")
+    List<ClassListDTO> getTeacherCoursesByTermByPage(@Param("teacherId") Integer teacherId, @Param("term") String term, @Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
+    int countTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
 }
