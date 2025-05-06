@@ -64,6 +64,8 @@ public class AdminService {
             result.put("total", total);
             result.put("pageNum", pageNum);
             result.put("pageSize", pageSize);
+            int pages = (int) Math.ceil((double) total / pageSize);
+            result.put("pages", pages);
 
             return ResponseUtil.build(Result.success(result, "获取学生列表成功"));
         } catch (Exception e) {
