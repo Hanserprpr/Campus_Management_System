@@ -215,6 +215,8 @@ public class ClassService {
             result.put("total", total);
             result.put("pageNum", pageNum);
             result.put("pageSize", pageSize);
+            int pages = (int) Math.ceil((double) total / pageSize);
+            result.put("pages", pages);
 
             return ResponseUtil.build(Result.success(result, "获取课程列表成功"));
         } catch (CustomException e) {
