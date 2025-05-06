@@ -11,14 +11,6 @@
                 </foreach>
             </if>
     </select>
-    <select id="getUserNamesByIds" resultType="com.orbithy.cms.data.po.User">
-        SELECT id, username
-        FROM user
-        WHERE id IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </select>
     <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, sex, email, phone, password, SDUId, major, permission, nation, ethnic, politicsStatus)
         VALUES

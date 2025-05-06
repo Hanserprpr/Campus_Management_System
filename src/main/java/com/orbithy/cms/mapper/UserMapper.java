@@ -21,7 +21,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select permission from user where id=#{id}")
     Integer getPermissionById(String id);
 
-    Map<Integer, String> getUsernamesByIds(@Param("ids") List<String> ids);
+    List<Map<String, Object>> getUsernamesByIds(@Param("ids") List<String> ids);
 
 
     @Insert("INSERT INTO user (username, password, SDUId, major) VALUES (#{username}, #{password}, #{SDUId}, '0')")
