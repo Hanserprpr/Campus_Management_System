@@ -25,7 +25,7 @@ COLLATE utf8mb4_bin;
 | **SDUId** | `CHAR(20) NOT NULL UNIQUE`    | 非空，唯一                                 | 学号              |
 | **major**    | `ENUM('0', '1', '2', '3')` | 非空，默认为0                                   | 专业 (`0` 软工 / `1` 树莓 / `2` 大数据 / `3` AI) |
 | **permission** | `TINYINT DEFAULT 2`          | 默认 2                                    | 权限 (`0` 教务 / `1` 教师 / `2` 学生) |
-| **nation**   | `VARCHAR(100) DEFAULT 'China' NOT NULL` | 默认 `China`，非空                     | 国籍              |
+| **nation**   | `VARCHAR(100) DEFAULT 'China' NOT NULL` | 默认 `China`，非空                     | 国籍/地区        |
 | **ethnic**   | `VARCHAR(50) DEFAULT '汉族' NOT NULL` | 默认 `汉族`，非空                        | 民族              |
 | **PoliticsStatus**   | `VARCHAR(50) DEFAULT '群众' NOT NULL` | 默认`群众`，非空                   | 政治面貌         |
 | **college** | `VARCHAR(20) DEFAULT '软件学院' NOT NULL` | 默认`软件学院`，非空                   | 所属学院         |
@@ -48,7 +48,7 @@ CREATE TABLE user (
     SDUId CHAR(20) NOT NULL UNIQUE COMMENT '学号',
     major ENUM('0','1','2','3') DEFAULT '0' COMMENT '专业0软工/1树莓/2大数据/3AI',
     permission TINYINT DEFAULT 2 COMMENT '教务牢师0/教师1/学生2',
-    nation VARCHAR(100) DEFAULT 'China' NOT NULL COMMENT '国籍',
+    nation VARCHAR(100) DEFAULT 'China' NOT NULL COMMENT '国籍/地区',
     ethnic VARCHAR(50) DEFAULT '汉族' NOT NULL COMMENT '民族',
     PoliticsStatus VARCHAR(50) DEFAULT '群众' NOT NULL COMMENT '政治面貌',
     college VARCHAR(20) DEFAULT '软件学院' NOT NULL COMMENT '院系',

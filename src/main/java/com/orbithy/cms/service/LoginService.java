@@ -1,14 +1,21 @@
 package com.orbithy.cms.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orbithy.cms.cache.IGlobalCache;
+import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
+import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.BcryptUtils;
 import com.orbithy.cms.utils.JWTUtil;
 import com.orbithy.cms.utils.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import org.casbin.casdoor.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,31 +29,33 @@ public class LoginService {
     private JWTUtil jwtUtil;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private StatusMapper statusMapper;
+    @Autowired
+    private IGlobalCache redis;
 
     /**
      * 获取token
      *
      * @param id 用户id
-     * @return ResponseEntity<Result>
+     * @return Map<String, String>
      */
-    public ResponseEntity<Result> getToken(String id) {
+    public Map<String, String> getToken(String id) {
         String token;
         String refreshToken;
-        try {
-            refreshToken = jwtUtil.getToken(id, JWTUtil.REFRESH_EXPIRE_TIME, REFRESH_SECRET_KEY);
+        refreshToken = jwtUtil.getToken(id, JWTUtil.REFRESH_EXPIRE_TIME, REFRESH_SECRET_KEY);
 
-            token = jwtUtil.getToken(id, JWTUtil.EXPIRE_TIME, JWTUtil.SECRET_KEY);
+        token = jwtUtil.getToken(id, JWTUtil.EXPIRE_TIME, JWTUtil.SECRET_KEY);
 
-            Map<String, String> tokenMap = new HashMap<>();
-            tokenMap.put("accessToken", token);
-            tokenMap.put("refreshToken", refreshToken);
-            User user = getDetail(id);
-            tokenMap.put("username", user.getUsername());
-            tokenMap.put("permission", user.getPermission().toString());
-            return ResponseUtil.build(Result.success(tokenMap, "登陆成功"));
-        } catch (Exception e) {
-            return ResponseUtil.build(Result.error(500, e.getMessage()));
-        }
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", token);
+        tokenMap.put("refreshToken", refreshToken);
+        User user = getDetail(id);
+        tokenMap.put("username", user.getUsername());
+        tokenMap.put("permission", user.getPermission().toString());
+        return tokenMap;
     }
 
     private User getDetail (String stuId) {
@@ -67,7 +76,7 @@ public class LoginService {
             return ResponseUtil.build(Result.error(401, "密码错误"));
         }
         String userId = String.valueOf(userMapper.getUserId(stuId));
-        return getToken(userId);
+        return ResponseUtil.build(Result.success(getToken(userId), "登录成功"));
     }
 
     /**
@@ -89,4 +98,40 @@ public class LoginService {
         return ResponseUtil.build(Result.error(400, "无有效RefreshToken"));
     }
 
+    @Transactional
+    public String OAuthLogin(String code, String state, HttpServletRequest request) {
+        // 1. 获取 token
+        String token = authService.getOAuthToken(code, state);
+
+        // 2. 解析 token 得到用户信息
+        org.casbin.casdoor.entity.User user = authService.parseJwtToken(token);
+        String SDUId = user.education;
+        if (!this.isExisted(SDUId)) {
+            // 3. 如果用户不存在，注册用户
+            User newUser = new User();
+            newUser.setEmail(user.email);
+            newUser.setUsername(user.displayName);
+            newUser.setNation(user.region);
+            newUser.setSDUId(SDUId);
+            newUser.setSex(user.gender);
+            userMapper.insert(newUser);
+            Status status = new Status();
+            Integer grade = Integer.valueOf(SDUId.substring(2, 4));
+            status.setId(newUser.getId());
+            status.setGrade(grade);
+            status.setAdmission(grade);
+            status.setGraduation(grade+4);
+            System.out.println(status);
+            statusMapper.insertStatus(status);
+        }
+        String id = Integer.toString(userMapper.getUserId(SDUId));
+        Map<String, String> tokenMap = getToken(id);
+        redis.set(state, tokenMap, 180);
+
+        return "登录成功，欢迎：" + user.displayName + "\n" + "请返回软件继续";
+    }
+
+    public ResponseEntity<Result> getOAuthToken(String state) {
+        return ResponseUtil.build(Result.success(redis.get(state), "获取成功"));
+    }
 }
