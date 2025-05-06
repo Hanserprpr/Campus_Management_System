@@ -72,4 +72,26 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
     int getTeacherNum();
+
+    @Select({
+            "SELECT u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status ",
+            "FROM user u ",
+            "LEFT JOIN status s ON u.id = s.id ",
+            "WHERE u.permission = 2",
+            "<if test='major != null'> AND u.major = #{major} </if>",
+            "<if test='grade != null'> AND s.grade = #{grade} </if>",
+            "<if test='status != null'> AND s.status = #{status} </if>",
+            "LIMIT #{offset}, #{size}"
+    })
+    List<com.orbithy.cms.data.dto.StudentListDTO> getStudentListByPage(@Param("grade") Integer grade, @Param("major") String major, @Param("status") Integer status, @Param("offset") int offset, @Param("size") int size);
+
+    @Select({
+            "SELECT COUNT(*) FROM user u ",
+            "LEFT JOIN status s ON u.id = s.id ",
+            "WHERE u.permission = 2",
+            "<if test='major != null'> AND u.major = #{major} </if>",
+            "<if test='grade != null'> AND s.grade = #{grade} </if>",
+            "<if test='status != null'> AND s.status = #{status} </if>"
+    })
+    int countStudentList(@Param("grade") Integer grade, @Param("major") String major, @Param("status") Integer status);
 }

@@ -55,59 +55,15 @@ public class AdminService {
 
     public ResponseEntity<Result> getStudentList(Integer grade, String major, Integer status, Integer pageNum, Integer pageSize) {
         try {
+            int offset = (pageNum - 1) * pageSize;
+            List<StudentListDTO> studentList = userMapper.getStudentListByPage(grade, major, status, offset, pageSize);
+            int total = userMapper.countStudentList(grade, major, status);
 
-            // 构建查询条件
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("permission", 2); // 只查询学生
-
-
-            // 分页查询
-            Page<User> page = new Page<>(pageNum, pageSize);
-            Page<User> userPage = userMapper.selectPage(page, queryWrapper);
-
-            // 转换为 DTO
-            List<StudentListDTO> studentList = userPage.getRecords().stream()
-                    .map(user -> {
-                        StudentListDTO dto = new StudentListDTO();
-                        dto.setSDUId(user.getSDUId());
-                        dto.setUsername(user.getUsername());
-                        dto.setSex(user.getSex());
-                        dto.setMajor(String.valueOf(user.getMajor()));
-
-                        // 获取学籍信息
-                        Status studentStatus = statusMapper.getStatusById(user.getId().toString());
-                        if (studentStatus != null) {
-                            dto.setGrade(studentStatus.getGrade());
-                            dto.setSection(studentStatus.getSection());
-                            dto.setStatus(studentStatus.getStatus());
-                        }
-
-                        return dto;
-
-
-                    })
-                    .filter(dto -> {
-                        // 应用过滤条件
-                        if (grade != null && !grade.equals(dto.getGrade())) {
-                            return false;
-                        }
-                        if (major != null && !major.isEmpty() && !major.equals(dto.getMajor())) {
-                            return false;
-                        }
-                        if (status != null && !status.equals(dto.getStatus())) {//TODO
-                            return false;
-                        }
-                        return true;
-                    })
-                    .collect(Collectors.toList());
-
-            // 构建分页结果
             Map<String, Object> result = new HashMap<>();
             result.put("list", studentList);
-            result.put("total", userPage.getTotal());
-            result.put("pages", userPage.getPages());
-            result.put("current", userPage.getCurrent());
-            result.put("size", userPage.getSize());
+            result.put("total", total);
+            result.put("pageNum", pageNum);
+            result.put("pageSize", pageSize);
 
             return ResponseUtil.build(Result.success(result, "获取学生列表成功"));
         } catch (Exception e) {
