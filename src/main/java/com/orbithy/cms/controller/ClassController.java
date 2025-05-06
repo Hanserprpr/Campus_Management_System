@@ -147,4 +147,17 @@ public class ClassController {
         String id = (String) request.getAttribute("userId");
         return classService.adminDeleteCourse(id, courseId);
     }
+
+    /**
+     * 获取课程b被退回原因
+     *
+     * @param courseId 课程ID
+     * @return ResponseEntity<Result>
+     */
+    @Teacher
+    @GetMapping("/getReason/{courseId}")
+    public ResponseEntity<Result> getReason(@PathVariable Integer courseId) {
+        String id = (String) request.getAttribute("userId");
+        return classService.getReason(id, courseId);
+    }
 }

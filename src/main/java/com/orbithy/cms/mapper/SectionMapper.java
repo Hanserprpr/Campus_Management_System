@@ -24,4 +24,7 @@ public interface SectionMapper extends BaseMapper<Section> {
 
     @Select("SELECT * FROM section WHERE grade = #{grade} AND major = #{major}")
     List<Section> searchSection(String grade, int major);
+
+    @Select("SELECT count(*) FROM section")
+    int getSectionCountAll();
 }

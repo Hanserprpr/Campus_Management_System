@@ -8,6 +8,7 @@ import com.orbithy.cms.service.GradeService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,4 +42,10 @@ public class GradeController {
         return gradeService.releaseGrade(courseId);
     }
 
+    @Auth
+    @GetMapping("/getGrade")
+    public ResponseEntity<Result> getGrade(String term) {
+        String id = (String) request.getAttribute("userId");
+        return gradeService.getGrade(id, term);
+    }
 }

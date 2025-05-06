@@ -7,4 +7,5 @@ public class StudentSectionDTO {
     private Integer id;
     private String username;
     private Integer sectionNumber;
+    private Integer SDUId;
 }

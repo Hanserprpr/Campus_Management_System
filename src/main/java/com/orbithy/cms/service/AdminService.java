@@ -180,7 +180,14 @@ public class AdminService {
         if (!loginService.isExisted(SDUId)) {
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
-            userMapper.insert(user);
+            userMapper.addUser(user);
+            Status status = new Status();
+            Integer grade = Integer.valueOf(SDUId.substring(2, 4));
+            status.setId(user.getId());
+            status.setGrade(grade);
+            status.setAdmission(grade);
+            status.setGraduation(grade+4);
+            statusMapper.insertStatus(status);
         }
         return ResponseUtil.build(Result.ok());
     }

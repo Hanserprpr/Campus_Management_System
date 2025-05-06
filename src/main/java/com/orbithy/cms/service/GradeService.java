@@ -2,6 +2,7 @@ package com.orbithy.cms.service;
 
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.dto.GradeDTO;
+import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
@@ -91,5 +92,10 @@ public class GradeService {
         // 发布成绩
         gradeMapper.releaseGrade(courseId);
         return ResponseUtil.build(Result.ok());
+    }
+
+    public ResponseEntity<Result> getGrade(String id, String term) {
+        List<GradeTermDTO> grade = gradeMapper.getGradeByTerm(id, term);
+        return ResponseUtil.build(Result.success(grade, "获取成绩成功"));
     }
 }

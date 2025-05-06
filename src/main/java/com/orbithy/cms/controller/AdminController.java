@@ -135,7 +135,7 @@ public class AdminController {
      */
     @Admin
     @PostMapping("/addUser")
-    public ResponseEntity<Result> addUser(@RequestParam User user) {
+    public ResponseEntity<Result> addUser(@ModelAttribute User user) {
         return adminService.addUser(user);
     }
 }

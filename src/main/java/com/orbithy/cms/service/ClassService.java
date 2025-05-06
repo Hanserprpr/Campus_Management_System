@@ -505,4 +505,11 @@ public class ClassService {
         return ResponseUtil.build(Result.success(result, "获取选课学生成功"));
 
     }
+
+    public ResponseEntity<Result> getReason(String id, Integer courseId) {
+        if (!classMapper.getTeacherIdByCourseId(courseId).toString().equals(id) && userMapper.getPermission(id) != 0) {
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+        return ResponseUtil.build(Result.success(classMapper.getRefuseReasonByCourseId(courseId), "获取成功"));
+    }
 }
