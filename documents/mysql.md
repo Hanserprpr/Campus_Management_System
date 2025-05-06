@@ -21,7 +21,7 @@ COLLATE utf8mb4_bin;
 | **sex**      | `ENUM('男','女','未设定')`                | 默认未设定                                | 性别             |
 | **email**    | `VARCHAR(100) NOT NULL UNIQUE`          | 可为空，唯一                               | 邮箱              |
 | **phone**    | `VARCHAR(11) UNIQUE`           | 可为空，唯一                               | 手机号            |
-| **password** | `CHAR(128) NOT NULL`           | 非空                                      | 加密后的密码      |
+| **password** | `CHAR(128)`            | 无特殊约束                                      | 加密后的密码      |
 | **SDUId** | `CHAR(20) NOT NULL UNIQUE`    | 非空，唯一                                 | 学号              |
 | **major**    | `ENUM('0', '1', '2', '3')` | 非空，默认为0                                   | 专业 (`0` 软工 / `1` 树莓 / `2` 大数据 / `3` AI) |
 | **permission** | `TINYINT DEFAULT 2`          | 默认 2                                    | 权限 (`0` 教务 / `1` 教师 / `2` 学生) |
