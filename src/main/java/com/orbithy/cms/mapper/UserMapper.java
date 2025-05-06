@@ -12,7 +12,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select id from user where SDUId=#{SDUId}")
     Integer getUserId(String SDUId);
-    @Select("select id, username, email, sex, phone, SDUId, major, permission, nation, ethnic, PoliticsStatus from user where id=#{id}")
+    @Select("select id, username, email, sex, phone, SDUId, major, permission, nation, ethnic, PoliticsStatus, college from user where id=#{id}")
     User getUserInfo(String id);
     @Select("select permission from user where id=#{id}")
     int getPermission(String id);
