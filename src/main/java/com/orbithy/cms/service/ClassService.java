@@ -36,7 +36,7 @@ public class ClassService {
      */
     public ResponseEntity<Result> createCourse(String id, CreateCourseDTO courseDTO) {
         try {
-            
+
             // 创建课程对象
             Classes course = new Classes();
             BeanUtils.copyProperties(courseDTO, course);
