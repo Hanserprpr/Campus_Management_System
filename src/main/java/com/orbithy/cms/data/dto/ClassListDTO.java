@@ -13,4 +13,6 @@ public class ClassListDTO {//获取课程列表DTO
     private int peopleNum;
     private Classes.CourseStatus status;
     private String teacherName;
+    private float regularRatio;
+    private float finalRatio;
 }
