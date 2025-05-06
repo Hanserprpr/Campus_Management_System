@@ -99,4 +99,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Param("grade") Integer grade,
             @Param("major") String major,
             @Param("status") Integer status);
+
+    @Select("SELECT password FROM user WHERE id = #{userId}")
+    String getPasswordById(String userId);
 }

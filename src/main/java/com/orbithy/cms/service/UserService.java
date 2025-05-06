@@ -162,4 +162,13 @@ public class UserService {
         return ResponseUtil.build(Result.ok());
     }
 
+    public ResponseEntity<Result> updatePassword(String userId, String oldPassword, String newPassword) {
+        String password = userMapper.getPasswordById(userId);
+        if (!BcryptUtils.verifyPasswd(oldPassword, password)) {
+            return ResponseUtil.build(Result.error(401, "旧密码错误"));
+        }
+        String newPasswd = BcryptUtils.encrypt(newPassword);
+        userMapper.resetPassword(userId, newPasswd);
+        return ResponseUtil.build(Result.ok());
+    }
 }

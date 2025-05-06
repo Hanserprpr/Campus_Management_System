@@ -115,4 +115,17 @@ public class UserController {
         return userService.resetPassword(userId);
     }
 
+    /**
+     * 修改密码
+     *
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return ResponseEntity<Result>
+     */
+    @Auth
+    @PostMapping("/updatePassword")
+    public ResponseEntity<Result> updatePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
+        String userId = (String) request.getAttribute("userId");
+        return userService.updatePassword(userId, oldPassword, newPassword);
+    }
 }
