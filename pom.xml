@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.orbithy</groupId>
 	<artifactId>Campus_Management_System</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 	<name>Campus_Management_System</name>
 	<description>Campus_Management_System</description>
 	<url/>
@@ -93,7 +93,7 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>RELEASE</version>
+			<version>26.0.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -105,6 +105,11 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.4.0</version> <!-- 或最新稳定版 -->
+		</dependency>
+		<dependency>
+			<groupId>org.casbin</groupId>
+			<artifactId>casdoor-spring-boot-starter</artifactId>
+			<version>1.15.0</version>
 		</dependency>
 
 	</dependencies>

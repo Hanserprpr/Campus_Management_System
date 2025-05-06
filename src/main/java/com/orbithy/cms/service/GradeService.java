@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,6 +58,9 @@ public class GradeService {
         }
         // 获取成绩列表
         List<Grade> grades = gradeMapper.getGradeByCourseId(courseId);
+        if (grades == null || grades.isEmpty()) {
+            return ResponseUtil.build(Result.success(Collections.emptyList(), "暂无成绩记录"));
+        }
         // 1. 获取所有学生 ID
         Set<String> studentIds = grades.stream()
                 .map(Grade::getStudentId) // 返回 String 类型
@@ -68,17 +68,18 @@ public class GradeService {
 
 
         // 2. 批量查询所有学生的用户名
-        Map<Integer, String> studentUsernameMap = userMapper.getUsernamesByIds(new ArrayList<>(studentIds));
-
-        // 3. 遍历 grades，直接从 studentUsernameMap 获取对应的 username
+        List<Map<String, Object>> rawList = userMapper.getUsernamesByIds(new ArrayList<>(studentIds));
+        Map<Integer, String> idToUsernameMap = new HashMap<>();
+        for (Map<String, Object> row : rawList) {
+            idToUsernameMap.put((Integer) row.get("id"), (String) row.get("username"));
+        }
         List<GradeDTO> gradeDTOList = new ArrayList<>();
         for (Grade grade : grades) {
             GradeDTO dto = new GradeDTO();
             BeanUtils.copyProperties(grade, dto);
-            dto.setUsername(studentUsernameMap.get(grade.getStudentId()));  // 从 Map 中获取 username
+            dto.setUsername(idToUsernameMap.get(grade.getStudentId()));
             gradeDTOList.add(dto);
         }
-
         return ResponseUtil.build(Result.success(gradeDTOList, "获取成功"));
     }
 
