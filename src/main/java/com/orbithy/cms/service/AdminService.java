@@ -138,6 +138,7 @@ public class AdminService {
         if (!loginService.isExisted(SDUId)) {
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
+            user.setEmail(SDUId + "@mail.sdu.edu.cn");
             userMapper.addUser(user);
             Status status = new Status();
             Integer grade = Integer.valueOf(SDUId.substring(2, 4));

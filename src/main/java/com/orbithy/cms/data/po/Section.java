@@ -1,13 +1,13 @@
 package com.orbithy.cms.data.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @TableName("section")
 public class Section {

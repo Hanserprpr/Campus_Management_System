@@ -24,7 +24,7 @@ public interface UserMapper extends BaseMapper<User> {
     List<Map<String, Object>> getUsernamesByIds(@Param("ids") List<String> ids);
 
 
-    @Insert("INSERT INTO user (username, password, SDUId, major) VALUES (#{username}, #{password}, #{SDUId}, '0')")
+    @Insert("INSERT INTO user (username, password, SDUId, major, email) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addUser(User user);
 
