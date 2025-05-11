@@ -19,7 +19,7 @@ public class WrapperUtil {
                     continue;
                 }
                 Object value = field.get(entity);
-                if (value != null) {
+                if (value != null && !(value instanceof String && ((String) value).isBlank())) {
                     String column = getColumnName(field);
                     wrapper.set(column, value);
                 }
