@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class StudentListDTO {
+    private Integer id;
     @TableField("SDUId")
     private String SDUId;           // 学号
     private String username;        // 姓名

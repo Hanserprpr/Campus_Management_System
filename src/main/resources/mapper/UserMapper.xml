@@ -22,7 +22,7 @@
     </insert>
 
     <select id="getStudentListByPage" resultType="com.orbithy.cms.data.dto.StudentListDTO">
-        SELECT u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status
+        SELECT u.id, u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status
         FROM user u
         LEFT JOIN status s ON u.id = s.id
         WHERE u.permission = 2
