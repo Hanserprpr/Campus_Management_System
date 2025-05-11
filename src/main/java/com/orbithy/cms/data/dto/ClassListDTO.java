@@ -15,4 +15,5 @@ public class ClassListDTO {//获取课程列表DTO
     private String teacherName;
     private float regularRatio;
     private float finalRatio;
+    private Classes.CourseType type;
 }
