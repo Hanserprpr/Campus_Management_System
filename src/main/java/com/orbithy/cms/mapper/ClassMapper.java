@@ -68,25 +68,25 @@ public interface ClassMapper extends BaseMapper<Classes> {
     String getRefuseReasonByCourseId(Integer courseId);
 
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE term = #{term} LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE term = #{term} LIMIT #{offset}, #{size}")
     List<ClassListDTO> getCoursesByTermByPage(@Param("term") String term, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes WHERE term = #{term}")
     int countCoursesByTerm(@Param("term") String term);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes LIMIT #{offset}, #{size}")
     List<ClassListDTO> getAllCoursesByPage(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes")
     int countAllCourses();
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE teacher_id = #{teacherId} LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE teacher_id = #{teacherId} LIMIT #{offset}, #{size}")
     List<ClassListDTO> getTeacherCoursesByPage(@Param("teacherId") Integer teacherId, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId}")
     int countTeacherCourses(@Param("teacherId") Integer teacherId);
 
-    @Select("SELECT id, class_num, name, point, term, status FROM classes WHERE teacher_id = #{teacherId} AND term = #{term} LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio FROM classes WHERE teacher_id = #{teacherId} AND term = #{term} LIMIT #{offset}, #{size}")
     List<ClassListDTO> getTeacherCoursesByTermByPage(@Param("teacherId") Integer teacherId, @Param("term") String term, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
