@@ -43,6 +43,8 @@ public interface UserMapper extends BaseMapper<User> {
     @MapKey("id")
     Map<Integer, User> getUserNamesByIds(@Param("ids") List<Integer> ids);
 
+    List<User> getUsersByIds(@Param("ids") List<Integer> ids);
+
     @Update("UPDATE user SET password = #{passwd} WHERE id = #{userId}")
     void resetPassword(String userId, String passwd);
 

@@ -53,5 +53,13 @@
             AND s.status = #{status}
         </if>
     </select>
-
+    <select id="getUsersByIds" resultType="com.orbithy.cms.data.po.User">
+        SELECT id, username, sex, SDUId FROM user
+        <if test="ids != null and ids.size > 0">
+            WHERE id IN
+            <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
 </mapper>

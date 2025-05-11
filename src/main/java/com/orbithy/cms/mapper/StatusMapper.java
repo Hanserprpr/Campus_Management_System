@@ -6,7 +6,6 @@ import com.orbithy.cms.data.po.Status;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface StatusMapper extends BaseMapper<Status> {
@@ -25,4 +24,7 @@ public interface StatusMapper extends BaseMapper<Status> {
     List<SectionCountDTO> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
 
     void insertBatch(@Param("list") List<Status> list);
+
+    @Select("SELECT id FROM status WHERE section = #{sectionId}")
+    List<Integer> getStudentIdsBySectionId(Integer sectionId);
 }

@@ -98,4 +98,24 @@ public class SectionController {
     public ResponseEntity<Result> searchSection(String grade, int major) {
         return sectionService.searchSection(grade, major);
     }
+
+    /**
+     * 获取班级成员
+     *
+     */
+    @Admin
+    @GetMapping("/getSectionMember")
+    public ResponseEntity<Result> getSectionMember(Integer id) {
+        return sectionService.getSectionMember(id);
+    }
+
+    /**
+     * 获取班级信息
+     *
+     */
+    @Admin
+    @GetMapping("/getSectionInfo")
+    public ResponseEntity<Result> getSectionInfo(Integer id) {
+        return sectionService.getSectionInfo(id);
+    }
 }

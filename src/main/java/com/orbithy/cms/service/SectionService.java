@@ -126,4 +126,21 @@ public class SectionService {
     public ResponseEntity<Result> searchSection(String grade ,int major) {
         return ResponseUtil.build(Result.success(sectionMapper.searchSection(grade, major), "获取成功"));
     }
+
+    public ResponseEntity<Result> getSectionMember(Integer id) {
+        List<Integer> ids = statusMapper.getStudentIdsBySectionId(id);
+        if (ids.isEmpty()) {
+            return ResponseUtil.build(Result.error(404, "该班级暂无成员"));
+        }
+        List<User> users = userMapper.getUsersByIds(ids);
+        return ResponseUtil.build(Result.success(users, "获取成功"));
+    }
+
+    public ResponseEntity<Result> getSectionInfo(Integer id) {
+        Section section = sectionMapper.selectById(id);
+        if (section == null) {
+            return ResponseUtil.build(Result.error(404, "班级不存在"));
+        }
+        return ResponseUtil.build(Result.success(section, "获取成功"));
+    }
 }
