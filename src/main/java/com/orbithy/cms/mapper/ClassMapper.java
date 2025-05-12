@@ -32,7 +32,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     Classes getCourseById(@Param("courseId") Integer courseId);
 
 
-    List<Classes> searchCourses(@Param("keyword") String keyword, String term);
+    List<Classes> searchCourses(@Param("keyword") String keyword, String term, String type);
 
     @Select("SELECT * FROM classes WHERE status = 0")
     List<ClassDTO> getPendingCourses();

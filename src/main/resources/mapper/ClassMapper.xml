@@ -21,6 +21,9 @@
             <if test="term != null">
                 AND term = #{term}
             </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
                 AND status = 1
         </where>
         ORDER BY id DESC
