@@ -5,6 +5,7 @@ import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.data.po.Term;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.TermService;
+import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,14 @@ public class TermController {
     @GetMapping("/getTermList")
     public ResponseEntity<Result> getTermList() throws IOException {
         return termService.getTerms();
+    }
+
+    /**
+     * 获取当前学期
+     */
+    @Auth
+    @GetMapping("/getCurrentTerm")
+    public ResponseEntity<Result> getCurrentTerm() throws IOException {
+        return ResponseUtil.build(Result.success(TermService.getCurrentTerm(), "获取当前学期成功"));
     }
 }
