@@ -112,15 +112,6 @@ public class AdminController {
     }
 
     /**
-     * 获取学期列表
-     */
-    @Admin
-    @GetMapping("/getTermList")
-    public ResponseEntity<Result> getTermList() throws IOException {
-        return termService.getTerms();
-    }
-
-    /**
      * 修改用户信息
      */
     @Admin

@@ -1,15 +1,13 @@
 package com.orbithy.cms.controller;
 
 import com.orbithy.cms.annotation.Admin;
+import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.data.po.Term;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -36,5 +34,14 @@ public class TermController {
     @Admin
     public ResponseEntity<Result> openSelection(Term term) throws IOException {
         return termService.updateTerm(term);
+    }
+
+    /**
+     * 获取学期列表
+     */
+    @Auth
+    @GetMapping("/getTermList")
+    public ResponseEntity<Result> getTermList() throws IOException {
+        return termService.getTerms();
     }
 }
