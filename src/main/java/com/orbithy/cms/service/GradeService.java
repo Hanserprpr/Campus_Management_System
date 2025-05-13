@@ -86,10 +86,12 @@ public class GradeService {
     /**
      * 发布成绩
      */
+    @Transactional
     public ResponseEntity<Result> releaseGrade(int courseId) {
         if (classMapper.getTeacherIdByCourseId(courseId) == null) {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }
+        gradeMapper.updateRankByCourse(courseId);
         // 发布成绩
         gradeMapper.releaseGrade(courseId);
         return ResponseUtil.build(Result.ok());
