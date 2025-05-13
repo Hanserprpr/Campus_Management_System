@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -23,4 +24,17 @@ public interface GradeMapper extends BaseMapper<Grade> {
             "JOIN user u ON c.teacher_id = u.id "+
             "WHERE student_id = #{id} AND g.term = #{term}")
     List<GradeTermDTO> getGradeByTerm(String id, String term);
+
+    @Update("""
+                UPDATE grade t1
+                JOIN (
+                    SELECT id, RANK() OVER (PARTITION BY course_id ORDER BY grade DESC) AS r
+                    FROM grade
+                    WHERE course_id = #{courseId}
+                ) t2 ON t1.id = t2.id
+                SET t1.rank = t2.r
+                WHERE t1.course_id = #{courseId}
+            """)
+    void updateRankByCourse(@Param("courseId") Integer courseId);
+
 }
