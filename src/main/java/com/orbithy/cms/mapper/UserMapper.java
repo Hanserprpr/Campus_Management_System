@@ -1,6 +1,7 @@
 package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.orbithy.cms.data.dto.StudentListDTO;
 import com.orbithy.cms.data.po.User;
 import org.apache.ibatis.annotations.*;
 
@@ -62,8 +63,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     void insertBatch(@Param("list") List<User> users);
 
-    @Select("SELECT * FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission} LIMIT #{offset}, #{size}")
-    List<User> searchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission, @Param("offset") int offset, @Param("size") int size);
+    List<StudentListDTO> searchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission}")
     int countSearchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission);

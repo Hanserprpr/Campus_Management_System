@@ -64,10 +64,9 @@
     </select>
     <select id="searchUsers" resultType="User">
         SELECT
-            u.id, u.username, u.sex, u.email, u.phone, u.SDUId, u.major,
-            u.permission, u.nation, u.ethnic, u.PoliticsStatus, u.college,
-            s.number, s.major,
-            st.status
+            u.id, u.username, u.sex, u.SDUId, u.major,
+            s.grade,
+            st.status, st.section
         FROM user u
                  LEFT JOIN status st ON u.id = st.id
                  LEFT JOIN section s ON st.section = s.id

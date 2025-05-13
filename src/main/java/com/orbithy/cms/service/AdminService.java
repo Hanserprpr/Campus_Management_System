@@ -77,7 +77,7 @@ public class AdminService {
     public ResponseEntity<Result> searchUsers(String keyword, Integer permission, int pageNum, int pageSize) {
         try {
             int offset = (pageNum - 1) * pageSize;
-            List<User> users = userMapper.searchUsers(keyword, permission, offset, pageSize);
+            List<StudentListDTO> users = userMapper.searchUsers(keyword, permission, offset, pageSize);
             int total = userMapper.countSearchUsers(keyword, permission);
             Map<String, Object> result = new HashMap<>();
             result.put("list", users);

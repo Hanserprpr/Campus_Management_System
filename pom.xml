@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.orbithy</groupId>
 	<artifactId>Campus_Management_System</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<name>Campus_Management_System</name>
 	<description>Campus_Management_System</description>
 	<url/>
