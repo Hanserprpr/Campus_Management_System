@@ -17,6 +17,7 @@ spring:
       database: ${REDIS_DB:0}
       password: ${REDIS_PASSWORD:}
   secret: ${APP_SECRET}  #此处是手动添加用户时用的密钥，将在未来版本被废弃
+  default_password: ${DEFAULT_PASSWORD:123456}  #此处是重置密码时的默认密码
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
