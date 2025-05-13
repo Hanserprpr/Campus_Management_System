@@ -2,11 +2,9 @@ package com.orbithy.cms.controller;
 
 import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.data.vo.Result;
-import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.service.UserService;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.annotations.Results;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/status")
 public class statusController {
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
     /**

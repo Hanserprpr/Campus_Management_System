@@ -4,7 +4,7 @@ import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.data.po.Section;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.SectionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/section")
 public class SectionController {
 
-    @Autowired
+    @Resource
     private SectionService sectionService;
 
     /**
@@ -95,8 +95,10 @@ public class SectionController {
      */
     @Admin
     @GetMapping("/search")
-    public ResponseEntity<Result> searchSection(String grade, int major) {
-        return sectionService.searchSection(grade, major);
+    public ResponseEntity<Result> searchSection(@RequestParam(required = false) String grade,
+                                                @RequestParam(required = false) Integer major,
+                                                @RequestParam(required = false) Integer number) {
+        return sectionService.searchSection(grade, major, number);
     }
 
     /**

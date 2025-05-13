@@ -123,8 +123,8 @@ public class SectionService {
         return ResponseUtil.build(Result.success(result, "获取成功"));
     }
 
-    public ResponseEntity<Result> searchSection(String grade ,int major) {
-        return ResponseUtil.build(Result.success(sectionMapper.searchSection(grade, major), "获取成功"));
+    public ResponseEntity<Result> searchSection(String grade ,Integer major, Integer number) {
+        return ResponseUtil.build(Result.success(sectionMapper.searchSection(grade, major, number), "获取成功"));
     }
 
     public ResponseEntity<Result> getSectionMember(Integer id) {

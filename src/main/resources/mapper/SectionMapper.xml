@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.orbithy.cms.mapper.SectionMapper">
+    <select id="searchSection" resultType="com.orbithy.cms.data.po.Section">
+        SELECT * FROM section
+        WHERE 1=1
+        <if test="grade != null">
+            AND grade = #{grade}
+        </if>
+        <if test="major != null">
+            AND major = #{major}
+        </if>
+        <if test="number != null">
+            AND number = #{number}
+        </if>
+    </select>
+</mapper>
