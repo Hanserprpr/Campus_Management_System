@@ -4,7 +4,7 @@ import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.data.po.Section;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.SectionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/section")
 public class SectionController {
 
-    @Autowired
+    @Resource
     private SectionService sectionService;
 
     /**

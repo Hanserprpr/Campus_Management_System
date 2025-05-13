@@ -5,14 +5,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orbithy.cms.cache.IGlobalCache;
 import com.orbithy.cms.data.dto.StudentCardDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
+import com.orbithy.cms.data.po.Section;
 import com.orbithy.cms.data.po.StudentStatus;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.data.po.Status;
+import com.orbithy.cms.mapper.SectionMapper;
 import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.BcryptUtils;
 import com.orbithy.cms.utils.ResponseUtil;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,8 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private LoginService loginService;
+    @Resource
+    private SectionMapper sectionMapper;
     @Autowired
     private IGlobalCache redis;
 
@@ -137,9 +142,11 @@ public class UserService {
                 return ResponseUtil.build(Result.error(404, "用户不存在"));
             }
             User user = userMapper.getUserInfo(userId);
+            Section section = sectionMapper.selectById(status.getSection());
             StudentCardDTO userCardDTO = new StudentCardDTO();
             userCardDTO.setUser(user);
             userCardDTO.setStatus(status);
+            userCardDTO.setSection(section);
             return ResponseUtil.build(Result.success(userCardDTO, "获取成功"));
         } catch (Exception e) {
             return ResponseUtil.build(Result.error(500, "获取失败：" + e.getMessage()));
