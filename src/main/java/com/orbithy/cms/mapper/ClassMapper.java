@@ -68,13 +68,13 @@ public interface ClassMapper extends BaseMapper<Classes> {
     String getRefuseReasonByCourseId(Integer courseId);
 
 
-    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio, type FROM classes WHERE term = #{term} AND status IN (1, 3) LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio, type, college FROM classes WHERE term = #{term} AND status IN (1, 3) LIMIT #{offset}, #{size}")
     List<ClassListDTO> getCoursesByTermByPage(@Param("term") String term, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes WHERE term = #{term}")
     int countCoursesByTerm(@Param("term") String term);
 
-    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio, type FROM classes WHERE status IN (1, 3) LIMIT #{offset}, #{size}")
+    @Select("SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio, type, college FROM classes WHERE status IN (1, 3) LIMIT #{offset}, #{size}")
     List<ClassListDTO> getAllCoursesByPage(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM classes")
