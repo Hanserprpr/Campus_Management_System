@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=true&jdbcCompliantTruncation=false
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DB:0}
+      password: ${REDIS_PASSWORD:}
+  secret: ${APP_SECRET}  #此处是手动添加用户时用的密钥，将在未来版本被废弃
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  refresh-secret-key: ${JWT_REFRESH_SECRET_KEY}
+
+logging:
+  level:
+    org.springframework.data.redis: DEBUG
+    com.orbithy.cms.mapper: DEBUG
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-enums-package: com.orbithy.cms.data.po
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      update-strategy: not_null
+
+casdoor:  # 详细信息见 https://casdoor.org/zh/docs/integration/java/spring-boot
+  endpoint: ${CASDOOR_ENDPOINT}
+  client-id: ${CASDOOR_CLIENT_ID}
+  client-secret: ${CASDOOR_CLIENT_SECRET}
+  certificate: |
+    ${CASDOOR_CERTIFICATE}
+  organization-name: ${CASDOOR_ORG}
+  application-name: ${CASDOOR_APP}
+  redirectUri: ${CASDOOR_REDIRECT_URI}
