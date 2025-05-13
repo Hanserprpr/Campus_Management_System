@@ -162,4 +162,15 @@ public class ClassController {
         String id = (String) request.getAttribute("userId");
         return classService.getReason(id, courseId);
     }
+
+    /**
+     * 获取课表
+     */
+    @Auth
+    @GetMapping("/getClassSchedule/{week}")
+    public ResponseEntity<Result> getClassSchedule(@RequestParam String term,
+                                                @PathVariable Integer week) {
+    String id = (String) request.getAttribute("userId");
+    return classService.getClassSchedule(id,week,term);
+    }
 }

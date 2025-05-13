@@ -518,4 +518,21 @@ public class ClassService {
         }
         return ResponseUtil.build(Result.success(classMapper.getRefuseReasonByCourseId(courseId), "获取成功"));
     }
+
+    public ResponseEntity<Result> getClassSchedule(String id, Integer week, String term) {
+        if(userMapper.getPermission(id) != 1 && userMapper.getPermission(id) != 2){
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+            
+        int permission = userMapper.getPermission(id);
+        List<ClassDTO> classSchedule = Collections.emptyList();
+        if (permission == 1) {
+            classSchedule = classMapper.getClassScheduleTea(id,term, week);
+        } else if (permission == 2) {
+            classSchedule = classMapper.getClassScheduleSdu(id,term,week);
+
+        }
+        return ResponseUtil.build(Result.success(classSchedule,"获取成功"))
+
+    }
 }

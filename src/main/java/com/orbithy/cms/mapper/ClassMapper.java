@@ -91,4 +91,12 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND term = #{term}")
     int countTeacherCoursesByTerm(@Param("teacherId") Integer teacherId, @Param("term") String term);
+
+    @Select("SELECT class_num, name, time, classroom FROM classes WHERE teacher_id = #{teacherId} AND term = #{term} AND week_start <= week AND week_end >= week")
+    List<ClassDTO>getClassScheduleTea(@Param("teacherId") String teacherId, @Param("term") String term, @Param("week") Integer week);
+
+    @Select("SELECT class_num, name, time, classroom, teacher_id FROM classes cl" +
+            "JOIN course_reg co ON co.course_id = c.id" +
+            " WHERE cl.term = #{term} AND cl.week_start <= week AND cl.week_end >= week AND co.student_id = #{id}")
+    List<ClassDTO> getClassScheduleSdu(String id, String term, Integer week);
 }
