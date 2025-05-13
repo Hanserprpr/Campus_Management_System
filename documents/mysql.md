@@ -194,7 +194,7 @@ CREATE TABLE course_reg(
 | **id**       | `INT AUTO_INCREMENT PRIMARY KEY` | 主键，自动递增                             | 成绩唯一 ID   |
 | **student_id** | `INT NOT NULL`                | 非空，外键，关联 `user` 表                 | 学生 ID      |
 | **course_id** | `INT NOT NULL`                | 非空，外键，关联 `classes` 表                | 课程 ID      |
-| **grade**    | `TINYINT NOT NULL`             | 非空                                      | 成绩         |
+| **grade**    | `DECIMAL(5,2) NOT NULL`             | 非空                                      | 成绩         |
 | **term**     | `VARCHAR(15) NOT NULL`         | 非空                                      | 开课学期     |
 | **rank**     | `TINYINT NOT NULL`             | 非空                                      | 排名         |
 
@@ -209,7 +209,7 @@ CREATE TABLE grade(
     course_id INT NOT NULL COMMENT '课程id',
     regular INT NOT NULL COMMENT '平时分',
     final INT NOT NULL COMMENT '期末分',
-    grade TINYINT NOT NULL COMMENT '成绩',
+    grade DECIMAL(5,2) NOT NULL COMMENT '成绩',
     term VARCHAR(15) NOT NULL COMMENT '开课学期',
     rank TINYINT NOT NULL COMMENT '排名',
     FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE,
