@@ -95,8 +95,10 @@ public class SectionController {
      */
     @Admin
     @GetMapping("/search")
-    public ResponseEntity<Result> searchSection(String grade, int major) {
-        return sectionService.searchSection(grade, major);
+    public ResponseEntity<Result> searchSection(@RequestParam(required = false) String grade,
+                                                @RequestParam(required = false) Integer major,
+                                                @RequestParam(required = false) Integer number) {
+        return sectionService.searchSection(grade, major, number);
     }
 
     /**
