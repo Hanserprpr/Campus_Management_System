@@ -62,7 +62,7 @@
             </foreach>
         </if>
     </select>
-    <select id="searchUsers" resultType="User">
+    <select id="searchUsers" resultType="com.orbithy.cms.data.dto.StudentListDTO">
         SELECT
             u.id, u.username, u.sex, u.SDUId, u.major,
             s.grade,
