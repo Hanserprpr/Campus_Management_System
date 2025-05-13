@@ -532,7 +532,7 @@ public class ClassService {
             classSchedule = classMapper.getClassScheduleSdu(id,term,week);
 
         }
-        return ResponseUtil.build(Result.success(classSchedule,"获取成功"))
+        return ResponseUtil.build(Result.success(classSchedule,"获取成功"));
 
     }
 }
