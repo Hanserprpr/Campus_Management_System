@@ -339,6 +339,51 @@ public class ClassService {
     }
 
     /**
+     * 自动排课
+     */
+    public ResponseEntity<Result> autoSchedule(String id, String term) {
+        try {
+
+
+            // 验证学期格式
+            if (term == null || !term.matches("\\d{4}-\\d{4}-[12]")) {
+                throw new CustomException("无效的学期格式");
+            }
+
+            // 获取需要排课的课程（状态为已通过审批的课程）
+            List<Classes> courses = classMapper.getCoursesByTermAndStatus(term, 1);
+            if (courses.isEmpty()) {
+                throw new CustomException("没有需要排课的课程");
+            }
+
+            // 执行排课
+            boolean success = generateSchedule(courses);
+
+            if (!success) {
+                throw new CustomException("无法找到合适的排课方案，请检查课程时间冲突或教室容量限制");
+            }
+
+            // 生成排课结果报告
+            StringBuilder report = new StringBuilder("排课成功！\n");
+            for (Classes course : courses) {
+                report.append(String.format("课程：%s\n", course.getName()));
+                report.append(String.format("教师：%s\n", userMapper.getUsernameById(course.getTeacherId())));
+                report.append("上课时间：\n");
+                Arrays.stream(course.getTime().split(","))
+                        .map(Integer::parseInt)
+                        .forEach(slot -> report.append(getTimeSlotInfo(slot)).append("\n"));
+                report.append("\n");
+            }
+
+            return ResponseUtil.build(Result.success(report.toString(), "自动排课完成"));
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException("自动排课失败：" + e.getMessage(), e);
+        }
+    }
+
+    /**
      * 生成排课方案（贪心算法）
      * 0-4: 周一的时间段
      * 5-9: 周二的时间段
@@ -354,10 +399,15 @@ public class ClassService {
         boolean[][] timeSlotOccupied = new boolean[DAYS][SLOTS_PER_DAY];
         // 创建教师课程表 [教师ID][天数][时间段]
         Map<Integer, boolean[][]> teacherSchedule = new HashMap<>();
+        // 创建教室容量表 [天数][时间段]
+        int[][] classroomCapacity = new int[DAYS][SLOTS_PER_DAY];
+        // 设置每个时间段的最大教室容量
+//        int MAX_CLASSROOM_CAPACITY = 200;
 
         for (Classes course : courses) {
             boolean scheduled = false;
             int teacherId = course.getTeacherId();
+            int courseCapacity = course.getCapacity();
 
             // 初始化教师课程表
             if (!teacherSchedule.containsKey(teacherId)) {
@@ -382,11 +432,12 @@ public class ClassService {
                         // 检查该时间段是否可用
                         if (!timeSlotOccupied[day][slot] &&
                                 !teacherSchedule.get(teacherId)[day][slot] &&
-                                !assignedSlots.contains(actualSlot)) {
+                                !assignedSlots.contains(actualSlot) ) {
 
                             // 分配时间段
                             timeSlotOccupied[day][slot] = true;
                             teacherSchedule.get(teacherId)[day][slot] = true;
+                            classroomCapacity[day][slot] += courseCapacity;
                             assignedSlots.add(actualSlot);
                             remainingPeriods--;
                             foundSlot = true;
@@ -426,40 +477,6 @@ public class ClassService {
         int day = slot / SLOTS_PER_DAY + 1;  // 1-5表示周一到周五
         int period = slot % SLOTS_PER_DAY + 1;  // 1-5表示第几节课
         return String.format("周%d第%d节", day, period);
-    }
-
-    /**
-     * 自动排课
-     */
-    public ResponseEntity<Result> autoSchedule(String id, String term) {
-        try {
-
-            // 获取需要排课的课程（状态为已通过审批的课程）
-            List<Classes> courses = classMapper.getCoursesByTermAndStatus(term, 1);
-
-            // 执行排课
-            boolean success = generateSchedule(courses);
-
-            if (!success) {
-                throw new CustomException("无法找到合适的排课方案");
-            }
-
-            // 生成排课结果报告
-            StringBuilder report = new StringBuilder("排课成功！\n");
-            for (Classes course : courses) {
-                report.append(String.format("课程：%s\n", course.getName()));
-                Arrays.stream(course.getTime().split(","))
-                        .map(Integer::parseInt)
-                        .forEach(slot -> report.append(getTimeSlotInfo(slot)).append("\n"));
-                report.append("\n");
-            }
-
-            return ResponseUtil.build(Result.success(report.toString(), "自动排课完成"));
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new CustomException("自动排课失败：" + e.getMessage(), e);
-        }
     }
 
     /**
