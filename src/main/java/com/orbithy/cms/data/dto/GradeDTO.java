@@ -9,7 +9,7 @@ public class GradeDTO {
     private Integer studentId;
     private String username;
     private Integer regular; // 平时分
-    private Integer final_score; // 期末分
+    private Integer finalScore; // 期末分
     private Integer grade;
     private String term;
     private Byte rank;

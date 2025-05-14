@@ -1,6 +1,5 @@
 package com.orbithy.cms.service;
 
-import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
@@ -66,19 +65,24 @@ public class GradeService {
             return ResponseUtil.build(Result.success(Collections.emptyList(), "暂无成绩记录"));
         }
         // 1. 获取所有学生 ID
-        Set<String> studentIds = grades.stream()
-                .map(Grade::getStudentId) // 返回 String 类型
+        Set<Integer> studentIds = grades.stream()
+                .map(Grade::getStudentId)
                 .collect(Collectors.toSet());
 
+        System.out.println("grades" + grades);
+        System.out.println("studentIds" + studentIds);
 
         // 2. 批量查询所有学生的用户名
-        List<Integer> studentIdList = studentIds.stream()
-                .map(Integer::valueOf)
-                .collect(Collectors.toList());
+        List<Integer> studentIdList = new ArrayList<>(studentIds);
+
+        System.out.println("studentIdList" + studentIdList);
 
         Map<Integer, String> idToUsernameMap = userMapper.getUsersByIds(studentIdList)
                 .stream()
-                .collect(Collectors.toMap(User::getId, User::getUsername));
+                .collect(Collectors.toMap(
+                        User::getId,
+                        User::getUsername
+                ));
 
         List<GradeDTO> gradeDTOList = new ArrayList<>();
         for (Grade grade : grades) {
