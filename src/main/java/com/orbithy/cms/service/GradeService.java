@@ -4,6 +4,7 @@ import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.GradeMapper;
@@ -71,11 +72,14 @@ public class GradeService {
 
 
         // 2. 批量查询所有学生的用户名
-        List<Map<String, Object>> rawList = userMapper.getUsernamesByIds(new ArrayList<>(studentIds));
-        Map<Integer, String> idToUsernameMap = new HashMap<>();
-        for (Map<String, Object> row : rawList) {
-            idToUsernameMap.put((Integer) row.get("id"), (String) row.get("username"));
-        }
+        List<Integer> studentIdList = studentIds.stream()
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        Map<Integer, String> idToUsernameMap = userMapper.getUsersByIds(studentIdList)
+                .stream()
+                .collect(Collectors.toMap(User::getId, User::getUsername));
+
         List<GradeDTO> gradeDTOList = new ArrayList<>();
         for (Grade grade : grades) {
             GradeDTO dto = new GradeDTO();

@@ -93,8 +93,7 @@ public class SectionService {
 
         Map<Integer, String> idToNameMap = advisorIds.isEmpty()
                 ? new HashMap<>()
-                : userMapper.getUserNamesByIds(advisorIds)
-                .values()
+                : userMapper.getUsersByIds(advisorIds)
                 .stream()
                 .collect(Collectors.toMap(User::getId, User::getUsername));
 

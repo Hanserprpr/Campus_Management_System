@@ -22,9 +22,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select permission from user where id=#{id}")
     Integer getPermissionById(String id);
 
-    List<Map<String, Object>> getUsernamesByIds(@Param("ids") List<String> ids);
-
-
     @Insert("INSERT INTO user (username, password, SDUId, major, email) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addUser(User user);
@@ -40,9 +37,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT username FROM user WHERE id = #{userId}")
     String getUsernameById(@Param("userId") int userId);
-
-    @MapKey("id")
-    Map<Integer, User> getUserNamesByIds(@Param("ids") List<Integer> ids);
 
     List<User> getUsersByIds(@Param("ids") List<Integer> ids);
 
