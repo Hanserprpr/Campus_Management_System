@@ -42,43 +42,50 @@ public class TermService {
      * @return ResponseEntity<Result>
      */
     public ResponseEntity<Result> updateTerm(Term term) throws IOException {
-            if (term == null || term.getTerm() == null || term.getTerm().trim().isEmpty()) {
-                return ResponseUtil.build(Result.error(400, "学期名不能为空"));
-            }
+        if (term == null || term.getTerm() == null || term.getTerm().trim().isEmpty()) {
+            return ResponseUtil.build(Result.error(400, "学期名不能为空"));
+        }
         if (!term.getTerm().matches("\\d{4}-\\d{4}-[12]")) {
             return ResponseUtil.build(Result.error(400, "无效的学期格式"));
         }
 
-            List<Term> terms = JsonUtil.readTerms();
+        List<Term> terms = JsonUtil.readTerms();
 
-            boolean found = false;
-            for (Term t : terms) {
-                if (t.getTerm().equals(term.getTerm())) {
-                    found = true;
-                    // 如果想要修改成 open
-                    if (term.isOpen()) {
-                        // 检查有没有其他 open 的学期
-                        boolean alreadyHasOpen = terms.stream()
-                                .anyMatch(x -> !x.getTerm().equals(t.getTerm()) && x.isOpen());
-                        if (alreadyHasOpen) {
-                            return ResponseUtil.build(Result.error(400, "已有开放学期，不能同时开放多个"));
-                        }
+        boolean found = false;
+        for (Term t : terms) {
+            if (t.getTerm().equals(term.getTerm())) {
+                found = true;
+                // 如果想要修改成 open
+                if (term.isOpen()) {
+                    // 检查有没有其他 open 的学期
+                    boolean alreadyHasOpen = terms.stream()
+                            .anyMatch(x -> !x.getTerm().equals(t.getTerm()) && x.isOpen());
+                    if (alreadyHasOpen) {
+                        return ResponseUtil.build(Result.error(400, "已有开放学期，不能同时开放多个"));
                     }
-                    // 更新 isOpen 状态
-                    t.setOpen(term.isOpen());
-                    break;
                 }
+                // 更新 isOpen 状态
+                t.setOpen(term.isOpen());
+
+                if (term.isOpen()) {
+                    boolean alreadyHasCurrent = terms.stream()
+                            .anyMatch(x -> !x.getTerm().equals(t.getTerm()) && x.isCurrent());
+                    if (alreadyHasCurrent) {
+                        return ResponseUtil.build(Result.error(400, "已有当前学期，不能同时设置多个"));
+                    }
+                }
+                t.setCurrent(term.isOpen());
+                break;
             }
+        }
 
-            if (!found) {
-                return ResponseUtil.build(Result.error(404, "学期不存在"));
-            }
+        if (!found) {
+            return ResponseUtil.build(Result.error(404, "学期不存在"));
+        }
 
-            JsonUtil.writeTerms(terms);
-            return ResponseUtil.build(Result.ok());
-
+        JsonUtil.writeTerms(terms);
+        return ResponseUtil.build(Result.ok());
     }
-
 
 
     /**
@@ -110,7 +117,7 @@ public class TermService {
     public static String getCurrentTerm() throws IOException {
         List<Term> terms = JsonUtil.readTerms();
         Term currentTerm = terms.stream()
-                .filter(Term::isOpen)
+                .filter(Term::isCurrent)
                 .findFirst()
                 .orElse(null);
         if (currentTerm == null) {
