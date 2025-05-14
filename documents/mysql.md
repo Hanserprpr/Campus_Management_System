@@ -46,7 +46,7 @@ CREATE TABLE user (
     phone VARCHAR(11) UNIQUE COMMENT '手机号',
     password CHAR(128) NOT NULL COMMENT '加密后的密码',
     SDUId CHAR(20) NOT NULL UNIQUE COMMENT '学号',
-    major ENUM('0','1','2','3') DEFAULT '0' COMMENT '专业0软工/1树莓/2大数据/3AI',
+    major ENUM('0','1','2','3') NOT NULL DEFAULT '0' COMMENT '专业0软工/1树莓/2大数据/3AI',
     permission TINYINT DEFAULT 2 COMMENT '教务牢师0/教师1/学生2',
     nation VARCHAR(100) DEFAULT 'China' NOT NULL COMMENT '国籍/地区',
     ethnic VARCHAR(50) DEFAULT '汉族' NOT NULL COMMENT '民族',

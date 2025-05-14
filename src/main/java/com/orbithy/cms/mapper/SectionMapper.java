@@ -3,6 +3,7 @@ package com.orbithy.cms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orbithy.cms.data.po.Section;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public interface SectionMapper extends BaseMapper<Section> {
 
     @Select("SELECT count(*) FROM section")
     int getSectionCountAll();
+
+    @Select("SELECT id FROM section WHERE grade = #{grade} AND major = #{major}")
+    List<Integer> getSectionIdListByGradeAndMajor(@Param("grade") String grade, @Param("major") String major);
+
 }

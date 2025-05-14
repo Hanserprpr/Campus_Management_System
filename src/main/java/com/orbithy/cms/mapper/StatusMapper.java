@@ -27,4 +27,13 @@ public interface StatusMapper extends BaseMapper<Status> {
 
     @Select("SELECT id FROM status WHERE section = #{sectionId}")
     List<Integer> getStudentIdsBySectionId(Integer sectionId);
+
+    @Select("""
+            SELECT s.*
+            FROM status s
+            JOIN user u ON s.id = u.id
+            WHERE s.grade = #{grade} AND u.major = #{major}
+        """)
+    List<Status> getStatusListByGradeAndMajor(@Param("grade") String grade, @Param("major") String major);
+
 }

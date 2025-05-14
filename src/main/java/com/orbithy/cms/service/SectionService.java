@@ -38,20 +38,30 @@ public class SectionService {
     }
 
     public ResponseEntity<Result> assign(String grade) {
-        int classCount = sectionMapper.getSectionCount(grade);
-        if (classCount == 0) {
-            return ResponseUtil.build(Result.error(400, "班级不存在"));
+        String[] majors = {"0", "1", "2", "3"};
+        for (String major : majors) {
+            // 1. 获取该年级+专业的班级
+            List<Integer> sectionList = sectionMapper.getSectionIdListByGradeAndMajor(grade, major);
+            int classCount = sectionList.size();
+            if (classCount == 0) {
+                continue; // 没有班级就跳过该专业
+            }
+
+            // 2. 获取该年级+专业的学生
+            List<Status> statusList = statusMapper.getStatusListByGradeAndMajor(grade, major);
+            int index = 0;
+
+            // 3. 轮流分配学生到班级
+            for (Status status : statusList) {
+                int cls = sectionList.get(index % classCount);
+                statusMapper.updateStudentSection(status.getId(), cls);
+                index++;
+            }
         }
-        List<Status> statusList = statusMapper.getStatusList(grade);
-        List<Integer> sectionList = sectionMapper.getSectionIdList(grade);
-        int index = 0;
-        for (Status status : statusList) {
-            int cls = sectionList.get(index % classCount);
-            statusMapper.updateStudentSection(status.getId(), cls);
-            index++;
-        }
+
         return ResponseUtil.build(Result.ok());
     }
+
 
     public ResponseEntity<Result> updateSection(Section section) {
         sectionMapper.updateById(section);
