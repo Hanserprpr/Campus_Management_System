@@ -208,7 +208,7 @@ CREATE TABLE grade(
     student_id INT NOT NULL COMMENT '学生id',
     course_id INT NOT NULL COMMENT '课程id',
     regular INT NOT NULL COMMENT '平时分',
-    final INT NOT NULL COMMENT '期末分',
+    final_score INT NOT NULL COMMENT '期末分',
     grade DECIMAL(5,2) NOT NULL COMMENT '成绩',
     term VARCHAR(15) NOT NULL COMMENT '开课学期',
     rank TINYINT NOT NULL COMMENT '排名',
