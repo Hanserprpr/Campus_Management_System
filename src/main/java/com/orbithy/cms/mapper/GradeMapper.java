@@ -37,4 +37,6 @@ public interface GradeMapper extends BaseMapper<Grade> {
             """)
     void updateRankByCourse(@Param("courseId") Integer courseId);
 
+    @Select("SELECT COUNT(*) FROM grade WHERE course_id = #{courseId} AND student_id = #{studentId}")
+    boolean getGradeByCourseIdAndStudentId(Integer courseId, Integer studentId);
 }

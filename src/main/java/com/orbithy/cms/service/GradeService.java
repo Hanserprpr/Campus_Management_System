@@ -40,6 +40,9 @@ public class GradeService {
         if (classMapper.getCourseById(gradeDTO.getCourseId()) == null) {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }
+        if (gradeMapper.getGradeByCourseIdAndStudentId(gradeDTO.getCourseId(), gradeDTO.getStudentId())) {
+            return ResponseUtil.build(Result.error(400, "成绩已存在"));
+        }
         if (gradeDTO.getRank() == null) {
             gradeDTO.setRank((byte) 0);
         }
