@@ -41,11 +41,11 @@ public class GradeService {
         if (classMapper.getCourseById(gradeDTO.getCourseId()) == null) {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }
+        if (classMapper.isGradeReleased(gradeDTO.getCourseId())) {
+            return ResponseUtil.build(Result.error(400, "成绩已发布，无法修改"));
+        }
         if (gradeMapper.getGradeByCourseIdAndStudentId(gradeDTO.getCourseId(), gradeDTO.getStudentId())) {
             // 更新成绩
-            if (classMapper.isGradeReleased(gradeDTO.getCourseId())) {
-                return ResponseUtil.build(Result.error(400, "成绩已发布，无法修改"));
-            }
             UpdateWrapper<Grade> wrapper = new UpdateWrapper<>();
             wrapper.eq("student_id", gradeDTO.getStudentId());
             wrapper.eq("course_id", gradeDTO.getCourseId());
@@ -55,7 +55,7 @@ public class GradeService {
 
             gradeMapper.update(grade, wrapper);
 
-            return ResponseUtil.build(Result.error(400, "成绩更新成功"));
+            return ResponseUtil.build(Result.success(200, "成绩更新成功"));
         }
         if (gradeDTO.getRank() == null) {
             gradeDTO.setRank((byte) 0);
