@@ -1,5 +1,6 @@
 package com.orbithy.cms.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
@@ -41,7 +42,20 @@ public class GradeService {
             return ResponseUtil.build(Result.error(404, "课程不存在"));
         }
         if (gradeMapper.getGradeByCourseIdAndStudentId(gradeDTO.getCourseId(), gradeDTO.getStudentId())) {
-            return ResponseUtil.build(Result.error(400, "成绩已存在"));
+            // 更新成绩
+            if (classMapper.isGradeReleased(gradeDTO.getCourseId())) {
+                return ResponseUtil.build(Result.error(400, "成绩已发布，无法修改"));
+            }
+            UpdateWrapper<Grade> wrapper = new UpdateWrapper<>();
+            wrapper.eq("student_id", gradeDTO.getStudentId());
+            wrapper.eq("course_id", gradeDTO.getCourseId());
+
+            Grade grade = new Grade();
+            BeanUtils.copyProperties(gradeDTO, grade);
+
+            gradeMapper.update(grade, wrapper);
+
+            return ResponseUtil.build(Result.error(400, "成绩更新成功"));
         }
         if (gradeDTO.getRank() == null) {
             gradeDTO.setRank((byte) 0);

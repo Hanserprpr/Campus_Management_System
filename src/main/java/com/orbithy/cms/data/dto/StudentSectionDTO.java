@@ -10,4 +10,8 @@ public class StudentSectionDTO {
     private Integer sectionNumber;
     private Section.Major major;
     private String SDUId;
+    private Integer regular; // 平时分
+    private Integer finalScore; // 期末分
+    private Integer grade;
+    private String number;
 }

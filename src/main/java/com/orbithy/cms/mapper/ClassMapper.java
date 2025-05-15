@@ -101,4 +101,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     List<ClassDTO> getClassScheduleSdu(String id, String term, Integer week);
 
     List<ClassListDTO> searchTeacherCourses(int id, String term, int offset, Integer pageSize, String keyword);
+
+    @Select("SELECT published FROM classes WHERE id = #{courseId}")
+    boolean isGradeReleased(@Param("courseId") Integer courseId);
 }
