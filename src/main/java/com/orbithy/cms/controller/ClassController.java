@@ -70,7 +70,7 @@ public class ClassController {
     }
 
     /**
-     * 获取教师创建的课程列表
+     * 搜索教师创建的课程列表
      * 支持按学期筛选
      *
      * @param term 学期（可选，格式：YYYY-YYYY-S，例如：2023-2024-1）

@@ -41,7 +41,6 @@
             <if test="term != null and term != ''">
                 AND term = #{term}
             </if>
-            AND status = 1
             AND teacher_id = #{id}
         </where>
         ORDER BY id DESC
