@@ -28,5 +28,22 @@
         </where>
         ORDER BY id DESC
     </select>
-
+    <select id="searchTeacherCourses" resultType="com.orbithy.cms.data.dto.ClassListDTO">
+        SELECT id, class_num, name, point, term, status, regular_ratio, final_ratio, type  FROM classes
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                name LIKE CONCAT('%', #{keyword}, '%')
+                OR category LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="term != null and term != ''">
+                AND term = #{term}
+            </if>
+            AND status = 1
+            AND teacher_id = #{id}
+        </where>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
 </mapper>

@@ -11,6 +11,7 @@ import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -175,7 +176,7 @@ public class ClassService {
             }
             int permission = userMapper.getPermission(id);
             List<ClassListDTO> classList;
-            int total = 0;
+            int total;
             int offset = (pageNum - 1) * pageSize;
 
             switch (permission) {
@@ -201,24 +202,7 @@ public class ClassService {
                     throw new CustomException("无效的用户权限");
             }
 
-            for (ClassListDTO classListDTO : classList) {
-                String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
-                classListDTO.setTeacherName(teacherName);
-                Integer cla = classListDTO.getId();
-                Integer num = classMapper.countCourseByCourseId(cla);
-                num = num == null ? 0 : num;
-                classListDTO.setPeopleNum(num);
-            }
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("list", classList);
-            result.put("total", total);
-            result.put("pageNum", pageNum);
-            result.put("pageSize", pageSize);
-            int pages = (int) Math.ceil((double) total / pageSize);
-            result.put("pages", pages);
-
-            return ResponseUtil.build(Result.success(result, "获取课程列表成功"));
+            return getResultResponseEntity(pageNum, pageSize, classList, total);
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
@@ -551,5 +535,35 @@ public class ClassService {
         }
         return ResponseUtil.build(Result.success(classSchedule,"获取成功"));
 
+    }
+
+    public ResponseEntity<Result> getTeacherCourses(String id, String term, Integer pageNum, Integer pageSize, String keyword) {
+        int offset = (pageNum - 1) * pageSize;
+        List<ClassListDTO> classList = classMapper.searchTeacherCourses(Integer.parseInt(id), term, offset, pageSize, keyword);
+        int total = classMapper.countTeacherCoursesByTerm(Integer.parseInt(id), term);
+
+        return getResultResponseEntity(pageNum, pageSize, classList, total);
+    }
+
+    @NotNull
+    private ResponseEntity<Result> getResultResponseEntity(Integer pageNum, Integer pageSize, List<ClassListDTO> classList, int total) {
+        for (ClassListDTO classListDTO : classList) {
+            String teacherName = userMapper.getUsernameById(classMapper.getTeacherIdByCourseId(classListDTO.getId()));
+            classListDTO.setTeacherName(teacherName);
+            Integer cla = classListDTO.getId();
+            Integer num = classMapper.countCourseByCourseId(cla);
+            num = num == null ? 0 : num;
+            classListDTO.setPeopleNum(num);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", classList);
+        result.put("total", total);
+        result.put("pageNum", pageNum);
+        result.put("pageSize", pageSize);
+        int pages = (int) Math.ceil((double) total / pageSize);
+        result.put("pages", pages);
+
+        return ResponseUtil.build(Result.success(result, "获取课程列表成功"));
     }
 }

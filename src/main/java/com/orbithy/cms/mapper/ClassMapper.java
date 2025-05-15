@@ -99,4 +99,6 @@ public interface ClassMapper extends BaseMapper<Classes> {
             "JOIN course_reg co ON co.course_id = cl.id" +
             " WHERE cl.term = #{term} AND cl.week_start <= #{week} AND cl.week_end >= #{week} AND co.student_id = #{id}")
     List<ClassDTO> getClassScheduleSdu(String id, String term, Integer week);
+
+    List<ClassListDTO> searchTeacherCourses(int id, String term, int offset, Integer pageSize, String keyword);
 }

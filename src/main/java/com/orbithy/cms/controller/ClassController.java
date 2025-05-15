@@ -38,17 +38,17 @@ public class ClassController {
      * 教务审批课程
      *
      * @param courseId 课程ID
-     * @param status 审批状态（1通过，2拒绝）
+     * @param status   审批状态（1通过，2拒绝）
      * @param classNum 课序号（通过时必填）
-     * @param reason 拒绝理由（拒绝时必填）
+     * @param reason   拒绝理由（拒绝时必填）
      * @return ResponseEntity<Result>
      */
     @Admin
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
-                                              @RequestParam Integer status,
-                                              @RequestParam(required = false) String classNum,
-                                              @RequestParam(required = false) String reason) {
+                                                @RequestParam Integer status,
+                                                @RequestParam(required = false) String classNum,
+                                                @RequestParam(required = false) String reason) {
         String id = (String) request.getAttribute("userId");
         return classService.approveCourse(id, courseId, status, classNum, reason);
     }
@@ -70,6 +70,23 @@ public class ClassController {
     }
 
     /**
+     * 获取教师创建的课程列表
+     * 支持按学期筛选
+     *
+     * @param term 学期（可选，格式：YYYY-YYYY-S，例如：2023-2024-1）
+     * @return ResponseEntity<Result>
+     */
+    @Teacher
+    @GetMapping("/searchTeacherCourses")
+    public ResponseEntity<Result> getTeacherCourses(@RequestParam(required = false) String term,
+                                                    @RequestParam(defaultValue = "1") Integer pageNum,
+                                                    @RequestParam(defaultValue = "10") Integer pageSize,
+                                                    @RequestParam(required = false) String keyword) {
+        String id = (String) request.getAttribute("userId");
+        return classService.getTeacherCourses(id, term, pageNum, pageSize, keyword);
+    }
+
+    /**
      * 获取课程详情
      *
      * @param courseId 课程ID
@@ -85,14 +102,14 @@ public class ClassController {
     /**
      * 教师修改课程信息
      *
-     * @param courseId 课程ID
+     * @param courseId  课程ID
      * @param courseDTO 课程信息
      * @return ResponseEntity<Result>
      */
     @Teacher
     @PostMapping("/update/{courseId}")
     public ResponseEntity<Result> updateCourse(@PathVariable Integer courseId,
-                                             @RequestBody CreateCourseDTO courseDTO) {
+                                               @RequestBody CreateCourseDTO courseDTO) {
         String id = (String) request.getAttribute("userId");
         return classService.updateCourse(id, courseId, courseDTO);
     }
@@ -126,12 +143,12 @@ public class ClassController {
     @GetMapping("/{courseId}/students")
     public ResponseEntity<Result> getSelectedStudents(@PathVariable Integer courseId) {
         String id = (String) request.getAttribute("userId");
-        int permission = (int)request.getAttribute("permission");
+        int permission = (int) request.getAttribute("permission");
         return classService.getSelectedStudents(permission, id, courseId);
     }
 
     /**
-     *排课
+     * 排课
      */
     @Admin
     @PostMapping("/autoSchedule")
@@ -141,7 +158,7 @@ public class ClassController {
     }
 
     /**
-     *删除已审核课程
+     * 删除已审核课程
      */
     @Admin
     @PostMapping("/deleteAd/{courseId}")
@@ -169,8 +186,8 @@ public class ClassController {
     @Auth
     @GetMapping("/getClassSchedule/{week}")
     public ResponseEntity<Result> getClassSchedule(@RequestParam String term,
-                                                @PathVariable Integer week) {
-    String id = (String) request.getAttribute("userId");
-    return classService.getClassSchedule(id,week,term);
+                                                   @PathVariable Integer week) {
+        String id = (String) request.getAttribute("userId");
+        return classService.getClassSchedule(id, week, term);
     }
 }
