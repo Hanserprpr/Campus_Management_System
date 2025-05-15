@@ -255,7 +255,7 @@ CREATE TABLE section (
 | **title**       | VARCHAR(200) NOT NULL                        | 非空                                   | 公告标题                                     |
 | **content**     | TEXT NOT NULL                                | 非空                                   | 公告正文内容                                 |
 | **publish_time**| DATETIME NOT NULL                            | 非空                                   | 发布时间                                     |
-| **visible_scope** | VARCHAR(50) NOT NULL                       | 非空                                   | 可见范围，使用权限决定，上级可以看到下级       |
+| **visible_scope** | TINYINT NOT NULL                           | 非空                                   | 可见范围，使用权限决定，上级可以看到下级       |
 | **creator_id**  | INT NOT NULL                                 | 外键，关联 user 表 id 字段             | 发布者用户 ID                                |
 | **is_top**      | TINYINT DEFAULT 0                            | 默认值 0                               | 是否置顶（1=置顶，0=普通）                   |
 | **status**      | TINYINT DEFAULT 1                            | 默认值 1                               | 状态（1=正常，0=禁用/删除）                  |
@@ -270,7 +270,7 @@ CREATE TABLE notice (
     title VARCHAR(200) NOT NULL COMMENT '公告标题',
     content TEXT NOT NULL COMMENT '公告内容',
     publish_time DATETIME NOT NULL COMMENT '发布时间',
-    visible_scope VARCHAR(50) NOT NULL COMMENT '可见范围，使用权限决定，上级可以看到下级',
+    visible_scope TINYINT NOT NULL COMMENT '可见范围，使用权限决定，上级可以看到下级',
     creator_id INT DEFAULT NULL COMMENT '发布者ID',
     is_top TINYINT DEFAULT 0 COMMENT '是否置顶公告',
     status TINYINT DEFAULT 1 COMMENT '1正常 0删除/禁用',
