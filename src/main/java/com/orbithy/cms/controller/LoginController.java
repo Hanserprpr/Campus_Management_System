@@ -72,7 +72,7 @@ public class LoginController {
 
 
     @GetMapping("/callback")
-    public String OAuthLogin(@RequestParam String code, @RequestParam String state, HttpServletRequest request) throws JsonProcessingException {
+    public ResponseEntity<String> OAuthLogin(@RequestParam String code, @RequestParam String state, HttpServletRequest request) throws JsonProcessingException {
         return loginService.OAuthLogin(code, state, request);
 
     }

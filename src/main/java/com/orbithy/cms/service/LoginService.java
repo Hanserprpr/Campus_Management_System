@@ -99,7 +99,7 @@ public class LoginService {
     }
 
     @Transactional
-    public String OAuthLogin(String code, String state, HttpServletRequest request) {
+    public ResponseEntity<String> OAuthLogin(String code, String state, HttpServletRequest request) {
         // 1. 获取 token
         String token = authService.getOAuthToken(code, state);
 
@@ -128,7 +128,52 @@ public class LoginService {
         Map<String, String> tokenMap = getToken(id);
         redis.set(state, tokenMap, 180);
 
-        return "登录成功，欢迎：" + user.displayName + "\n" + "请返回软件继续";
+        String html = """
+        <!DOCTYPE html>
+        <html lang="zh">
+        <head>
+            <meta charset="UTF-8">
+            <title>登录成功</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', sans-serif;
+                    background-color: #f4f6f8;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+                .card {
+                    background-color: #fff;
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+                    text-align: center;
+                }
+                h1 {
+                    color: #2ecc71;
+                    margin-bottom: 16px;
+                }
+                p {
+                    font-size: 16px;
+                    color: #333;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <h1>✅ 登录成功！</h1>
+                <p>欢迎你，<strong>%s</strong>！</p>
+                <p>您可以返回软件继续操作。</p>
+            </div>
+        </body>
+        </html>
+        """.formatted(user.displayName);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/html; charset=UTF-8")
+                .body(html);
     }
 
     public ResponseEntity<Result> getOAuthToken(String state) {
