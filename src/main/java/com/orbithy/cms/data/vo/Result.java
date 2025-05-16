@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
+
     private Integer code; // 业务状态码
     private Object data;  // 数据
     private String msg;   // 提示信息
