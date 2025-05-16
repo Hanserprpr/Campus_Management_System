@@ -244,3 +244,40 @@ CREATE TABLE section (
     FOREIGN KEY (advisor_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='班级表';
 ```
+
+## 公告(notice)
+
+### 表结构
+
+| 字段名          | 数据类型                                      | 约束                                   | 描述                                         |
+|-----------------|----------------------------------------------|----------------------------------------|----------------------------------------------|
+| **id**          | INT AUTO_INCREMENT PRIMARY KEY               | 主键，自动递增                         | 公告唯一 ID                                  |
+| **title**       | VARCHAR(200) NOT NULL                        | 非空                                   | 公告标题                                     |
+| **content**     | TEXT NOT NULL                                | 非空                                   | 公告正文内容                                 |
+| **publish_time**| DATETIME NOT NULL                            | 非空                                   | 发布时间                                     |
+| **visible_scope** | TINYINT NOT NULL                           | 非空                                   | 可见范围，使用权限决定，上级可以看到下级       |
+| **creator_id**  | INT NOT NULL                                 | 外键，关联 user 表 id 字段             | 发布者用户 ID                                |
+| **is_top**      | TINYINT DEFAULT 0                            | 默认值 0                               | 是否置顶（1=置顶，0=普通）                   |
+| **status**      | TINYINT DEFAULT 1                            | 默认值 1                               | 状态（1=正常，0=禁用/删除）                  |
+| **created_at**  | TIMESTAMP DEFAULT CURRENT_TIMESTAMP          | 默认当前时间                           | 创建时间                                     |
+| **updated_at**  | TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | 自动更新时间        | 最后更新时间               |
+
+### 创建指令
+
+```sql
+CREATE TABLE notice (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL COMMENT '公告标题',
+    content TEXT NOT NULL COMMENT '公告内容',
+    publish_time DATETIME NOT NULL COMMENT '发布时间',
+    visible_scope TINYINT NOT NULL COMMENT '可见范围，使用权限决定，上级可以看到下级',
+    creator_id INT DEFAULT NULL COMMENT '发布者ID',
+    is_top TINYINT DEFAULT 0 COMMENT '是否置顶公告',
+    status TINYINT DEFAULT 1 COMMENT '1正常 0删除/禁用',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_creator_id FOREIGN KEY (creator_id) REFERENCES user(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告表';
+```
