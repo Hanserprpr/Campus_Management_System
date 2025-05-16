@@ -136,6 +136,9 @@ public class AdminService {
         String SDUId = user.getSDUId();
         String password = user.getPassword();
         if (!loginService.isExisted(SDUId)) {
+            if (user.getPermission() == 0) {
+                return ResponseUtil.build(Result.error(403, "无权限"));
+            }
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
             user.setEmail(SDUId + "@mail.sdu.edu.cn");
@@ -147,7 +150,8 @@ public class AdminService {
             status.setAdmission(grade);
             status.setGraduation(grade+4);
             statusMapper.insertStatus(status);
+            return ResponseUtil.build(Result.ok());
         }
-        return ResponseUtil.build(Result.ok());
+        return ResponseUtil.build(Result.error(400, "用户已存在"));
     }
 }
