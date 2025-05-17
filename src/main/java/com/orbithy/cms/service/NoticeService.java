@@ -43,6 +43,8 @@ public class NoticeService {
             } else {
                 noticeList = noticeMapper.getNoticeListAll();
             }
+        } else {
+            noticeList = noticeMapper.getNotice(1);
         }
         return ResponseUtil.build(Result.success(noticeList, "获取公告成功"));
     }
