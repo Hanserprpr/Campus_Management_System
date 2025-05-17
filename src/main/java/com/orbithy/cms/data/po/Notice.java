@@ -13,9 +13,6 @@ public class Notice {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @TableField(value = "username")
-    private String creatName;
-
     private String title;
 
     private String content;

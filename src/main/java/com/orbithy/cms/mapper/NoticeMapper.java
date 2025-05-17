@@ -9,15 +9,12 @@ import java.util.List;
 
 @Mapper
 public interface NoticeMapper extends BaseMapper<Notice> {
-    @Select("SELECT no.* , use.username AS username FROM notice no JOIN user use ON no.creator_id = use.id" +
-            "WHERE visible_scope = #{permission} AND status = 1 ORDER BY publish_time DESC")
+    @Select("SELECT * FROM notice WHERE visible_scope = #{permission} AND status = 1 ORDER BY publish_time DESC")
     List<Notice> getNoticeList(int permission);
 
-    @Select("SELECT * FROM notice use.username AS username FROM notice no JOIN user use ON no.creator_id = use.id" +
-            "ORDER BY publish_time DESC")
+    @Select("SELECT * FROM notice ORDER BY publish_time DESC")
     List<Notice> getNoticeListAll();
 
-    @Select("SELECT * FROM notice use.username AS username FROM notice no JOIN user use ON no.creator_id = use.id" +
-            "WHERE status = #{status} ORDER BY publish_time DESC")
+    @Select("SELECT * FROM notice WHERE status = #{status} ORDER BY publish_time DESC")
     List<Notice> getNotice(int status);
 }
