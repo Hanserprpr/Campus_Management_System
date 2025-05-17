@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Teacheer")
+@RequestMapping("/Teacher")
 public class TeacherController {
     @Resource
     private TeacherService TeacherService;

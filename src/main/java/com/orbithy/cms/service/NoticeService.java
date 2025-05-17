@@ -58,3 +58,4 @@ public class NoticeService {
         noticeMapper.updateById(notice);
         return ResponseUtil.build(Result.ok());
     }
+}
