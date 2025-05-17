@@ -14,6 +14,9 @@ public class WrapperUtil {
         Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
+            if (field.getName().equals(idField)) {
+                continue;
+            }
             try {
                 if (Modifier.isStatic(field.getModifiers())) {
                     continue;
