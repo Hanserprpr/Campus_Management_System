@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.orbithy.cms.data.po.Notice;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.NoticeMapper;
+import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
 import com.orbithy.cms.utils.WrapperUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.List;
 public class NoticeService {
     @Resource
     private NoticeMapper noticeMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
     public ResponseEntity<Result> setNotice(String userId, int permission, Notice notice) {
@@ -56,5 +60,17 @@ public class NoticeService {
         UpdateWrapper<Notice> updateWrapper = WrapperUtil.buildNonNullUpdateWrapper(notice, "id", notice.getId());
         noticeMapper.update(null, updateWrapper);
         return ResponseUtil.build(Result.ok());
+    }
+
+    public ResponseEntity<Result> closeNotice(String userId, int id) {
+        Notice notice = noticeMapper.selectById(id);
+        if (notice == null) {
+            return ResponseUtil.build(Result.error(403, "不存在"));
+        }
+        String nid = notice.getCreatorId().toString();
+        if ((!nid.equals(userId) || userMapper.getPermissionById(userId) != 0)) {
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+        userMapper.closeNotice
     }
 }

@@ -81,4 +81,14 @@ public class NoticeController {
     public ResponseEntity<Result> editNotice(Notice notice) {
         return noticeService.editNotice(notice);
     }
+
+    /**
+     * 删除公告
+     */
+    @Teacher
+    @RequestMapping("/close")
+    public ResponseEntity<Result> closeNotice(Integer id){
+        String userId = (String) request.getAttribute("userId");
+    return noticeService.closeNotice(userId,id);
+    }
 }

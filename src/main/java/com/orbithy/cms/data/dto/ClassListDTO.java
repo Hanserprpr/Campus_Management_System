@@ -7,7 +7,7 @@ import lombok.Data;
 public class ClassListDTO {//获取课程列表DTO
     private int id;
     private String name;
-    private Integer point;
+    private float point;
     private String term;
     private String classNum;
     private int peopleNum;

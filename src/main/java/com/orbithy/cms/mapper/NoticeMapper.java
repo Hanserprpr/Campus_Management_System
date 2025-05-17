@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.orbithy.cms.data.po.Notice;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface NoticeMapper extends BaseMapper<Notice> {
     @Select("SELECT no.* , us.username AS username FROM notice no JOIN user us ON no.creator_id = us.id " +
             "WHERE status = #{status} ORDER BY publish_time DESC")
     List<Notice> getNotice(int status);
+
+    @Update("SET status ")
 }
