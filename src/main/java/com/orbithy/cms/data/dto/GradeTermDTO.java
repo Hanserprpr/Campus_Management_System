@@ -8,6 +8,7 @@ import lombok.Data;
 public class GradeTermDTO {
     private int id;
     private int courseId;
+    private String className;
     private int regular;
     private int finalScore;
     private int grade;
