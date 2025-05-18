@@ -27,4 +27,15 @@ public class TeacherController {
         return TeacherService.getMessage(id);
     }
 
+    /**
+     * 获取教师课程数量
+     *
+     * @return ResponseEntity<Result>
+     */
+    @Teacher
+    @GetMapping("/countClass")
+    public ResponseEntity<Result> getCountClass() {
+        String id = (String) request.getAttribute("userId");
+        return TeacherService.getCountClass(id);
+    }
 }

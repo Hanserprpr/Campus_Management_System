@@ -104,4 +104,10 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT published FROM classes WHERE id = #{courseId}")
     boolean isGradeReleased(@Param("courseId") Integer courseId);
+
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 1")
+    Integer getMyActiveClassCount(String id);
+
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 0")
+    Integer getMyPendingClassCount(String id);
 }
