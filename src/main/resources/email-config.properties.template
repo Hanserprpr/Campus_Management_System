@@ -1,0 +1,7 @@
+# SMTP ??
+mail.smtp.host=
+mail.smtp.port=465
+mail.smtp.ssl.enable=true
+mail.smtp.auth=true
+mail.smtp.username=
+mail.smtp.password=

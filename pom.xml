@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.orbithy</groupId>
 	<artifactId>Campus_Management_System</artifactId>
-	<version>0.1.6</version>
+	<version>0.1.7</version>
 	<name>Campus_Management_System</name>
 	<description>Campus_Management_System</description>
 	<url/>
@@ -64,6 +64,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
