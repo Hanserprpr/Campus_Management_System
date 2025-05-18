@@ -251,7 +251,7 @@ public class ClassService {
             }
 
             // 验证课程状态
-            if (course.getStatus() != Classes.CourseStatus.待审批) {
+            if (course.getStatus() == Classes.CourseStatus.已通过) {
                 throw new CustomException("只能修改待审批的课程");
             }
 
