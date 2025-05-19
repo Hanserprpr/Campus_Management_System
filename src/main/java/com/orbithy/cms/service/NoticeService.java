@@ -24,7 +24,7 @@ public class NoticeService {
 
     public ResponseEntity<Result> setNotice(String userId, int permission, Notice notice) {
         notice.setCreatorId(Integer.valueOf(userId));
-        if (notice.getVisibleScope() == 1 || permission != 0) {
+        if (notice.getVisibleScope() == 1 && permission != 0) {
             return ResponseUtil.build(Result.error(403, "无权限"));
         } else if (notice.getVisibleScope() == 0) {
             return ResponseUtil.build(Result.error(403, "无权限"));
