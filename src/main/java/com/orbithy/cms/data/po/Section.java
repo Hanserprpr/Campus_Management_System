@@ -15,7 +15,7 @@ public class Section {
     private Integer id; // 班级唯一ID
 
     private Major major; // 专业
-    private Integer advisorId; // 导员ID（外键）
+    private String advisorId; // 导员ID（外键）
     private String grade;
     private String number; // 班级编号
 
