@@ -43,7 +43,7 @@ public class NoticeService {
             if (status == 0) {
                 noticeList = noticeMapper.getNotice(status);
             } else {
-                noticeList = noticeMapper.getNoticeListAll();
+                noticeList = noticeMapper.getNotice(status);//修改简单
             }
         } else {
             noticeList = noticeMapper.getNotice(1);
