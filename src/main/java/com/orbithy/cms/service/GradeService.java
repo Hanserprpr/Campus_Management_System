@@ -50,10 +50,7 @@ public class GradeService {
             wrapper.eq("student_id", gradeDTO.getStudentId());
             wrapper.eq("course_id", gradeDTO.getCourseId());
 
-            Grade grade = new Grade();
-            BeanUtils.copyProperties(gradeDTO, grade);
-
-            gradeMapper.update(grade, wrapper);
+            gradeMapper.update(gradeDTO, wrapper);
 
             return ResponseUtil.build(Result.success(200, "成绩更新成功"));
         }

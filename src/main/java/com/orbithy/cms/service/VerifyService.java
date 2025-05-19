@@ -23,9 +23,6 @@ public class VerifyService {
     @Resource
     private UserMapper userMapper;
 
-    @Resource
-    private LoginService loginService;
-
     /**
      * 生成验证码和 ticket
      * @return 返回包含验证码和 ticket 的数组
