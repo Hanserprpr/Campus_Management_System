@@ -59,7 +59,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     List<String> getSelectedStudents(Integer courseId);
 
 
-    List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids);
+    List<StudentSectionDTO> getStudentSectionInfo(@Param("ids") List<String> ids, int courseId);
 
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = 1")
     List<Classes> getCourseByTerm(String term);

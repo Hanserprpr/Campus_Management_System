@@ -507,7 +507,7 @@ public class ClassService {
         List<String> studentIds = classMapper.getSelectedStudents(courseId);
         List<StudentSectionDTO> result = studentIds.isEmpty()
                 ? Collections.emptyList()
-                : classMapper.getStudentSectionInfo(studentIds);
+                : classMapper.getStudentSectionInfo(studentIds, courseId);
 
         return ResponseUtil.build(Result.success(result, "获取选课学生成功"));
 

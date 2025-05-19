@@ -12,6 +12,9 @@
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
+        <if test="courseId != null">
+            AND g.course_id = #{courseId}
+        </if>
     </select>
     <select id="searchCourses" resultType="com.orbithy.cms.data.po.Classes">
         SELECT * FROM classes
