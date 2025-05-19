@@ -22,5 +22,8 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             "WHERE status = #{status} ORDER BY publish_time DESC")
     List<Notice> getNotice(int status);
 
-    @Update("SET status ")
+    @Update("UPDATE status = 0 FROM notice WHERE id = #{id}")
+    void closeNotice(int id);
+
+
 }

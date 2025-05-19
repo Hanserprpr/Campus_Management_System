@@ -58,4 +58,17 @@ public class NoticeService {
         noticeMapper.updateById(notice);
         return ResponseUtil.build(Result.ok());
     }
+
+    public ResponseEntity<Result> closeNotice(String userId, int id) {
+        Notice notice = noticeMapper.selectById(id);
+        if (notice == null) {
+            return ResponseUtil.build(Result.error(403, "不存在"));
+        }
+        String nid = notice.getCreatorId().toString();
+        if ((!nid.equals(userId) && userMapper.getPermissionById(userId) != 0)) {
+            return ResponseUtil.build(Result.error(403, "无权限"));
+        }
+        noticeMapper.closeNotice(id);
+        return ResponseUtil.build(Result.ok());
+    }
 }
