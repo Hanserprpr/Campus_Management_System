@@ -18,7 +18,7 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             "ORDER BY publish_time DESC")
     List<Notice> getNoticeListAll();
 
-    @Select("SELECT n.* , us.username AS username FROM notice n JOIN user us ON n.creator_id = us.id " +
+    @Select("SELECT n.* , us.username AS creatorName FROM notice n JOIN user us ON n.creator_id = us.id " +
             "WHERE status = #{status} ORDER BY publish_time DESC")
     List<Notice> getNotice(int status);
 

@@ -13,8 +13,8 @@ public class Notice {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @TableField(value = "username")
-    private String createName;
+    @TableField(value = "username", exist = false)
+    private String creatorName;
 
     private String title;
 
