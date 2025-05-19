@@ -22,7 +22,7 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             "WHERE status = #{status} ORDER BY publish_time DESC")
     List<Notice> getNotice(int status);
 
-    @Update("UPDATE status = 0 FROM notice WHERE id = #{id}")
+    @Update("UPDATE notice SET status = 0 FROM notice WHERE id = #{id}")
     void closeNotice(int id);
 
 
