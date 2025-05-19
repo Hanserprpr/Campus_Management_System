@@ -281,3 +281,27 @@ CREATE TABLE notice (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告表';
 ```
+
+## 课程与班级关联表(class_course)
+
+### 表结构
+
+| 字段名         | 数据类型                      | 约束                                    | 描述       |
+|----------------|-----------------------------|-----------------------------------------|------------|
+| **id**         | INT AUTO_INCREMENT PRIMARY KEY | 主键，自动递增                         | 关联唯一ID |
+| **class_id**   | INT NOT NULL                | 非空，外键，关联 section(id)            | 班级ID     |
+| **course_id**  | INT NOT NULL                | 非空，外键，关联 classes(id)            | 课程ID     |
+| **is_required**| BOOLEAN NOT NULL            | 非空                                   | 是否必修   |
+
+### 创建指令
+
+```sql
+CREATE TABLE class_course (
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '关联唯一ID',
+    class_id INT NOT NULL COMMENT '班级ID',
+    course_id INT NOT NULL COMMENT '课程ID',
+    is_required BOOLEAN NOT NULL COMMENT '是否必修',
+    FOREIGN KEY (class_id) REFERENCES section(id),
+    FOREIGN KEY (course_id) REFERENCES classes(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程与班级关联表';
+```
