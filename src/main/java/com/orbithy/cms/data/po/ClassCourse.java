@@ -4,5 +4,5 @@ public class ClassCourse {
     private Integer id;
     private Integer classId;
     private Integer courseId;
-    private Boolean isRequired;//是否必修
+    private Boolean isRequired;
 }

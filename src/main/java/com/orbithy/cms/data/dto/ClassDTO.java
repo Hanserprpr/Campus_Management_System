@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 public class ClassDTO {//详细信息DTO
     private String id;
 
-
     private String name;
     private String category;
     private Float point;

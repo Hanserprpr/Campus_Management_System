@@ -190,7 +190,4 @@ public class ClassController {
         String id = (String) request.getAttribute("userId");
         return classService.getClassSchedule(id, week, term);
     }
-
-
-
 }
