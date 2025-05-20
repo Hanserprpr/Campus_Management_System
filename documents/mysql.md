@@ -305,3 +305,21 @@ CREATE TABLE class_course (
     FOREIGN KEY (course_id) REFERENCES classes(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程与班级关联表';
 ```
+
+## 教室列表(rooms)
+
+### 表结构
+
+| 字段名    | 数据类型                          | 约束                  | 描述           |
+|-----------|----------------------------------|----------------------|----------------|
+| **id**    | INT AUTO_INCREMENT PRIMARY KEY   | 主键，自动递增       | 教室唯一 ID    |
+| **location** | VARCHAR(50) NOT NULL UNIQUE   | 非空，唯一           | 教室地点，如1区105 |
+
+### 创建指令
+
+```sql
+CREATE TABLE rooms (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '教室唯一ID',
+    location VARCHAR(50) NOT NULL UNIQUE COMMENT '教室地点，如1区105'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='教室列表';
+```
