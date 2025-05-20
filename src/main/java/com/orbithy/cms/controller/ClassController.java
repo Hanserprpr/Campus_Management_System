@@ -47,10 +47,11 @@ public class ClassController {
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
                                                 @RequestParam Integer status,
+                                                @RequestParam(required = false) Integer ccourseId,
                                                 @RequestParam(required = false) String classNum,
                                                 @RequestParam(required = false) String reason) {
         String id = (String) request.getAttribute("userId");
-        return classService.approveCourse(id, courseId, status, classNum, reason);
+        return classService.approveCourse(id, courseId, status, classNum, reason, ccourseId);
     }
 
     /**

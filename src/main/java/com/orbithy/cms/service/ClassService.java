@@ -8,6 +8,7 @@ import com.orbithy.cms.data.dto.StudentSectionDTO;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
+import com.orbithy.cms.mapper.ClassCourseMapper;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
@@ -27,6 +28,8 @@ public class ClassService {
     private ClassMapper classMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ClassCourseMapper classCourseMapper;
 
     // 定义每天的时间段范围
     private static final int SLOTS_PER_DAY = 5;  // 每天5个时间段
@@ -103,7 +106,7 @@ public class ClassService {
     /**
      * 教务审批课程
      */
-    public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason) {
+    public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason, Integer ccourseId) {
         try {
             // 验证状态值
             if (status != 1 && status != 2) {
@@ -134,15 +137,20 @@ public class ClassService {
                 // 如果提供了新的课序号，使用新课序号；否则保留原课序号
                 String finalClassNum = (classNum != null && !classNum.trim().isEmpty()) ? classNum : existingClassNum;
 
-                // 如果课序号发生变化，检查唯一性
-                if (!finalClassNum.equals(existingClassNum)) {
-                    // 验证课序号唯一性
-                    QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
-                    queryWrapper.eq("class_num", finalClassNum)
-                            .eq("term", course.getTerm());
-                    if (classMapper.selectCount(queryWrapper) > 0) {
-                        throw new CustomException("该学期已存在相同课序号");
-                    }
+                // 如果课序号发生变化，检查唯一性（应该是不需要的）
+//                if (!finalClassNum.equals(existingClassNum)) {
+//                    // 验证课序号唯一性
+//                    QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
+//                    queryWrapper.eq("class_num", finalClassNum)
+//                            .eq("term", course.getTerm());
+//                    if (classMapper.selectCount(queryWrapper) > 0) {
+//                        throw new CustomException("该学期已存在相同课序号");
+//                    }
+//                }
+                if (course.getType() == Classes.CourseType.必修 && ccourseId == null) {
+                    throw new CustomException("必修课需要和班级绑定，审批通过时必须提供班级");
+                }else if(ccourseId != null){classCourseMapper.insertClassCourse(courseId, ccourseId);
+
                 }
 
                 // 更新课程状态和课序号（如果有变化）
