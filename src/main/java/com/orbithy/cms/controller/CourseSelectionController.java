@@ -27,7 +27,8 @@ public class CourseSelectionController {
     @GetMapping("/search")
     public ResponseEntity<Result> searchCourses(@RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "term", required = false) String term, @RequestParam(required = false) String type) throws IOException {
-        return courseSelectionService.searchCourses(keyword, term, type);
+        String userId = (String) request.getAttribute("userId");
+        return courseSelectionService.searchCourses(userId, keyword, term, type);
     }
 
     /**

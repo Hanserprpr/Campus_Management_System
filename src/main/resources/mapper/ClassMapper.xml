@@ -29,18 +29,19 @@
 
     <select id="searchCourses" resultType="com.orbithy.cms.data.po.Classes">
         SELECT * FROM classes
-        <where>
-            <if test="keyword != null">
-                AND name LIKE CONCAT('%', #{keyword}, '%')
-            </if>
-            <if test="term != null">
-                AND term = #{term}
-            </if>
-            <if test="type != null">
-                AND type = #{type}
-            </if>
-                AND status = 1
-        </where>
+        WHERE id NOT IN (
+        SELECT course_id FROM course_reg WHERE student_id = #{studentId}
+        )
+        <if test="keyword != null">
+            AND name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="term != null">
+            AND term = #{term}
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        AND status = 1
         ORDER BY id DESC
     </select>
     <select id="searchTeacherCourses" resultType="com.orbithy.cms.data.dto.ClassListDTO">

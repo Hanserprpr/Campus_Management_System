@@ -120,7 +120,7 @@ CREATE TABLE status(
 | **published**    | `BOOLEAN DEFAULT 0`                                       | 默认 0                                   | 成绩是否发布                 |
 | **regular_ratio**| `DECIMAL(3,2) NOT NULL`                                   | 非空                                     | 平时分占比                   |
 | **final_ratio**  | `DECIMAL(3,2) NOT NULL`                                   | 非空                                     | 期末分占比                   |
-| **intro**        | `VARCHAR(50) NOT NULL`                                    | 非空                                     | 课程简介                     |
+| **intro**        | `VARCHAR(50) NOT NULL`                                    | 无特殊约束                                | 课程简介                     |
 | **examination**  | `TINYINT(1) NOT NULL`                                     | 非空                                     | 考核方式（考查0，考试1）     |
 
 ---
@@ -149,7 +149,7 @@ CREATE TABLE classes(
     published BOOLEAN DEFAULT 0 COMMENT '成绩是否发布',
     regular_ratio DECIMAL(3,2) NOT NULL COMMENT '平时分占比',
     final_ratio   DECIMAL(3,2) NOT NULL COMMENT '期末分占比',
-    intro VARCHAR(50) NOT NULL COMMENT '课程简介',
+    intro VARCHAR(50) COMMENT '课程简介',
     examination TINYINT(1) NOT NULL COMMENT '考核方式，考查0 考核1',
     FOREIGN KEY (teacher_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程表';

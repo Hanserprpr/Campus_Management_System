@@ -40,7 +40,7 @@ public class CourseSelectionService {
     /**
      * 搜索课程
      */
-    public ResponseEntity<Result> searchCourses(String keyword, String term, String type) throws IOException {
+    public ResponseEntity<Result> searchCourses(String userId, String keyword, String term, String type) throws IOException {
         if (Objects.isNull(term)) {
             term = getCurrentTerm();
         }
@@ -60,7 +60,7 @@ public class CourseSelectionService {
                 type = null;
             }
 
-            List<Classes> courses = classMapper.searchCourses(keyword, term, type);
+            List<Classes> courses = classMapper.searchCourses(Integer.valueOf(userId), keyword, term, type);
             return ResponseUtil.build(Result.success(courses, "搜索成功"));
         } catch (CustomException e) {
             throw e;
