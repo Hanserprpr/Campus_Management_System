@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 @Data
 public class CreateCourseDTO {
+
+    private Integer courseId;
     private String name;           // 课程名称
     private String category;       // 课程类别
     private float point;         // 学分
