@@ -1,6 +1,7 @@
 package com.orbithy.cms.data.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.orbithy.cms.data.enums.Major;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,21 +20,5 @@ public class Section {
     private String grade;
     private String number; // 班级编号
 
-    // 专业枚举类型
-    @Getter
-    public enum Major {
-        软件工程("0"),
-        数字媒体技术("1"),
-        大数据("2"),
-        AI("3");
-
-        @EnumValue // 让 MyBatis-Plus 识别该字段的数据库存储值
-        private final String value;
-
-        Major(String value) {
-            this.value = value;
-        }
-
-    }
 }
 

@@ -1,11 +1,10 @@
 package com.orbithy.cms.data.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
+import com.orbithy.cms.data.enums.Major;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
@@ -22,11 +21,15 @@ public class User {
     private String password;
     @TableField("SDUId")
     private String SDUId;
-    private Integer major;
+    private Major major;
     private Byte permission;
     private String nation;
     private String ethnic;
     @TableField("PoliticsStatus")
     private String PoliticsStatus;
     private String college;
+
+
+
 }
+
