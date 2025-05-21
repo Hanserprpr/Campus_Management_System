@@ -3,10 +3,11 @@ package com.orbithy.cms.controller;
 import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.annotation.Teacher;
+import com.orbithy.cms.data.dto.ChangeClassDTO;
 import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.ClassService;
-import com.orbithy.cms.utils.ResponseUtil;
+
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,5 +191,13 @@ public class ClassController {
                                                    @PathVariable Integer week) {
         String id = (String) request.getAttribute("userId");
         return classService.getClassSchedule(id, week, term);
+    }
+
+    @Admin
+    @PostMapping("/adUpdate/{classId}")
+    public ResponseEntity<Result> adDelete(@PathVariable Integer classId,
+                                           @RequestParam ChangeClassDTO ChangeClassDTO) {
+        String id = (String) request.getAttribute("userId");
+        return  classService.adUpdate(id,classId,ChangeClassDTO);
     }
 }

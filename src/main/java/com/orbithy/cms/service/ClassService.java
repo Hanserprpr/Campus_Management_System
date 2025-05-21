@@ -1,10 +1,8 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.orbithy.cms.data.dto.ClassDTO;
-import com.orbithy.cms.data.dto.ClassListDTO;
-import com.orbithy.cms.data.dto.CreateCourseDTO;
-import com.orbithy.cms.data.dto.StudentSectionDTO;
+import com.orbithy.cms.data.dto.*;
+import com.orbithy.cms.data.po.ClassCourse;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
@@ -573,5 +571,39 @@ public class ClassService {
         result.put("pages", pages);
 
         return ResponseUtil.build(Result.success(result, "获取课程列表成功"));
+    }
+
+    public ResponseEntity<Result> adUpdate(String id, Integer classId, ChangeClassDTO changeClassDTO){
+        try {
+
+            Classes course = classMapper.getCourseById(classId);
+            ClassCourse classCourse = new ClassCourse();
+            classCourse.setClassId(classId);
+            classCourse.setCourseId(course.getId());
+            if (course == null) {
+                throw new CustomException("课程不存在");
+            }
+
+            // 更新课程信息
+            BeanUtils.copyProperties(changeClassDTO, course);
+            try {
+                course.setType(Classes.CourseType.valueOf(String.valueOf(changeClassDTO.getType())));
+            } catch (IllegalArgumentException e) {
+                throw new CustomException("无效的课程类型", e);
+            }
+
+            // 验证课程数据
+            if (!isValidCourseData(course)) {
+                throw new CustomException("课程信息不合法");
+            }
+
+            classMapper.updateById(course);
+            classCourseMapper.updateById(classCourse);
+            return ResponseUtil.build(Result.success(null, "更新成功"));
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException("更新课程失败：" + e.getMessage(), e);
+        }
     }
 }
