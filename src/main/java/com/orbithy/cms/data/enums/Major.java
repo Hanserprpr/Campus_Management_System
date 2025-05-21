@@ -26,7 +26,7 @@ public enum Major {
         return description;
     }
 
-    public static Major fromCode(int code) {
+    public static Major fromCode(Integer code) {
         for (Major m : values()) {
             if (m.code == code) return m;
         }
