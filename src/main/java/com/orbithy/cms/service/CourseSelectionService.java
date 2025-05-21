@@ -201,7 +201,7 @@ public class CourseSelectionService {
                     dto.setPoint(course.getPoint());
                     dto.setType(String.valueOf(course.getType()));
                     dto.setTime(course.getTime());
-                    dto.setClassroom(course.getClassroom());
+                    dto.setClassroom(course.getClassroomId());
                     dto.setCapacity(course.getCapacity());
                     dto.setCategory(course.getCategory());
 
@@ -282,7 +282,7 @@ public class CourseSelectionService {
                     dto.setPoint(course.getPoint());
                     dto.setType(String.valueOf(course.getType()));
                     dto.setTime(course.getTime());
-                    dto.setClassroom(course.getClassroom());
+                    dto.setClassroom(course.getClassroomId());
                     dto.setCapacity(course.getCapacity());
                     dto.setCategory(course.getCategory());
 

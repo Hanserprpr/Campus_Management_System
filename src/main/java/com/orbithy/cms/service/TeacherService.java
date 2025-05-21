@@ -1,6 +1,6 @@
 package com.orbithy.cms.service;
 
-import com.orbithy.cms.data.po.rooms;
+import com.orbithy.cms.data.po.Rooms;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
 import com.orbithy.cms.mapper.RoomMapper;
@@ -45,7 +45,7 @@ public class TeacherService {
     }
 
     public ResponseEntity<Result> getClassRoom() {
-        List<rooms> rooms = roomMapper.getAllClassRooms();
+        List<Rooms> rooms = roomMapper.getAllClassRooms();
         if (rooms == null || rooms.isEmpty()) {
             return ResponseUtil.build(Result.error(404, "没有教室信息"));
         }

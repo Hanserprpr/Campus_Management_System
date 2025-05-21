@@ -14,16 +14,16 @@ public enum Major {
     @EnumValue
     private final int code;
 
-    private final String description;
+    private final String label;
 
-    Major(int code, String description) {
+    Major(int code, String label) {
         this.code = code;
-        this.description = description;
+        this.label = label;
     }
 
     @JsonValue
-    public String getDescription() {
-        return description;
+    public String getLabel() {
+        return label;
     }
 
     public static Major fromCode(Integer code) {
