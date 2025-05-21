@@ -38,4 +38,13 @@ public class TeacherController {
         String id = (String) request.getAttribute("userId");
         return TeacherService.getCountClass(id);
     }
+
+    /**
+     * 获取教室列表
+     */
+    @Teacher
+    @GetMapping("/getClassRoom")
+    public ResponseEntity<Result> getClassRoom() {
+        return TeacherService.getClassRoom();
+    }
 }
