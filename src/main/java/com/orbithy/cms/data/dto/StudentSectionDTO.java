@@ -1,6 +1,6 @@
 package com.orbithy.cms.data.dto;
 
-import com.orbithy.cms.data.po.Section;
+import com.orbithy.cms.data.enums.Major;
 import lombok.Data;
 
 @Data
@@ -8,7 +8,7 @@ public class StudentSectionDTO {
     private Integer id;
     private String username;
     private Integer sectionNumber;
-    private Section.Major major;
+    private Major major;
     private String SDUId;
     private Integer regular; // 平时分
     private Integer finalScore; // 期末分

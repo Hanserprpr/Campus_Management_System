@@ -1,4 +1,5 @@
 package com.orbithy.cms.service;
+import com.orbithy.cms.data.enums.Major;
 import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.mapper.StatusMapper;
@@ -44,7 +45,9 @@ public class UserImportService {
             user.setPhone(getCellValue(row.getCell(3)));
             user.setPassword(BcryptUtils.encrypt(getCellValue(row.getCell(4))));
             user.setSDUId(getCellValue(row.getCell(5)));
-            user.setMajor(parseInteger(row.getCell(6)));
+            Integer code = parseInteger(row.getCell(6));
+            Major majorEnum = Major.fromCode(code);
+            user.setMajor(majorEnum);
             Byte permission = parseByte(row.getCell(7));
             if (permission != null && permission == 0) {
                 throw new IllegalArgumentException("第 " + (i + 1) + " 行的权限(permission)不能为0！");
