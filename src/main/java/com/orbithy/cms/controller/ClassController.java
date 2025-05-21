@@ -193,6 +193,12 @@ public class ClassController {
         return classService.getClassSchedule(id, week, term);
     }
 
+    /**
+     * 教务修改课程信息
+     * @param classId
+     * @param ChangeClassDTO
+     * @return
+     */
     @Admin
     @PostMapping("/adUpdate/{classId}")
     public ResponseEntity<Result> adUpdate(@PathVariable Integer classId,
