@@ -105,7 +105,7 @@ CREATE TABLE status(
 | **category**     | `VARCHAR(100)`                                            | 可为空                                   | 课程类别（如体育小项）       |
 | **point**        | `TINYINT NOT NULL`                                        | 非空                                     | 学分                         |
 | **teacher_id**   | `INT NOT NULL`                                            | 非空，外键，关联 `user` 表               | 教师ID                       |
-| **classroom**    | `VARCHAR(50)`                                             | 可为空                                   | 上课教室                     |
+| **classroom_id** | `INT`                                                     | 可为空，外键，关联 `rooms` 表             | 上课教室                     |
 | **week_start**   | `TINYINT DEFAULT 1 NOT NULL`                              | 默认值 1，非空                            | 起始周                       |
 | **week_end**     | `TINYINT DEFAULT 17 NOT NULL`                             | 默认值 17，非空                           | 结束周                       |
 | **period**       | `TINYINT NOT NULL`                                        | 非空                                     | 课时                         |
@@ -134,7 +134,7 @@ CREATE TABLE classes(
     category VARCHAR(100) COMMENT '类别，如体育小项',
     point TINYINT NOT NULL COMMENT '学分',
     teacher_id INT NOT NULL COMMENT '教师id',
-    classroom VARCHAR(50) COMMENT '上课教室',
+    classroom_id INT COMMENT '上课教室',
     week_start TINYINT DEFAULT 1 NOT NULL COMMENT '起始周',
     week_end TINYINT DEFAULT 17 NOT NULL COMMENT '结束周',
     period TINYINT NOT NULL COMMENT '课时',
@@ -151,7 +151,8 @@ CREATE TABLE classes(
     final_ratio   DECIMAL(3,2) NOT NULL COMMENT '期末分占比',
     intro VARCHAR(50) COMMENT '课程简介',
     examination TINYINT(1) NOT NULL COMMENT '考核方式，考查0 考核1',
-    FOREIGN KEY (teacher_id) REFERENCES user(id) ON DELETE CASCADE
+    FOREIGN KEY (teacher_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY (room_id) REFERENCES rooms(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程表';
 ```
 

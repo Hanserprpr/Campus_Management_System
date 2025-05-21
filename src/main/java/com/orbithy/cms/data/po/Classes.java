@@ -25,7 +25,7 @@ public class Classes {
     private String category;
     private Float point;
     private Integer teacherId;
-    private String classroom;
+    private String classroomId;
     private Integer weekStart;
     private Integer weekEnd;
     private Integer period;
