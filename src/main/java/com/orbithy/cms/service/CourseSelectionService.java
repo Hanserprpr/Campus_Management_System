@@ -319,6 +319,8 @@ public class CourseSelectionService {
                     dto.setClassroom(course.getClassroomId());
                     dto.setCapacity(course.getCapacity());
                     dto.setCategory(course.getCategory());
+                    dto.setWeekStart(course.getWeekStart());
+                    dto.setWeekEnd(course.getWeekEnd());
 
                     // 获取教师名称
                     String teacherName = userMapper.getUsernameById(course.getTeacherId());
