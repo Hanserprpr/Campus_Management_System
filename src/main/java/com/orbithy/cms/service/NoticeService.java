@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class NoticeService {
@@ -51,9 +52,12 @@ public class NoticeService {
         return ResponseUtil.build(Result.success(noticeList, "获取公告成功"));
     }
 
-    public ResponseEntity<Result> editNotice(Notice notice) {
+    public ResponseEntity<Result> editNotice(Notice notice, String userId) {
         if (notice.getId() == null) {
             return ResponseUtil.build(Result.error(404, "公告id未提供"));
+        }
+        if (!Objects.equals(notice.getCreatorId(), Integer.valueOf(userId))){
+            return ResponseUtil.build(Result.error(404, "无权限"));
         }
         noticeMapper.updateById(notice);
         return ResponseUtil.build(Result.ok());

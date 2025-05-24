@@ -62,12 +62,40 @@ public class CourseSelectionService {
                 type = null;
             }
 
-            List<CSSearchCourseDTO> courses = classMapper.searchCourses(Integer.valueOf(userId), keyword, term, type);
-            for (CSSearchCourseDTO cSSearchCourseDTO : courses) {
-                String teacherName = userMapper.getUsernameById(cSSearchCourseDTO.getTeacherId());
-                cSSearchCourseDTO.setTeacherName(teacherName);
+            List<Classes> courses = classMapper.searchCourses(Integer.valueOf(userId), keyword, term, type);
+            List<CSSearchCourseDTO> courseDTOList  = new ArrayList<>();
+            for (Classes classes : courses) {
+                CSSearchCourseDTO dto = new CSSearchCourseDTO();
+                dto.setId(classes.getId());
+                dto.setName(classes.getName());
+                dto.setCategory(classes.getCategory());
+                dto.setPoint(classes.getPoint());
+                dto.setTeacherId(classes.getTeacherId());
+                dto.setClassroomId(classes.getClassroomId());
+                dto.setWeekStart(classes.getWeekStart());
+                dto.setWeekEnd(classes.getWeekEnd());
+                dto.setPeriod(classes.getPeriod());
+                dto.setTime(classes.getTime());
+                dto.setCollege(classes.getCollege());
+                dto.setTerm(classes.getTerm());
+                dto.setClassNum(classes.getClassNum());
+                dto.setType(classes.getType());
+                dto.setCapacity(classes.getCapacity());
+                dto.setStatus(classes.getStatus());
+                dto.setIntro(classes.getIntro());
+                dto.setExamination(classes.getExamination());
+                dto.setF_reason(classes.getF_reason());
+                dto.setPublished(classes.getPublished());
+                dto.setRegularRatio(classes.getRegularRatio());
+                dto.setFinalRatio(classes.getFinalRatio());
+
+                // 从 user 表获取教师姓名
+                String teacherName = userMapper.getUsernameById(classes.getTeacherId());
+                dto.setTeacherName(teacherName);
+
+                courseDTOList.add(dto);
             }
-            return ResponseUtil.build(Result.success(courses, "搜索成功"));
+            return ResponseUtil.build(Result.success(courseDTOList, "搜索成功"));
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

@@ -76,10 +76,11 @@ public class NoticeController {
      * @param notice 公告
      * @return ResponseEntity<Result>
      */
-    @Admin
+    @Teacher
     @RequestMapping("/edit")
     public ResponseEntity<Result> editNotice(Notice notice) {
-        return noticeService.editNotice(notice);
+        String userId = (String) request.getAttribute("userId");
+        return noticeService.editNotice(notice, userId);
     }
 
     /**
