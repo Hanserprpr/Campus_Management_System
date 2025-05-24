@@ -1,5 +1,7 @@
 package com.orbithy.cms.service;
 
+import com.orbithy.cms.data.dto.CSSearchCourseDTO;
+import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
 import com.orbithy.cms.data.po.Classes;
@@ -60,7 +62,11 @@ public class CourseSelectionService {
                 type = null;
             }
 
-            List<Classes> courses = classMapper.searchCourses(Integer.valueOf(userId), keyword, term, type);
+            List<CSSearchCourseDTO> courses = classMapper.searchCourses(Integer.valueOf(userId), keyword, term, type);
+            for (CSSearchCourseDTO cSSearchCourseDTO : courses) {
+                String teacherName = userMapper.getUsernameById(cSSearchCourseDTO.getTeacherId());
+                cSSearchCourseDTO.setTeacherName(teacherName);
+            }
             return ResponseUtil.build(Result.success(courses, "搜索成功"));
         } catch (CustomException e) {
             throw e;

@@ -2,6 +2,7 @@ package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import com.orbithy.cms.data.dto.CSSearchCourseDTO;
 import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.dto.StudentSectionDTO;
@@ -32,7 +33,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     Classes getCourseById(@Param("courseId") Integer courseId);
 
 
-    List<Classes> searchCourses(@Param("studentId") Integer studentId, @Param("keyword") String keyword, String term, String type);
+    List<CSSearchCourseDTO> searchCourses(@Param("studentId") Integer studentId, @Param("keyword") String keyword, String term, String type);
 
     @Select("SELECT * FROM classes WHERE status = 0")
     List<ClassDTO> getPendingCourses();
