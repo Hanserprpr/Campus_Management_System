@@ -144,7 +144,7 @@ public class AdminService {
             user.setEmail(SDUId + "@mail.sdu.edu.cn");
             userMapper.addUser(user);
             Status status = new Status();
-            Integer grade = Integer.valueOf(SDUId.substring(2, 4));
+            Integer grade = Integer.valueOf(SDUId.substring(0, 4));
             status.setId(user.getId());
             status.setGrade(grade);
             status.setAdmission(grade);
