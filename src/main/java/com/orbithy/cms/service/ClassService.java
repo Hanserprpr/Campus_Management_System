@@ -147,7 +147,7 @@ public class ClassService {
 //                }
                 if (course.getType() == Classes.CourseType.必修 && ccourseId == null) {
                     throw new CustomException("必修课需要和班级绑定，审批通过时必须提供班级");
-                }else if(ccourseId != null){classCourseMapper.insertClassCourse(courseId, ccourseId);
+                }else if(ccourseId != null){classCourseMapper.insertClassCourse(ccourseId, courseId);
 
                 }
 
