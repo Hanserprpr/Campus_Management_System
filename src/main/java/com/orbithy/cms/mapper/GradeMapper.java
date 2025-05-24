@@ -18,6 +18,14 @@ public interface GradeMapper extends BaseMapper<Grade> {
     @Update("UPDATE classes SET published = true WHERE id = #{courseId}")
     void releaseGrade(int courseId);
 
+    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
+            "ON gr.course_id = c.id WHERE c.publish = 1 AND c.teacher_id = #{id}")
+    int finish(String id);
+
+    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
+            "ON gr.course_id = c.id WHERE c.publish = 0 AND c.teacher_id = #{id}")
+    int unFinish(String id);
+
     @Select("SELECT g.id, g.course_id, g.regular, g.final_score, g.grade, g.rank, c.class_num, c.point, c.teacher_id, c.type, c.name AS className, u.username AS teacher " +
             "FROM grade g " +
             "JOIN classes c ON g.course_id = c.id " +

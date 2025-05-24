@@ -36,6 +36,18 @@ public class GradeController {
         return gradeService.getGradeList(id, courseId);
     }
 
+    /**
+     * 获取统计信息
+     * @param
+     * @return
+     */
+    @Auth
+    @PostMapping("/getMessage")
+    public ResponseEntity<Result> getMessage() {
+        String id = (String) request.getAttribute("userId");
+        return gradeService.getMessage(id);
+    }
+
     @Admin
     @PostMapping("/releaseGrade")
     public ResponseEntity<Result> releaseGrade(int courseId) {
