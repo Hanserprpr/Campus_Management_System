@@ -15,4 +15,6 @@ public class CourseSelectionResultDTO {
     private Integer selectedCount;   // 已选人数
     private Integer capacity;        // 课程容量
     private String category;         // 课程类别
+    private Integer weekStart;
+    private Integer weekEnd;
 }

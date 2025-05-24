@@ -126,4 +126,14 @@ public class GradeService {
         List<GradeTermDTO> grade = gradeMapper.getGradeByTerm(id, term);
         return ResponseUtil.build(Result.success(grade, "获取成绩成功"));
     }
+
+    public ResponseEntity<Result> getMessage(String id) {
+        int finish  = gradeMapper.finish(id);
+        int unFinish = gradeMapper.unFinish(id);
+        Map<String, Integer> result = new HashMap<>();
+        result.put("finish", finish);
+        result.put("unFinish", unFinish);
+
+        return ResponseUtil.build(Result.success(result,"获取成功"));
+    }
 }
