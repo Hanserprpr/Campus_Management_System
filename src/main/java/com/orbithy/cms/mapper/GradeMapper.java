@@ -50,4 +50,6 @@ public interface GradeMapper extends BaseMapper<Grade> {
 
     @Select("SELECT SUM(gr.grade * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.courseid WHERE gr.student_id = #{id} AND gr.term =#{term}")
     int getTotalGrade(String id, String term);
+
+
 }
