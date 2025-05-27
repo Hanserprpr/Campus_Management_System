@@ -8,6 +8,7 @@ import com.orbithy.cms.data.dto.CreateCourseDTO;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.ClassService;
 
+import com.orbithy.cms.service.ScheduleService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 public class ClassController {
     @Resource
     private ClassService classService;
-    @Autowired
+    @Resource
     private HttpServletRequest request;
+    @Resource
+    private ScheduleService scheduleService;
 
     /**
      * 教师创建课程
@@ -155,8 +158,7 @@ public class ClassController {
     @Admin
     @PostMapping("/autoSchedule")
     public ResponseEntity<Result> autoSchedule(@RequestParam String term) {
-        String id = (String) request.getAttribute("userId");
-        return classService.autoSchedule(id, term);
+        return scheduleService.schedule(term);
     }
 
     /**

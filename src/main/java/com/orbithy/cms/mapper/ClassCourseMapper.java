@@ -19,4 +19,7 @@ public interface ClassCourseMapper extends BaseMapper<ClassCourse> {
 
     @Select("SELECT * FROM class_course WHERE class_id = #{classId} AND course_id = #{courseId}")
     ClassCourse selectClassCourse(Integer classId, Integer courseId);
+
+    @Select("SELECT class_id FROM class_course WHERE course_id = #{courseId}")
+    Integer selectClassIdByCourseId(Integer courseId);
 }
