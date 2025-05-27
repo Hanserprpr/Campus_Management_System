@@ -7,6 +7,7 @@ import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
+import com.orbithy.cms.mapper.CourseSelectionMapper;
 import com.orbithy.cms.mapper.GradeMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
@@ -27,6 +28,8 @@ public class GradeService {
     private UserMapper userMapper;
     @Autowired
     private ClassMapper classMapper;
+    @Autowired
+    private CourseSelectionMapper courseSelectionMapper;
 
     /**
      * 添加成绩
@@ -127,13 +130,24 @@ public class GradeService {
         return ResponseUtil.build(Result.success(grade, "获取成绩成功"));
     }
 
-    public ResponseEntity<Result> getMessage(String id) {
-        int finish  = gradeMapper.finish(id);
-        int unFinish = gradeMapper.unFinish(id);
+    public ResponseEntity<Result> getMessage(String id,String term) {
+        int finish  = gradeMapper.finish(id,term);
+        int unFinish = gradeMapper.unFinish(id,term);
         Map<String, Integer> result = new HashMap<>();
         result.put("finish", finish);
         result.put("unFinish", unFinish);
 
+        return ResponseUtil.build(Result.success(result,"获取成功"));
+    }
+
+    public ResponseEntity<Result> getStudentMessage(String id, String term) {
+        int totalPoint = courseSelectionMapper.sumAllPointById(id,term);
+        int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
+        int averCredits = gradeMapper.getTotalGrade(id,term);
+        Map<String, Integer> result = new HashMap<>();
+        result.put("totalPoint", totalPoint);
+        result.put("totalClass", totalClass);
+        result.put("averCredits", averCredits);
         return ResponseUtil.build(Result.success(result,"获取成功"));
     }
 }
