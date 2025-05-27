@@ -19,12 +19,12 @@ public interface GradeMapper extends BaseMapper<Grade> {
     void releaseGrade(int courseId);
 
     @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
-            "ON gr.course_id = c.id WHERE c.publish = 1 AND c.teacher_id = #{id}")
-    int finish(String id);
+            "ON gr.course_id = c.id WHERE c.publish = 1 AND c.teacher_id = #{id} AND term = #{term}")
+    int finish(String id,String term);
 
     @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
-            "ON gr.course_id = c.id WHERE c.publish = 0 AND c.teacher_id = #{id}")
-    int unFinish(String id);
+            "ON gr.course_id = c.id WHERE c.publish = 0 AND c.teacher_id = #{id} AND term = #{term}")
+    int unFinish(String id,String term);
 
     @Select("SELECT g.id, g.course_id, g.regular, g.final_score, g.grade, g.rank, c.class_num, c.point, c.teacher_id, c.type, c.name AS className, u.username AS teacher " +
             "FROM grade g " +
@@ -47,4 +47,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
 
     @Select("SELECT COUNT(*) FROM grade WHERE course_id = #{courseId} AND student_id = #{studentId}")
     boolean getGradeByCourseIdAndStudentId(Integer courseId, Integer studentId);
+
+    @Select("SELECT SUM(gr.grade * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.courseid WHERE gr.student_id = #{id} AND gr.term =#{term}")
+    int getTotalGrade(String id, String term);
 }

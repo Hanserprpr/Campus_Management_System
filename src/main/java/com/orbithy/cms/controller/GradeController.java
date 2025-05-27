@@ -43,9 +43,9 @@ public class GradeController {
      */
     @Auth
     @PostMapping("/getMessage")
-    public ResponseEntity<Result> getMessage() {
+    public ResponseEntity<Result> getMessage(String term) {
         String id = (String) request.getAttribute("userId");
-        return gradeService.getMessage(id);
+        return gradeService.getMessage(id,term);
     }
 
     @Admin
@@ -59,5 +59,12 @@ public class GradeController {
     public ResponseEntity<Result> getGrade(String term) {
         String id = (String) request.getAttribute("userId");
         return gradeService.getGrade(id, term);
+    }
+
+    @Auth
+    @GetMapping("/getMessage")
+    public ResponseEntity<Result> getMessage(String term) {
+        String id = (String) request.getAttribute("userId");
+        return gradeService.getStudentMessage(id, term);
     }
 }
