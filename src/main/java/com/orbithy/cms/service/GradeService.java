@@ -122,6 +122,7 @@ public class GradeService {
         gradeMapper.updateRankByCourse(courseId);
         // 发布成绩
         gradeMapper.releaseGrade(courseId);
+
         return ResponseUtil.build(Result.ok());
     }
 
@@ -143,7 +144,13 @@ public class GradeService {
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
         int totalPoint = courseSelectionMapper.sumAllPointById(id,term);
         int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
-        int averCredits = gradeMapper.getTotalGrade(id,term);
+        int averCredits;
+        if (totalPoint == 0){
+             averCredits = 0;
+        } else  {
+             averCredits = gradeMapper.getTotalGrade(id,term) / totalPoint;
+        }
+
         Map<String, Integer> result = new HashMap<>();
         result.put("totalPoint", totalPoint);
         result.put("totalClass", totalClass);

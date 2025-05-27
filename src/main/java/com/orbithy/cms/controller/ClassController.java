@@ -208,4 +208,18 @@ public class ClassController {
         String id = (String) request.getAttribute("userId");
         return  classService.adUpdate(id,classId,ChangeClassDTO);
     }
+
+    @Admin
+    @PostMapping("/updateRank")
+    public ResponseEntity<Result> updateRank(@RequestParam Integer classId){
+        return  classService.updateRank(classId);
+    }
+
+    @Admin
+    @PostMapping("/updatePointPank")
+    public ResponseEntity<Result> updatePointRank(@RequestParam Integer grade) {
+
+        return classService.updatePointRank(grade);
+    }
+
 }

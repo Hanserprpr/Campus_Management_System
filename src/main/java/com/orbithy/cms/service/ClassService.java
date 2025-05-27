@@ -5,11 +5,11 @@ import com.orbithy.cms.data.dto.*;
 import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.ClassCourse;
 import com.orbithy.cms.data.po.Classes;
+import com.orbithy.cms.data.po.Grade;
+import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
-import com.orbithy.cms.mapper.ClassCourseMapper;
-import com.orbithy.cms.mapper.ClassMapper;
-import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +29,10 @@ public class ClassService {
     private UserMapper userMapper;
     @Autowired
     private ClassCourseMapper classCourseMapper;
+    @Autowired
+    private GradeMapper gradeMapper;
+    @Autowired
+    private CourseSelectionMapper courseSelectionMapper;
 
     // 定义每天的时间段范围
     private static final int SLOTS_PER_DAY = 5;  // 每天5个时间段
@@ -603,5 +607,44 @@ public class ClassService {
         } catch (Exception e) {
             throw new CustomException("更新课程失败：" + e.getMessage(), e);
         }
+    }
+
+    public ResponseEntity<Result> updateRank(Integer classId) {
+        QueryWrapper<Grade> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("class_id", classId)  // classId 等于特定值
+                .orderByDesc("grade");
+        List<Grade> students = gradeMapper.selectList(queryWrapper);
+        for (int i = 0; i < students.size(); i++) {
+            students.get(i).setRank((byte)(i + 1));
+            gradeMapper.updateById(students.get(i));
+        }
+        return ResponseUtil.build(Result.success(null, "更新成功"));
+
+
+    }
+
+    public ResponseEntity<Result> updatePointRank( int grade) {
+        String str = grade + "%";
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("permission",2);
+        queryWrapper.like( "SDUId",str );
+        List<User> users = userMapper.selectList(queryWrapper);
+        List<UserDTO> userDTOs = users.stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+        for (UserDTO user : userDTOs) {
+            int totalPoint = courseSelectionMapper.sumAllPointById(user.getSDUId(),"all");
+            int averCredits;
+            if (totalPoint == 0){
+                averCredits = 0;
+            } else  {
+                averCredits = gradeMapper.getTotalGrade(user.getSDUId(),"all") / totalPoint;
+            }
+
+            user.setProcessed(averCredits);
+        }
+        userDTOs.sort((u1, u2) -> Integer.compare(u2.getProcessed(), u1.getProcessed()));
+
+        return ResponseUtil.build(Result.success(null, "更新成功"));
     }
 }
