@@ -126,9 +126,9 @@ public class AdminService {
     @Transactional
     public ResponseEntity<Result> updateUser(User user, Status status) {
         UpdateWrapper<User> updateWrapper = WrapperUtil.buildNonNullUpdateWrapper(user, "id", user.getId());
-        userMapper.update(null, updateWrapper);
+        userMapper.update(user, updateWrapper);
         UpdateWrapper<Status> statusUpdateWrapper = WrapperUtil.buildNonNullUpdateWrapper(status, "id", status.getId());
-        statusMapper.update(null, statusUpdateWrapper);
+        statusMapper.update(status, statusUpdateWrapper);
         return ResponseUtil.build(Result.ok());
     }
 
