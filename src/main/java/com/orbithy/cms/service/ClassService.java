@@ -2,6 +2,7 @@ package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.orbithy.cms.data.dto.*;
+import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.ClassCourse;
 import com.orbithy.cms.data.po.Classes;
 import com.orbithy.cms.data.po.Grade;
@@ -51,7 +52,7 @@ public class ClassService {
 
             // 转换课程类型
             try {
-                course.setType(Classes.CourseType.valueOf(courseDTO.getType()));
+                course.setType(CourseType.valueOf(courseDTO.getType()));
             } catch (IllegalArgumentException e) {
                 throw new CustomException("无效的课程类型", e);
             }
@@ -149,7 +150,7 @@ public class ClassService {
 //                        throw new CustomException("该学期已存在相同课序号");
 //                    }
 //                }
-                if (course.getType() == Classes.CourseType.必修 && ccourseId == null) {
+                if (course.getType() == CourseType.必修 && ccourseId == null) {
                     throw new CustomException("必修课需要和班级绑定，审批通过时必须提供班级");
                 }else if(ccourseId != null){classCourseMapper.insertClassCourse(ccourseId, courseId);
 
@@ -268,7 +269,7 @@ public class ClassService {
             // 更新课程信息
             BeanUtils.copyProperties(courseDTO, course);
             try {
-                course.setType(Classes.CourseType.valueOf(courseDTO.getType()));
+                course.setType(CourseType.valueOf(courseDTO.getType()));
             } catch (IllegalArgumentException e) {
                 throw new CustomException("无效的课程类型", e);
             }
@@ -584,14 +585,11 @@ public class ClassService {
             ClassCourse classCourse = new ClassCourse();
             classCourse.setClassId(classId);
             classCourse.setCourseId(course.getId());
-            if (course == null) {
-                throw new CustomException("课程不存在");
-            }
 
             // 更新课程信息
             BeanUtils.copyProperties(changeClassDTO, course);
             try {
-                course.setType(Classes.CourseType.valueOf(String.valueOf(changeClassDTO.getType())));
+                course.setType(CourseType.valueOf(String.valueOf(changeClassDTO.getType())));
             } catch (IllegalArgumentException e) {
                 throw new CustomException("无效的课程类型", e);
             }

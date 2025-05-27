@@ -1,5 +1,6 @@
 package com.orbithy.cms.data.dto;
 
+import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.Classes;
 import lombok.Data;
 
@@ -22,7 +23,7 @@ public class ClassDTO {//详细信息DTO
     private String college;
     private String term;
     private String classNum;
-    private Classes.CourseType type;
+    private CourseType type;
     private Integer capacity;
     private Classes.CourseStatus status;
     private String intro;

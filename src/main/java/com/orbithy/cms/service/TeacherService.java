@@ -29,7 +29,10 @@ public class TeacherService {
         }
         Map<String, Integer> Mes = new HashMap<>();
         int classAmo = userMapper.getClassAmoByTeacherId(id);
-        int totalClassHour = userMapper.getTotalClassHour(id);
+        Integer totalClassHour = userMapper.getTotalClassHour(id);
+        if (totalClassHour == null) {
+            totalClassHour = 0;
+        }
         Mes.put("totalClassHour", totalClassHour);
         Mes.put("classAmo", classAmo);
         return ResponseUtil.build(Result.success(Mes,"CGA"));
