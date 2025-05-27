@@ -37,7 +37,7 @@ public class GradeController {
     }
 
     /**
-     * 获取统计信息
+     * 获取教师统计信息
      * @param
      * @return
      */
@@ -61,9 +61,14 @@ public class GradeController {
         return gradeService.getGrade(id, term);
     }
 
+    /**
+     * 获取学生信息
+     * @param term
+     * @return
+     */
     @Auth
     @GetMapping("/getMessage")
-    public ResponseEntity<Result> getMessage(String term) {
+    public ResponseEntity<Result> getStudentMessage(String term) {
         String id = (String) request.getAttribute("userId");
         return gradeService.getStudentMessage(id, term);
     }
