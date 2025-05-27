@@ -1,6 +1,7 @@
 package com.orbithy.cms.controller;
 
 
+import com.orbithy.cms.annotation.Auth;
 import com.orbithy.cms.annotation.Teacher;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.TeacherService;
@@ -42,7 +43,7 @@ public class TeacherController {
     /**
      * 获取教室列表
      */
-    @Teacher
+    @Auth
     @GetMapping("/getClassRoom")
     public ResponseEntity<Result> getClassRoom() {
         return TeacherService.getClassRoom();
