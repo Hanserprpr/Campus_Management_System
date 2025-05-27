@@ -88,7 +88,7 @@ public interface UserMapper extends BaseMapper<User> {
     int getClassAmoByTeacherId(String teacherId);
 
     @Select("SELECT SUM(period) FROM classes WHERE teacher_id = #{teacherId} ")
-    int getTotalClassHour(String teacherId);
+    Integer getTotalClassHour(String teacherId);
 
     @Select("SELECT email FROM user WHERE id = #{userId}")
     String getEmailById(String userId);
