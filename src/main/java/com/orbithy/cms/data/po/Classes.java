@@ -1,20 +1,16 @@
 package com.orbithy.cms.data.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.orbithy.cms.data.enums.handler.CourseTypeHandler;
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.orbithy.cms.data.enums.CourseType;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @TableName("classes")
 public class Classes {
@@ -25,6 +21,7 @@ public class Classes {
     private String category;
     private Float point;
     private Integer teacherId;
+    @TableField(value = "classroom_id")
     private String classroomId;
     private Integer weekStart;
     private Integer weekEnd;
@@ -33,6 +30,7 @@ public class Classes {
     private String college;
     private String term;
     private String classNum;
+    @TableField(typeHandler = CourseTypeHandler.class)
     private CourseType type;
     private Integer capacity;
     private CourseStatus status;
@@ -44,22 +42,6 @@ public class Classes {
     private BigDecimal finalRatio;
 
 
-
-
-    // 课程类型枚举
-    @Getter
-    public enum CourseType {
-        必修("必修"),
-        限选("限选"),
-        任选("任选");
-
-        private final String description;
-
-        CourseType(String description) {
-            this.description = description;
-        }
-
-    }
 
     // 课程状态枚举
     @Getter

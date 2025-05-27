@@ -1,6 +1,7 @@
 package com.orbithy.cms.data.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.Classes;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class GradeTermDTO {
     private int classNum;
     private int point;
     private int teacherId;
-    private Classes.CourseType type;
+    private CourseType type;
     @TableField(value = "username")
     private String teacher;
 }

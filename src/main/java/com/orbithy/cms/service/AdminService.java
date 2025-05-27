@@ -116,6 +116,14 @@ public class AdminService {
         else if  (user.getPermission() == 0) {
             return ResponseUtil.build(Result.error(403, "无权限"));
         }
+        if (user.getPermission() == 1) {
+            Status status = new Status();
+            status.setGrade(Integer.valueOf(user.getSDUId().substring(0,4)));
+            StudentCardDTO userCardDTO = new StudentCardDTO();
+            userCardDTO.setStatus(status);
+            userCardDTO.setUser(user);
+            return ResponseUtil.build(Result.success(userCardDTO, "获取成功"));
+        }
         Status status = statusMapper.getStatusById(userId);
         StudentCardDTO userCardDTO = new StudentCardDTO();
         userCardDTO.setUser(user);
