@@ -2,7 +2,6 @@ package com.orbithy.cms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.orbithy.cms.data.dto.CSSearchCourseDTO;
 import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.ClassListDTO;
 import com.orbithy.cms.data.dto.StudentSectionDTO;
@@ -16,7 +15,7 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Insert("INSERT INTO classes (name, category, point, teacher_id, classroom_id, week_start, week_end, " +
             "period, college, term, class_num, type, capacity, status, intro, examination, " +
             "regular_ratio, final_ratio) " +
-            "VALUES (#{name}, #{category}, #{point}, #{teacherId}, #{classroom_id}, #{weekStart}, #{weekEnd}, " +
+            "VALUES (#{name}, #{category}, #{point}, #{teacherId}, #{classroomId}, #{weekStart}, #{weekEnd}, " +
             "#{period}, #{college}, #{term}, #{classNum}, #{type}, #{capacity}, #{status.code}, #{intro}, " +
             "#{examination}, #{regularRatio}, #{finalRatio})")
     void createCourse(Classes course);
@@ -111,4 +110,12 @@ public interface ClassMapper extends BaseMapper<Classes> {
 
     @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 0")
     Integer getMyPendingClassCount(String id);
+
+    void updateCourseSchedule(@Param("id") Integer id,
+                              @Param("timeSlot") String timeSlot,  // ← 注意改成 String
+                              @Param("roomId") Integer roomId);
+
+    @Select("SELECT * FROM classes WHERE term = #{term} AND status = 1")
+    List<Classes> getActiveCoursesByTerm(@Param("term") String term);
+
 }
