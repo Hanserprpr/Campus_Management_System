@@ -19,7 +19,7 @@
 </a>
 
 <a href="https://github.com/Tans-hub/Campus_Management_System_front">
-  <img align="center" src="https://github-readme-stats.vercel.app/api/pin/?username=Tans-hub&repo=Campus_Management_System_front" />
+  <img align="center" src="https://github-readme-stats.vercel.app/api/pin/?username=PycmgMagic&repo=Campus_Management_System_front" />
 </a>
 
 本项目是基于 **Spring Boot 后端 + JavaFX 前端** 的教务管理系统课设，具备学生管理、课程管理、选课与成绩录入等核心功能，~~适合高校教务管理场景的初步建模与实践~~。
