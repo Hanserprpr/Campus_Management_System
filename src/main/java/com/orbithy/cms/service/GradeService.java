@@ -148,16 +148,16 @@ public class GradeService {
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
         int totalPoint = courseSelectionMapper.sumAllPointById(id,term);
         int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
-        int averCredits;
+        double averCredits;
         if (totalPoint == 0){
              averCredits = 0;
         } else  {
-             averCredits = gradeMapper.getTotalGrade(id,term) / totalPoint;
+             averCredits = (double) gradeMapper.getTotalGrade(id, term) / totalPoint;
         }
 
-        Map<String, Integer> result = new HashMap<>();
-        result.put("totalPoint", totalPoint);
-        result.put("totalClass", totalClass);
+        Map<String, Double> result = new HashMap<>();
+        result.put("totalPoint", (double) totalPoint);
+        result.put("totalClass", (double) totalClass);
         result.put("averCredits", averCredits);
         return ResponseUtil.build(Result.success(result,"获取成功"));
     }

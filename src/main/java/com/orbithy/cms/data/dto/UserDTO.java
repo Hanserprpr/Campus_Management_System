@@ -27,7 +27,7 @@ public class UserDTO {
     @TableField("PoliticsStatus")
     private String PoliticsStatus;
     private String college;
-    private Integer processed;
+    private Double processed;
 
     public UserDTO(User user) {
         this.username = user.getUsername();

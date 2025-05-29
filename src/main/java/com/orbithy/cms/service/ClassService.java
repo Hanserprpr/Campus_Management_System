@@ -634,22 +634,25 @@ public class ClassService {
                 .collect(Collectors.toList());
         for (UserDTO user : userDTOs) {
             int totalPoint = courseSelectionMapper.sumAllPointById(user.getSDUId(),"all");
-            int averCredits;
+            double averCredits;
             if (totalPoint == 0){
                 averCredits = 0;
             } else  {
-                averCredits = gradeMapper.getTotalGrade(user.getSDUId(),"all") / totalPoint;
+                averCredits = (double) gradeMapper.getTotalGrade(user.getSDUId(), "all") / totalPoint;
             }
 
             user.setProcessed(averCredits);
         }
-        userDTOs.sort((u1, u2) -> Integer.compare(u2.getProcessed(), u1.getProcessed()));
+        userDTOs.sort((u1, u2) -> Double.compare(u2.getProcessed(), u1.getProcessed()));
         Map<Integer,Integer>  orderMap = new HashMap<>();
         for (int i = 0; i < userDTOs.size(); i++) {
-            orderMap.put(userDTOs.get(i).getId(),i);
+            orderMap.put(userDTOs.get(i).getId(),i + 1);
         }
         users.sort(Comparator.comparingInt(p -> orderMap.getOrDefault(p.getId(), Integer.MAX_VALUE)));
-        userMapper.updateById(users);
+        for (User user : users) {
+            userMapper.updateById(user);
+        }
+
 
         return ResponseUtil.build(Result.success(null, "更新成功"));
     }
