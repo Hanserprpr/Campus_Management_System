@@ -18,9 +18,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
     @Update("UPDATE classes SET published = true WHERE id = #{courseId}")
     void releaseGrade(int courseId);
 
-    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
-            "ON gr.course_id = c.id WHERE c.publish = 1 AND c.teacher_id = #{id} AND term = #{term}")
-    int finish(String id,String term);
+
 
     @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
             "ON gr.course_id = c.id WHERE c.publish = 0 AND c.teacher_id = #{id} AND term = #{term}")
@@ -51,5 +49,8 @@ public interface GradeMapper extends BaseMapper<Grade> {
     @Select("SELECT SUM(gr.grade * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.courseid WHERE gr.student_id = #{id} AND gr.term =#{term}")
     int getTotalGrade(String id, String term);
 
+    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
+            "ON gr.course_id = c.id WHERE c.publish = 1 AND c.teacher_id = #{id} AND c.term = #{term}")
+    int finish(String id,String term);
 
 }

@@ -118,4 +118,6 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT * FROM classes WHERE term = #{term} AND status = 1")
     List<Classes> getActiveCoursesByTerm(@Param("term") String term);
 
+
+
 }
