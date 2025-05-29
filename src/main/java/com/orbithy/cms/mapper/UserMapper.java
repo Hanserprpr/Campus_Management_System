@@ -15,7 +15,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select id, username, email, sex, phone, SDUId, major, permission, nation, ethnic, PoliticsStatus, college from user where id=#{id}")
     User getUserInfo(String id);
     @Select("select permission from user where id=#{id}")
-    int getPermission(String id);
+    Integer getPermission(String id);
     @Select("select password from user where SDUId=#{SDUId}")
     String getPassword(String SDUId);
     @Select("select permission from user where id=#{id}")
@@ -49,24 +49,24 @@ public interface UserMapper extends BaseMapper<User> {
     List<User> getTeacherListAll(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
-    int countAllTeachers();
+    Integer countAllTeachers();
 
     @Select("SELECT COUNT(*) FROM user WHERE permission = 1 AND college = #{college}")
-    int countTeachersByCollege(@Param("college") String college);
+    Integer countTeachersByCollege(@Param("college") String college);
 
     void insertBatch(@Param("list") List<User> users);
 
     List<StudentListDTO> searchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission, @Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM user WHERE (SDUId LIKE CONCAT('%', #{keyword}, '%') OR username LIKE CONCAT('%', #{keyword}, '%')) AND permission = #{permission}")
-    int countSearchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission);
+    Integer countSearchUsers(@Param("keyword") String keyword, @Param("permission") Integer permission);
 
 
     @Select("SELECT COUNT(*) FROM user WHERE permission = 2")
-    int getStudentNum();
+    Integer getStudentNum();
 
     @Select("SELECT COUNT(*) FROM user WHERE permission = 1")
-    int getTeacherNum();
+    Integer getTeacherNum();
 
     List<com.orbithy.cms.data.dto.StudentListDTO> getStudentListByPage(
             @Param("grade") Integer grade,
@@ -75,7 +75,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Param("offset") int offset,
             @Param("size") int size);
 
-    int countStudentList(
+    Integer countStudentList(
             @Param("grade") Integer grade,
             @Param("major") String major,
             @Param("status") Integer status);
@@ -84,7 +84,7 @@ public interface UserMapper extends BaseMapper<User> {
     String getPasswordById(String userId);
 
     @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId}")
-    int getClassAmoByTeacherId(String teacherId);
+    Integer getClassAmoByTeacherId(String teacherId);
 
     @Select("SELECT SUM(period) FROM classes WHERE teacher_id = #{teacherId} ")
     Integer getTotalClassHour(String teacherId);

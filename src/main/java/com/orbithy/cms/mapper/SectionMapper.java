@@ -12,7 +12,7 @@ import java.util.List;
 public interface SectionMapper extends BaseMapper<Section> {
 
     @Select("select count(*) from section where grade=#{grade}")
-    int getSectionCount(String grade);
+    Integer getSectionCount(String grade);
 
     @Select("select id from section where grade=#{grade}")
     List<Integer> getSectionIdList(String grade);
@@ -26,7 +26,7 @@ public interface SectionMapper extends BaseMapper<Section> {
     List<Section> searchSection(String grade, Integer major, Integer number);
 
     @Select("SELECT count(*) FROM section")
-    int getSectionCountAll();
+    Integer getSectionCountAll();
 
     @Select("SELECT id FROM section WHERE grade = #{grade} AND major = #{major}")
     List<Integer> getSectionIdListByGradeAndMajor(@Param("grade") String grade, @Param("major") String major);

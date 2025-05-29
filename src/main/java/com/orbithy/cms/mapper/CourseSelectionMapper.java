@@ -13,7 +13,7 @@ public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
     List<CourseSelection> getStudentSelections(@Param("studentId") Integer studentId);
 
     @Select("SELECT COUNT(*) FROM course_reg WHERE course_id = #{courseId}")
-    int getCourseSelectionCount(@Param("courseId") Integer courseId);
+    Integer getCourseSelectionCount(@Param("courseId") Integer courseId);
 
     @Select("SELECT * FROM course_reg WHERE student_id = #{studentId} AND course_id = #{courseId}")
     CourseSelection getSelection(@Param("studentId") Integer studentId, @Param("courseId") Integer courseId);
@@ -25,11 +25,11 @@ public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
 
     @Select("SELECT SUM(c.point) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
             "WHERE cr.student_id = #{id} AND (c.term = #{term} OR c.term = 'all')")
-    int sumAllPointById(String id, String term);
+    Integer sumAllPointById(String id, String term);
 
     @Select("SELECT COUNT(*) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
             "WHERE cr.student_id = #{id} AND (c.term = #{term} OR c.term= 'all')")
-    int countAllCoursesById(String id, String term);
+    Integer countAllCoursesById(String id, String term);
 
 
 
