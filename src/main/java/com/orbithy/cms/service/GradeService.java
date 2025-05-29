@@ -30,6 +30,8 @@ public class GradeService {
     private ClassMapper classMapper;
     @Autowired
     private CourseSelectionMapper courseSelectionMapper;
+    @Autowired
+    private ClassService classService;
 
     /**
      * 添加成绩
@@ -122,6 +124,8 @@ public class GradeService {
         gradeMapper.updateRankByCourse(courseId);
         // 发布成绩
         gradeMapper.releaseGrade(courseId);
+
+        classService.updateRank(courseId);//自动更新排名
 
         return ResponseUtil.build(Result.ok());
     }

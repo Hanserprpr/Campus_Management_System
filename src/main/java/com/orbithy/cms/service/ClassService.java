@@ -611,7 +611,7 @@ public class ClassService {
 
     public ResponseEntity<Result> updateRank(Integer classId) {
         QueryWrapper<Grade> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("class_id", classId)  // classId 等于特定值
+        queryWrapper.eq("class_id", classId)
                 .orderByDesc("grade");
         List<Grade> students = gradeMapper.selectList(queryWrapper);
         for (int i = 0; i < students.size(); i++) {
@@ -644,6 +644,12 @@ public class ClassService {
             user.setProcessed(averCredits);
         }
         userDTOs.sort((u1, u2) -> Integer.compare(u2.getProcessed(), u1.getProcessed()));
+        Map<Integer,Integer>  orderMap = new HashMap<>();
+        for (int i = 0; i < userDTOs.size(); i++) {
+            orderMap.put(userDTOs.get(i).getId(),i);
+        }
+        users.sort(Comparator.comparingInt(p -> orderMap.getOrDefault(p.getId(), Integer.MAX_VALUE)));
+        userMapper.updateById(users);
 
         return ResponseUtil.build(Result.success(null, "更新成功"));
     }
