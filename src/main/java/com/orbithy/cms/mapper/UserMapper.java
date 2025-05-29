@@ -6,7 +6,6 @@ import com.orbithy.cms.data.po.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
@@ -22,7 +21,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select permission from user where id=#{id}")
     Integer getPermissionById(String id);
 
-    @Insert("INSERT INTO user (username, password, SDUId, major, email, permission, sex) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email}, #{permission}, #{sex})")
+    @Insert("INSERT INTO user (username, password, SDUId, major, email, permission, sex, college) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email}, #{permission}, #{sex}, #{college})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addUser(User user);
 

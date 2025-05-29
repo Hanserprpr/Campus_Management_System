@@ -1,6 +1,5 @@
 package com.orbithy.cms.controller;
 
-
 import com.orbithy.cms.annotation.Teacher;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.TeacherService;

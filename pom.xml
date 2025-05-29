@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.orbithy</groupId>
 	<artifactId>Campus_Management_System</artifactId>
-	<version>0.1.7</version>
+	<version>0.2.0</version>
 	<name>Campus_Management_System</name>
 	<description>Campus_Management_System</description>
 	<url/>
@@ -120,8 +120,16 @@
 			<artifactId>casdoor-spring-boot-starter</artifactId>
 			<version>1.15.0</version>
 		</dependency>
-
-	</dependencies>
+		<dependency>
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-spring-boot-starter</artifactId>
+			<version>9.44.0.Final</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

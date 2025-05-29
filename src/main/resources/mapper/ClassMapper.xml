@@ -61,4 +61,10 @@
         ORDER BY id DESC
         LIMIT #{offset}, #{pageSize}
     </select>
+    <update id="updateCourseSchedule">
+        UPDATE classes
+        SET time = #{timeSlot},
+        classroom_id = #{roomId}
+        WHERE id = #{id}
+    </update>
 </mapper>
