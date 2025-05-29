@@ -611,7 +611,7 @@ public class ClassService {
 
     public ResponseEntity<Result> updateRank(Integer classId) {
         QueryWrapper<Grade> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("class_id", classId)
+        queryWrapper.eq("course_id", classId)
                 .orderByDesc("grade");
         List<Grade> students = gradeMapper.selectList(queryWrapper);
         for (int i = 0; i < students.size(); i++) {
