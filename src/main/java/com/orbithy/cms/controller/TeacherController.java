@@ -35,9 +35,9 @@ public class TeacherController {
      */
     @Teacher
     @GetMapping("/countClass")
-    public ResponseEntity<Result> getCountClass() throws IOException {
+    public ResponseEntity<Result> getCountClass(String term) throws IOException {
         String id = (String) request.getAttribute("userId");
-        return TeacherService.getCountClass(id);
+        return TeacherService.getCountClass(id, term);
     }
 
     /**
