@@ -92,6 +92,9 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT email FROM user WHERE id = #{userId}")
     String getEmailById(String userId);
 
-    @Select("SELECT GPA_Rank FROM user WHERE id = #{userId}")
-    int getGPARankById(String userId);
+    @Select("SELECT GPA_rank FROM user WHERE id = #{userId}")
+    Integer getGPARankById(String userId);
+
+    @Update("UPDATE user SET GPA_rank = #{rank} WHERE id = #{id}")
+    void updateGPAById(Integer id, int rank);
 }

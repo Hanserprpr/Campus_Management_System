@@ -666,8 +666,10 @@ public class ClassService {
             orderMap.put(userDTOs.get(i).getId(),i + 1);
         }
         users.sort(Comparator.comparingInt(p -> orderMap.getOrDefault(p.getId(), Integer.MAX_VALUE)));
+        int i = 1;
         for (User user : users) {
-            userMapper.updateById(user);
+            userMapper.updateGPAById(user.getId(), i);
+            i++;
         }
 
 

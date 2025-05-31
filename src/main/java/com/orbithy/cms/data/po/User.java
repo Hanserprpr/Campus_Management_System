@@ -28,7 +28,7 @@ public class User {
     @TableField("PoliticsStatus")
     private String PoliticsStatus;
     private String college;
-
+    private Integer GPA_rank;
 
 
 
