@@ -637,7 +637,8 @@ public class ClassService {
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
         for (UserDTO user : userDTOs) {
-            int totalPoint = courseSelectionMapper.sumAllPointById(String.valueOf(user.getId()));
+            int totalPoint = Optional.ofNullable(courseSelectionMapper.sumAllPointById(String.valueOf(user.getId()))).orElse(0);
+
             double averCredits;
             if (totalPoint == 0){
                 averCredits = 0;
