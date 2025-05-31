@@ -7,6 +7,8 @@ import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import com.orbithy.cms.data.enums.CourseType;
 
+import java.util.List;
+
 @Data
 @PlanningEntity
 public class Course {
@@ -15,7 +17,7 @@ public class Course {
     private Integer id;
     private String name;
     private String classNum;
-    private Integer classId; // 班级ID
+    private List<Integer> classId; // 班级ID
     private CourseType type; // 必修、限选、任选
     private Teacher teacher;
     private int weekStart;

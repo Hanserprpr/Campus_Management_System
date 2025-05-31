@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 @TableName("class_course")
 public interface ClassCourseMapper extends BaseMapper<ClassCourse> {
@@ -21,5 +23,5 @@ public interface ClassCourseMapper extends BaseMapper<ClassCourse> {
     ClassCourse selectClassCourse(Integer classId, Integer courseId);
 
     @Select("SELECT class_id FROM class_course WHERE course_id = #{courseId}")
-    Integer selectClassIdByCourseId(Integer courseId);
+    List<Integer> selectClassIdByCourseId(Integer courseId);
 }
