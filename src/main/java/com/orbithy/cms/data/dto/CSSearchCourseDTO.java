@@ -15,7 +15,7 @@ public class CSSearchCourseDTO {
     private Float point;
     private Integer teacherId;
     private String teacherName;
-    private String classroomId;
+    private String classroom;
     private Integer weekStart;
     private Integer weekEnd;
     private Integer period;
