@@ -15,6 +15,7 @@ public class ClassDTO {//详细信息DTO
     private Float point;
     private Integer teacherId;
     private String teacherName;
+    private Integer classroomId;
     private String classroom;
     private Integer weekStart;
     private Integer weekEnd;

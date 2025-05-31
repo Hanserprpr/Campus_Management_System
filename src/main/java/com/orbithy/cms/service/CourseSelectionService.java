@@ -4,17 +4,13 @@ import com.orbithy.cms.data.dto.CSSearchCourseDTO;
 import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
 import com.orbithy.cms.data.dto.StudentListDTO;
-import com.orbithy.cms.data.po.Classes;
-import com.orbithy.cms.data.po.CourseSelection;
-import com.orbithy.cms.data.po.Status;
-import com.orbithy.cms.data.po.User;
+import com.orbithy.cms.data.po.*;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
-import com.orbithy.cms.mapper.ClassMapper;
-import com.orbithy.cms.mapper.CourseSelectionMapper;
-import com.orbithy.cms.mapper.UserMapper;
-import com.orbithy.cms.mapper.StatusMapper;
+import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,6 +34,17 @@ public class CourseSelectionService {
     private UserMapper userMapper;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    @Resource
+    private RoomMapper roomMapper;
+
+    private Map<Integer, String> classroomMap;
+
+    @PostConstruct
+    public void initClassroomMap() {
+        List<Rooms> rooms = roomMapper.selectList(null);
+        classroomMap = rooms.stream()
+                .collect(Collectors.toMap(Rooms::getId, Rooms::getLocation));
+    }
 
     /**
      * 搜索课程
@@ -71,7 +78,7 @@ public class CourseSelectionService {
                 dto.setCategory(classes.getCategory());
                 dto.setPoint(classes.getPoint());
                 dto.setTeacherId(classes.getTeacherId());
-                dto.setClassroomId(classes.getClassroomId());
+                dto.setClassroom(classroomMap.get(classes.getClassroomId()));
                 dto.setWeekStart(classes.getWeekStart());
                 dto.setWeekEnd(classes.getWeekEnd());
                 dto.setPeriod(classes.getPeriod());
@@ -235,7 +242,7 @@ public class CourseSelectionService {
                     dto.setPoint(course.getPoint());
                     dto.setType(String.valueOf(course.getType()));
                     dto.setTime(course.getTime());
-                    dto.setClassroom(course.getClassroomId());
+                    dto.setClassroom(classroomMap.get(course.getClassroomId()));
                     dto.setCapacity(course.getCapacity());
                     dto.setCategory(course.getCategory());
 
@@ -316,7 +323,7 @@ public class CourseSelectionService {
                     dto.setPoint(course.getPoint());
                     dto.setType(String.valueOf(course.getType()));
                     dto.setTime(course.getTime());
-                    dto.setClassroom(course.getClassroomId());
+                    dto.setClassroom(classroomMap.get(course.getClassroomId()));
                     dto.setCapacity(course.getCapacity());
                     dto.setCategory(course.getCategory());
                     dto.setWeekStart(course.getWeekStart());

@@ -22,7 +22,7 @@ public class Classes {
     private Float point;
     private Integer teacherId;
     @TableField(value = "classroom_id")
-    private String classroomId;
+    private Integer classroomId;
     private Integer weekStart;
     private Integer weekEnd;
     private Integer period;

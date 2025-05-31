@@ -4,14 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.orbithy.cms.config.GlobalExceptionHandler;
 import com.orbithy.cms.data.dto.*;
 import com.orbithy.cms.data.enums.CourseType;
-import com.orbithy.cms.data.po.ClassCourse;
-import com.orbithy.cms.data.po.Classes;
-import com.orbithy.cms.data.po.Grade;
-import com.orbithy.cms.data.po.User;
+import com.orbithy.cms.data.po.*;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +37,17 @@ public class ClassService {
     private GradeMapper gradeMapper;
     @Autowired
     private CourseSelectionMapper courseSelectionMapper;
+    @Resource
+    private RoomMapper roomMapper;
+
+    private Map<Integer, String> classroomMap;
+
+    @PostConstruct
+    public void initClassroomMap() {
+        List<Rooms> rooms = roomMapper.selectList(null);
+        classroomMap = rooms.stream()
+                .collect(Collectors.toMap(Rooms::getId, Rooms::getLocation));
+    }
 
     private static final Logger log = LoggerFactory.getLogger(ClassService.class);
 
@@ -147,16 +157,6 @@ public class ClassService {
                 // 如果提供了新的课序号，使用新课序号；否则保留原课序号
                 String finalClassNum = (classNum != null && !classNum.trim().isEmpty()) ? classNum : existingClassNum;
 
-                // 如果课序号发生变化，检查唯一性（应该是不需要的）
-//                if (!finalClassNum.equals(existingClassNum)) {
-//                    // 验证课序号唯一性
-//                    QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
-//                    queryWrapper.eq("class_num", finalClassNum)
-//                            .eq("term", course.getTerm());
-//                    if (classMapper.selectCount(queryWrapper) > 0) {
-//                        throw new CustomException("该学期已存在相同课序号");
-//                    }
-//                }
                 if (course.getType() == CourseType.必修 && ccourseId == null) {
                     throw new CustomException("必修课需要和班级绑定，审批通过时必须提供班级");
                 }else if(ccourseId != null){
@@ -242,14 +242,7 @@ public class ClassService {
                 throw new CustomException("课程不存在");
             }
             course.setTeacherName(userMapper.getUsernameById(course.getTeacherId()));
-
-//            // 验证权限
-//            int permission = userMapper.getPermission(id);
-//            if (permission != 0 && // 教务
-//                    !course.getTeacherId().toString().equals(id)) { // 课程创建者
-//                throw new CustomException("无权限查看此课程");
-//            }
-
+            course.setClassroom(classroomMap.get(course.getClassroomId()));
             return ResponseUtil.build(Result.success(course, "获取成功"));
         } catch (CustomException e) {
             throw e;
