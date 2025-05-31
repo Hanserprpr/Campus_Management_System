@@ -146,7 +146,7 @@ public class GradeService {
     }
 
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
-        int totalPoint = courseSelectionMapper.sumAllPointById(id,term);
+        int totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);
         int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
         double averCredits;
         if (totalPoint == 0){
