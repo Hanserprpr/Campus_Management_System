@@ -105,11 +105,11 @@ public interface ClassMapper extends BaseMapper<Classes> {
     @Select("SELECT published FROM classes WHERE id = #{courseId}")
     boolean isGradeReleased(@Param("courseId") Integer courseId);
 
-    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 1")
-    Integer getMyActiveClassCount(String id);
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 1 AND term = #{term}")
+    Integer getMyActiveClassCount(String teacherId, String term);
 
-    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 0")
-    Integer getMyPendingClassCount(String id);
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 0 AND term = #{term}")
+    Integer getMyPendingClassCount(String teacherId, String term);
 
     void updateCourseSchedule(@Param("id") Integer id,
                               @Param("timeSlot") String timeSlot,  // ← 注意改成 String
