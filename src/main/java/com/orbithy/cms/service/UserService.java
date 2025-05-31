@@ -49,9 +49,17 @@ public class UserService {
         String SDUId = user.getSDUId();
         String password = user.getPassword();
         if (user.getEmail() == null) {
+            user.setEmail("汉族");
+        }
+        if (user.getNation() == null) {
+            user.setNation("China");
+        }
+        if (user.getEthnic() == null) {
             user.setEthnic("汉族");
         }
-        user.setNation("China");
+        if (user.getEmail() == null) {
+            user.setEmail(user.getSDUId() + "@sdu.edu.cn");
+        }
         if (!loginService.isExisted(SDUId)) {
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
