@@ -46,7 +46,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
     @Select("SELECT COUNT(*) FROM grade WHERE course_id = #{courseId} AND student_id = #{studentId}")
     boolean getGradeByCourseIdAndStudentId(Integer courseId, Integer studentId);
 
-    @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND gr.published = 1")
+    @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND cl.published = 1")
     Integer getTotalTermGrade(String id, String term);
 
 
@@ -54,6 +54,6 @@ public interface GradeMapper extends BaseMapper<Grade> {
             " ON gr.course_id = c.id WHERE c.published = 1 AND c.teacher_id = #{id} AND c.term = #{term}")
     Integer finish(String id,String term);
 
-    @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND gr.published = 1")
+    @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND cl.published = 1")
     Integer getTotalGrade(String id);
 }

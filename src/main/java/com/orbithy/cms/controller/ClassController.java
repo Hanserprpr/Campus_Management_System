@@ -53,7 +53,7 @@ public class ClassController {
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
                                                 @RequestParam Integer status,
-                                                @RequestParam(required = false) List<Integer> sectionId,
+                                                @RequestBody(required = false) List<Integer> sectionId,
                                                 @RequestParam(required = false) String classNum,
                                                 @RequestParam(required = false) String reason) {
         String id = (String) request.getAttribute("userId");

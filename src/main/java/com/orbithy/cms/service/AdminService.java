@@ -149,7 +149,9 @@ public class AdminService {
             }
             String passwd = BcryptUtils.encrypt(password);
             user.setPassword(passwd);
-            user.setEmail(SDUId + "@mail.sdu.edu.cn");
+            if (user.getEmail() == null) {
+                user.setEmail(SDUId + "@sdu.edu.cn");
+            }
             userMapper.addUser(user);
             Status status = new Status();
             Integer grade = Integer.valueOf(SDUId.substring(0, 4));
