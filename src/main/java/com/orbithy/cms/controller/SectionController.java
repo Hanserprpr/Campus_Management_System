@@ -72,8 +72,8 @@ public class SectionController {
      */
     @Admin
     @GetMapping("/getSectionList")
-    public ResponseEntity<Result> getSectionList(String grade, int page, int size) {
-        return sectionService.getSectionList(grade, page, size);
+    public ResponseEntity<Result> getSectionList(String grade, int page, int size, String keyword) {
+        return sectionService.getSectionList(grade, page, size, keyword);
     }
 
     /**

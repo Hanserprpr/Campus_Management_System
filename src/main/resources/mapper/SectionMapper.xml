@@ -15,4 +15,30 @@
             AND number = #{number}
         </if>
     </select>
+
+
+    <select id="getSectionList" resultType="com.orbithy.cms.data.po.Section">
+        SELECT * FROM section
+        WHERE 1=1
+        <if test="grade != null">
+            AND grade = #{grade}
+        </if>
+        <if test="keyword != null and keyword.trim() != ''">
+            AND name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+
+    <select id="getSectionCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM section
+        WHERE 1=1
+        <if test="grade != null">
+            AND grade = #{grade}
+        </if>
+        <if test="keyword != null and keyword.trim() != ''">
+            AND name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </select>
+    
 </mapper>

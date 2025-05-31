@@ -28,7 +28,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
             "FROM grade g " +
             "JOIN classes c ON g.course_id = c.id " +
             "JOIN user u ON c.teacher_id = u.id "+
-            "WHERE student_id = #{id} AND g.term = #{term}")
+            "WHERE student_id = #{id} AND g.term = #{term} AND c.published = 1")
     List<GradeTermDTO> getGradeByTerm(String id, String term);
 
     @Update("""

@@ -11,14 +11,22 @@ import java.util.List;
 @Mapper
 public interface SectionMapper extends BaseMapper<Section> {
 
-    @Select("select count(*) from section where grade=#{grade}")
-    Integer getSectionCount(String grade);
+    @Select("SELECT COUNT(*) FROM section " +
+            "WHERE grade = #{grade} AND name LIKE CONCAT('%', #{keyword}, '%')")
+    Integer getSectionCount(@Param("grade") String grade,
+                            @Param("keyword") String keyword);
+
 
     @Select("select id from section where grade=#{grade}")
     List<Integer> getSectionIdList(String grade);
 
-    @Select("SELECT * FROM section WHERE grade = #{grade} LIMIT #{size} OFFSET #{offset}")
-    List<Section> getSectionList(String grade, int offset, int size);
+    @Select("SELECT * FROM section " +
+            "WHERE grade = #{grade} AND name LIKE CONCAT('%', #{keyword}, '%') " +
+            "LIMIT #{size} OFFSET #{offset}")
+    List<Section> getSectionList(@Param("grade") String grade,
+                                 @Param("offset") int offset,
+                                 @Param("size") int size,
+                                 @Param("keyword") String keyword);
 
     @Select("SELECT * FROM section LIMIT #{size} OFFSET #{offset}")
     List<Section> getSectionListAll(int offset, int size);
