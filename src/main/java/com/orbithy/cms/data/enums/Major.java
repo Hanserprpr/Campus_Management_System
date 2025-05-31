@@ -1,6 +1,7 @@
 package com.orbithy.cms.data.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -26,6 +27,7 @@ public enum Major {
         return label;
     }
 
+    @JsonCreator
     public static Major fromCode(Integer code) {
         for (Major m : values()) {
             if (m.code == code) return m;
