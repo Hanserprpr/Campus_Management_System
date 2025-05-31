@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/class")
 public class ClassController {
@@ -51,11 +53,11 @@ public class ClassController {
     @PostMapping("/approve/{courseId}")
     public ResponseEntity<Result> approveCourse(@PathVariable Integer courseId,
                                                 @RequestParam Integer status,
-                                                @RequestParam(required = false) Integer ccourseId,
+                                                @RequestParam(required = false) List<Integer> sectionId,
                                                 @RequestParam(required = false) String classNum,
                                                 @RequestParam(required = false) String reason) {
         String id = (String) request.getAttribute("userId");
-        return classService.approveCourse(id, courseId, status, classNum, reason, ccourseId);
+        return classService.approveCourse(id, courseId, status, classNum, reason, sectionId);
     }
 
     /**
@@ -197,9 +199,6 @@ public class ClassController {
 
     /**
      * 教务修改课程信息
-     * @param classId
-     * @param ChangeClassDTO
-     * @return
      */
     @Admin
     @PostMapping("/adUpdate/{classId}")
