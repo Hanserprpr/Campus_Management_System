@@ -92,4 +92,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT email FROM user WHERE id = #{userId}")
     String getEmailById(String userId);
 
+    @Select("SELECT GPA_Rank FROM user WHERE id = #{userId}")
+    int getGPARankById(String userId);
 }
