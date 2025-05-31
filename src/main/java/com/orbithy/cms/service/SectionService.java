@@ -73,10 +73,10 @@ public class SectionService {
         return ResponseUtil.build(Result.ok());
     }
 
-    public ResponseEntity<Result> getSectionList(String grade, int page, int size) {
+    public ResponseEntity<Result> getSectionList(String grade, int page, int size, String keyword) {
         int offset = (page - 1) * size;
-        List<Section> sectionList = sectionMapper.getSectionList(grade, offset, size);
-        int count = sectionMapper.getSectionCount(grade);
+        List<Section> sectionList = sectionMapper.getSectionList(grade, offset, size, keyword);
+        int count = sectionMapper.getSectionCount(grade, keyword);
         int pages = count / size + (count % size == 0 ? 0 : 1);
         return setAdvisorName(sectionList, pages);
     }
