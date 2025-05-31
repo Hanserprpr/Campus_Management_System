@@ -1,6 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.orbithy.cms.config.GlobalExceptionHandler;
 import com.orbithy.cms.data.dto.*;
 import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.ClassCourse;
@@ -12,6 +13,8 @@ import com.orbithy.cms.exception.CustomException;
 import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.compress.harmony.pack200.PackingUtils.log;
 
 @Service
 public class ClassService {
@@ -33,6 +38,8 @@ public class ClassService {
     private GradeMapper gradeMapper;
     @Autowired
     private CourseSelectionMapper courseSelectionMapper;
+
+    private static final Logger log = LoggerFactory.getLogger(ClassService.class);
 
     // 定义每天的时间段范围
     private static final int SLOTS_PER_DAY = 5;  // 每天5个时间段
@@ -637,6 +644,10 @@ public class ClassService {
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
         for (UserDTO user : userDTOs) {
+            if (user.getId() == null) {
+                log("user.id is null for user: {}" + user);
+                continue; // 跳过这个用户
+                }
             int totalPoint = Optional.ofNullable(courseSelectionMapper.sumAllPointById(String.valueOf(user.getId()))).orElse(0);
 
             double averCredits;
