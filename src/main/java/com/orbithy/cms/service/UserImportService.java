@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.orbithy.cms.config.GlobalExceptionHandler.log;
+
 @Service
 public class UserImportService {
 
@@ -28,11 +30,15 @@ public class UserImportService {
 
     @Transactional
     public void importUsersFromExcel(MultipartFile file) throws Exception {
+        log.info("文件名: {}", file.getOriginalFilename());
+        log.info("文件大小: {}", file.getSize());
+        log.info("开始上传文件");
         InputStream inputStream = file.getInputStream();
         Workbook workbook = new XSSFWorkbook(inputStream);
         Sheet sheet = workbook.getSheetAt(0);
 
         List<User> users = new ArrayList<>();
+        String encryptedDefaultPassword = BcryptUtils.encrypt("123456");
 
         for (int i = 1; i <= sheet.getLastRowNum(); i++) { // 跳过标题行
             Row row = sheet.getRow(i);
@@ -43,7 +49,7 @@ public class UserImportService {
             user.setSex(getCellValue(row.getCell(1)));
             user.setEmail(getCellValue(row.getCell(2)));
             user.setPhone(getCellValue(row.getCell(3)));
-            user.setPassword(BcryptUtils.encrypt(getCellValue(row.getCell(4))));
+            user.setPassword(encryptedDefaultPassword);
             user.setSDUId(getCellValue(row.getCell(5)));
             Integer code = parseInteger(row.getCell(6));
             Major majorEnum = Major.fromCode(code);

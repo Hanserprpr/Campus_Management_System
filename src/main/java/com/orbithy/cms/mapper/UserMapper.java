@@ -21,7 +21,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select permission from user where id=#{id}")
     Integer getPermissionById(String id);
 
-    @Insert("INSERT INTO user (username, password, SDUId, major, email, permission, sex, college, ethnic, PoliticsStatus) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email}, #{permission}, #{sex}, #{college}, #{ethnic} , #{PoliticsStatus})")
+    @Insert("INSERT INTO user (username, password, SDUId, major, email, permission, sex, college, ethnic, PoliticsStatus, phone) VALUES (#{username}, #{password}, #{SDUId}, '0', #{email}, #{permission}, #{sex}, #{college}, #{ethnic} , #{PoliticsStatus}, #{phone})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addUser(User user);
 
