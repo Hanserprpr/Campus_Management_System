@@ -41,4 +41,7 @@ public interface SectionMapper extends BaseMapper<Section> {
     @Select("SELECT id FROM section WHERE grade = #{grade} AND major = #{major}")
     List<Integer> getSectionIdListByGradeAndMajor(@Param("grade") String grade, @Param("major") String major);
 
+    @Select("SELECT id FROM section WHERE major = #{major} AND number = #{number}")
+    String getSectionIdByGradeMajorAndNumber(@Param("major") String major, @Param("number") String number);
+
 }

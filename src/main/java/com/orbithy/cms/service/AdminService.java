@@ -9,6 +9,7 @@ import com.orbithy.cms.data.dto.UserListDTO;
 import com.orbithy.cms.data.po.Status;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
+import com.orbithy.cms.mapper.SectionMapper;
 import com.orbithy.cms.mapper.StatusMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.BcryptUtils;
@@ -34,6 +35,8 @@ public class AdminService {
     private StatusMapper statusMapper;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SectionMapper sectionMapper;
 
     public ResponseEntity<Result> getTeacherList(String college, int page, int limit) {
         int offset = (page - 1) * limit;
@@ -135,6 +138,7 @@ public class AdminService {
     public ResponseEntity<Result> updateUser(User user, Status status) {
         UpdateWrapper<User> updateWrapper = WrapperUtil.buildNonNullUpdateWrapper(user, "id", user.getId());
         userMapper.update(user, updateWrapper);
+        status.setSection(sectionMapper.getSectionIdByGradeMajorAndNumber(user.getMajor().getLabel(), status.getSection()));
         UpdateWrapper<Status> statusUpdateWrapper = WrapperUtil.buildNonNullUpdateWrapper(status, "id", status.getId());
         statusMapper.update(status, statusUpdateWrapper);
         return ResponseUtil.build(Result.ok());
