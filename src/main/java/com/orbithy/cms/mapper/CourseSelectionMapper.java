@@ -26,7 +26,7 @@ public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
 
 
     @Select("SELECT SUM(c.point) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
-            "WHERE cr.student_id = #{id} ")
+            "WHERE cr.student_id = #{id} AND c.published = 1")
     Integer sumAllPointById(String id);
 
     @Select("SELECT COUNT(*) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
@@ -37,4 +37,8 @@ public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
     @Select("SELECT SUM(c.point) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
             "WHERE cr.student_id = #{id} AND c.term = #{term} ")
     Integer sumAllPointByTermId(String id, String term);
+
+    @Select("SELECT SUM(c.point) FROM course_reg cr JOIN classes c ON cr.course_id = c.id " +
+            "WHERE cr.student_id = #{id} AND c.published = 1")
+    int sumAllGradePointByTermId(String id, String term);
 }

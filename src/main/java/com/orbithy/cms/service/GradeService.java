@@ -148,11 +148,12 @@ public class GradeService {
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
         int totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);
         int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
+        int totalGradePoint = courseSelectionMapper.sumAllGradePointByTermId(id,term);
         double averCredits;
         if (totalPoint == 0){
              averCredits = 0;
         } else  {
-             averCredits = gradeMapper.getTotalTermGrade(id, term)  / totalPoint;
+             averCredits = gradeMapper.getTotalTermGrade(id, term)  / totalGradePoint;
         }
 
         Map<String, Double> result = new HashMap<>();
