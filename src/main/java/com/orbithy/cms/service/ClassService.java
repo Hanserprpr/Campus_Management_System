@@ -109,7 +109,7 @@ public class ClassService {
     /**
      * 教务审批课程
      */
-    public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason, Integer ccourseId) {
+    public ResponseEntity<Result> approveCourse(String id, Integer courseId, Integer status, String classNum, String reason, List<Integer> ccourseId) {
         try {
             // 验证状态值
             if (status != 1 && status != 2) {
@@ -152,7 +152,11 @@ public class ClassService {
 //                }
                 if (course.getType() == CourseType.必修 && ccourseId == null) {
                     throw new CustomException("必修课需要和班级绑定，审批通过时必须提供班级");
-                }else if(ccourseId != null){classCourseMapper.insertClassCourse(ccourseId, courseId);
+                }else if(ccourseId != null){
+                    for (int cCCourseId : ccourseId){
+                        classCourseMapper.insertClassCourse(cCCourseId, courseId);
+                    }
+
 
                 }
 
