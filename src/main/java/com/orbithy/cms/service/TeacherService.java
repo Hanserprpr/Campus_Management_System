@@ -41,10 +41,10 @@ public class TeacherService {
         return ResponseUtil.build(Result.success(Mes,"CGA"));
     }
 
-    public ResponseEntity<Result> getCountClass(String id) throws IOException {
+    public ResponseEntity<Result> getCountClass(String id, String term) throws IOException {
         Map<String, Integer> result = new HashMap<>();
-        String term = TermService.getCurrentTerm();
-        Integer activeClass = classMapper.getMyActiveClassCount(id, term);
+        String currentTerm = TermService.getCurrentTerm();
+        Integer activeClass = classMapper.getMyActiveClassCount(id, currentTerm);
         Integer pendingClass = classMapper.getMyPendingClassCount(id, term);
         result.put("activeClass", activeClass);
         result.put("pendingClass", pendingClass);
