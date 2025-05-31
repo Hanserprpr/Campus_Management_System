@@ -39,8 +39,8 @@ public class GradeController {
 
     /**
      * 获取教师统计信息
-     * @param
-     * @return
+     * @param term 学期
+     * @return ResponseEntity<Result>
      */
     @Auth
     @PostMapping("/getMessage")
@@ -64,8 +64,8 @@ public class GradeController {
 
     /**
      * 获取学生信息
-     * @param term
-     * @return
+     * @param term 学期
+     * @return ResponseEntity<Result>
      */
     @Auth
     @GetMapping("/getMessage")
