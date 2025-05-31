@@ -152,7 +152,7 @@ public class GradeService {
         if (totalPoint == 0){
              averCredits = 0;
         } else  {
-             averCredits = (double) gradeMapper.getTotalTermGrade(id, term)  / totalPoint;
+             averCredits = gradeMapper.getTotalTermGrade(id, term)  / totalPoint;
         }
 
         Map<String, Double> result = new HashMap<>();
