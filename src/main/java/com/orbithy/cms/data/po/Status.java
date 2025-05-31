@@ -15,7 +15,10 @@ public class Status {
     private Integer grade;
 
     @TableField(value = "section")
-    private Integer section;
+    private Integer sectionId;
+
+    @TableField(exist = false)
+    private String section;
 
     @EnumValue
     @TableField(value = "status")

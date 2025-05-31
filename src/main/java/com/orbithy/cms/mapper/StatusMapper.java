@@ -18,7 +18,12 @@ public interface StatusMapper extends BaseMapper<Status> {
     @Update("UPDATE status SET section = #{section} WHERE id = #{id}")
     void updateStudentSection(@Param("id") int id, @Param("section") int section);
 
-    @Select("SELECT id, grade, section, status, admission, graduation FROM status WHERE id=#{id}")
+    @Select("""
+            SELECT s.id, s.grade, s.section AS section_id, s.status, s.admission, s.graduation, sec.number AS section
+            FROM status s
+            JOIN section sec ON s.section = sec.id
+            WHERE s.id=#{id}
+            """)
     Status getStatusById(String id);
 
     List<SectionCountDTO> getStudentCountBySectionIds(@Param("sectionIds") List<Integer> sectionIds);
