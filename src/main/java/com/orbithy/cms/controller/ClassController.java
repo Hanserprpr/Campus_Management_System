@@ -216,7 +216,7 @@ public class ClassController {
     }
 
     @Admin
-    @PostMapping("/updatePointPank")
+    @PostMapping("/updatePointRank")
     public ResponseEntity<Result> updatePointRank(@RequestParam Integer grade) {
 
         return classService.updatePointRank(grade);
