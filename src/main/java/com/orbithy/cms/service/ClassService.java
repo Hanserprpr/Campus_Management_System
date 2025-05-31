@@ -637,12 +637,12 @@ public class ClassService {
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
         for (UserDTO user : userDTOs) {
-            int totalPoint = courseSelectionMapper.sumAllPointById(user.getSDUId(),"all");
+            int totalPoint = courseSelectionMapper.sumAllPointById(String.valueOf(user.getId()),"all");
             double averCredits;
             if (totalPoint == 0){
                 averCredits = 0;
             } else  {
-                averCredits = (double) gradeMapper.getTotalGrade(user.getSDUId(), "all") / totalPoint;
+                averCredits = (double) gradeMapper.getTotalGrade(String.valueOf(user.getId()), "all") / totalPoint;
             }
 
             user.setProcessed(averCredits);
