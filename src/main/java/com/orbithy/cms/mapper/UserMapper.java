@@ -83,11 +83,11 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT password FROM user WHERE id = #{userId}")
     String getPasswordById(String userId);
 
-    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId}")
-    Integer getClassAmoByTeacherId(String teacherId);
+    @Select("SELECT COUNT(*) FROM classes WHERE teacher_id = #{teacherId} AND status = 1 AND term = #{term}")
+    Integer getClassAmoByTeacherId(String teacherId, String term);
 
-    @Select("SELECT SUM(period) FROM classes WHERE teacher_id = #{teacherId} ")
-    Integer getTotalClassHour(String teacherId);
+    @Select("SELECT SUM(period) FROM classes WHERE teacher_id = #{teacherId} AND status = 1 AND term = #{term}")
+    Integer getTotalClassHour(String teacherId, String term);
 
     @Select("SELECT email FROM user WHERE id = #{userId}")
     String getEmailById(String userId);

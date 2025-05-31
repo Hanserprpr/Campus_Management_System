@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/Teacher")
 public class TeacherController {
@@ -21,7 +23,7 @@ public class TeacherController {
 
     @Teacher
     @GetMapping("/getMessage")
-    public ResponseEntity<Result> getMessage() {
+    public ResponseEntity<Result> getMessage() throws IOException {
         String id = (String) request.getAttribute("userId");
         return TeacherService.getMessage(id);
     }
@@ -33,7 +35,7 @@ public class TeacherController {
      */
     @Teacher
     @GetMapping("/countClass")
-    public ResponseEntity<Result> getCountClass() {
+    public ResponseEntity<Result> getCountClass() throws IOException {
         String id = (String) request.getAttribute("userId");
         return TeacherService.getCountClass(id);
     }
