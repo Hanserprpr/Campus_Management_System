@@ -229,7 +229,7 @@ CREATE TABLE grade(
 | **id**       | `INT AUTO_INCREMENT PRIMARY KEY` | 主键，自动递增                        | 班级唯一 ID                             |
 | **grade**    | `YEAR NOT NULL`              | 非空                                  | 年级                                    |
 | **number**   | `INT NOT NULL`              | 非空                                  | 班级号                                  |
-| **major**    | `ENUM('0', '1', '2', '3') NOT NULL` | 非空                              | 专业 (`0` 软工 / `1` 树莓 / `2` 大数据 / `3` AI) |
+| **major**    | `TINYINT NOT NULL` | 非空                              | 专业 (`0` 软工 / `1` 树莓 / `2` 大数据 / `3` AI) |
 | **advisor_id** | `INT`                         | 外键，关联 `user` 表                  | 班主任 ID                              |
 
 ---
@@ -241,7 +241,7 @@ CREATE TABLE section (
     id INT AUTO_INCREMENT PRIMARY KEY COMMENT '班级唯一ID',
     grade YEAR NOT NULL COMMENT '年级',
     number INT NOT NULL COMMENT '班级号',
-    major ENUM('0', '1', '2', '3') NOT NULL COMMENT '专业0软工/1树莓/2大数据/3AI',
+    major TINYINT NOT NULL COMMENT '专业0软工/1树莓/2大数据/3AI',
     advisor_id INT COMMENT '导员ID',
     UNIQUE KEY unique_grade_number (grade, number, major),
     FOREIGN KEY (advisor_id) REFERENCES user(id) ON DELETE CASCADE
