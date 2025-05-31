@@ -47,7 +47,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
     boolean getGradeByCourseIdAndStudentId(Integer courseId, Integer studentId);
 
     @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND gr.published = 1")
-    Integer getTotalTermGrade(String id, String term);
+    Double getTotalTermGrade(String id, String term);
 
 
     @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
@@ -55,5 +55,5 @@ public interface GradeMapper extends BaseMapper<Grade> {
     Integer finish(String id,String term);
 
     @Select("SELECT SUM(((gr.grade - 50) * 1.0 / 10) * cl.point) FROM grade gr JOIN classes cl ON cl.id = gr.course_id WHERE gr.student_id = #{id} AND gr.term =#{term} AND gr.grade >= 50 AND gr.published = 1")
-    Integer getTotalGrade(String id);
+    Double getTotalGrade(String id);
 }
