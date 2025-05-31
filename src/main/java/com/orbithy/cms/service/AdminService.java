@@ -138,7 +138,7 @@ public class AdminService {
     public ResponseEntity<Result> updateUser(User user, Status status) {
         UpdateWrapper<User> updateWrapper = WrapperUtil.buildNonNullUpdateWrapper(user, "id", user.getId());
         userMapper.update(user, updateWrapper);
-        status.setSection(sectionMapper.getSectionIdByGradeMajorAndNumber(user.getMajor().getLabel(), status.getSection()));
+        status.setSection(sectionMapper.getSectionIdByGradeMajorAndNumber(user.getMajor().getCode(), status.getSection()));
         UpdateWrapper<Status> statusUpdateWrapper = WrapperUtil.buildNonNullUpdateWrapper(status, "id", status.getId());
         statusMapper.update(status, statusUpdateWrapper);
         return ResponseUtil.build(Result.ok());
