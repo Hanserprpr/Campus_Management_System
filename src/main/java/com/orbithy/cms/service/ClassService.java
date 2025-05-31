@@ -642,7 +642,7 @@ public class ClassService {
             if (totalPoint == 0){
                 averCredits = 0;
             } else  {
-                averCredits = (double) gradeMapper.getTotalGrade(String.valueOf(user.getId()), "all") / totalPoint;
+                averCredits = (double) gradeMapper.getTotalGrade(String.valueOf(user.getId())) / totalPoint;
             }
 
             user.setProcessed(averCredits);
