@@ -2,6 +2,7 @@ package com.orbithy.cms.controller;
 
 import com.orbithy.cms.annotation.Admin;
 import com.orbithy.cms.annotation.Auth;
+import com.orbithy.cms.annotation.Teacher;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.service.GradeService;
@@ -48,7 +49,7 @@ public class GradeController {
         return gradeService.getMessage(id,term);
     }
 
-    @Admin
+    @Teacher
     @PostMapping("/releaseGrade")
     public ResponseEntity<Result> releaseGrade(int courseId) {
         return gradeService.releaseGrade(courseId);

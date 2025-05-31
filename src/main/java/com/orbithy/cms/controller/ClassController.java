@@ -97,7 +97,7 @@ public class ClassController {
      * @param courseId 课程ID
      * @return ResponseEntity<Result>
      */
-    @Teacher
+    @Auth
     @GetMapping("/detail/{courseId}")
     public ResponseEntity<Result> getCourseDetail(@PathVariable Integer courseId) {
         String id = (String) request.getAttribute("userId");

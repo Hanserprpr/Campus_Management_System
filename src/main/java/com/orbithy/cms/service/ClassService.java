@@ -232,12 +232,12 @@ public class ClassService {
             }
             course.setTeacherName(userMapper.getUsernameById(course.getTeacherId()));
 
-            // 验证权限
-            int permission = userMapper.getPermission(id);
-            if (permission != 0 && // 教务
-                    !course.getTeacherId().toString().equals(id)) { // 课程创建者
-                throw new CustomException("无权限查看此课程");
-            }
+//            // 验证权限
+//            int permission = userMapper.getPermission(id);
+//            if (permission != 0 && // 教务
+//                    !course.getTeacherId().toString().equals(id)) { // 课程创建者
+//                throw new CustomException("无权限查看此课程");
+//            }
 
             return ResponseUtil.build(Result.success(course, "获取成功"));
         } catch (CustomException e) {
