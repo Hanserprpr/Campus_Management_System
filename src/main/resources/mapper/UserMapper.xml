@@ -22,9 +22,10 @@
     </insert>
 
     <select id="getStudentListByPage" resultType="com.orbithy.cms.data.dto.StudentListDTO">
-        SELECT u.id, u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.section, s.status
+        SELECT u.id, u.SDUId AS SDUId, u.username, u.sex, u.major, s.grade, s.status, sec.number AS section
         FROM user u
         LEFT JOIN status s ON u.id = s.id
+        LEFT JOIN section sec ON s.section = sec.id
         WHERE u.permission = 2
         <if test="major != null and major != ''">
             AND u.major = #{major}
@@ -65,8 +66,8 @@
     <select id="searchUsers" resultType="com.orbithy.cms.data.dto.StudentListDTO">
         SELECT
             u.id, u.username, u.sex, u.SDUId, u.major,
-            s.grade,
-            st.status, st.section
+            s.grade, s.number AS section,
+            st.status
         FROM user u
                  LEFT JOIN status st ON u.id = st.id
                  LEFT JOIN section s ON st.section = s.id
