@@ -228,34 +228,37 @@ public class CourseSelectionService {
      */
     public ResponseEntity<Result> getSelectionResults(String studentId) {
         try {
+            String term = getCurrentTerm();
             List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
             List<CourseSelectionResultDTO> resultList = new ArrayList<>();
 
             // 获取课程详情
             for (CourseSelection selection : selections) {
                 Classes course = classMapper.getCourseById(selection.getCourseId());
-                if (course != null) {
-                    CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
-                    dto.setId(course.getId());
-                    dto.setClassNum(course.getClassNum());
-                    dto.setName(course.getName());
-                    dto.setPoint(course.getPoint());
-                    dto.setType(String.valueOf(course.getType()));
-                    dto.setTime(course.getTime());
-                    dto.setClassroom(classroomMap.get(course.getClassroomId()));
-                    dto.setCapacity(course.getCapacity());
-                    dto.setCategory(course.getCategory());
-
-                    // 获取教师名称
-                    String teacherName = userMapper.getUsernameById(course.getTeacherId());
-                    dto.setTeacherName(teacherName);
-
-                    // 获取已选人数
-                    Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
-                    dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
-
-                    resultList.add(dto);
+                if (!course.getTerm().equals(term)) {
+                    // 如果课程不在当前学期，则跳过
+                    continue;
                 }
+                CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
+                dto.setId(course.getId());
+                dto.setClassNum(course.getClassNum());
+                dto.setName(course.getName());
+                dto.setPoint(course.getPoint());
+                dto.setType(String.valueOf(course.getType()));
+                dto.setTime(course.getTime());
+                dto.setClassroom(classroomMap.get(course.getClassroomId()));
+                dto.setCapacity(course.getCapacity());
+                dto.setCategory(course.getCategory());
+
+                // 获取教师名称
+                String teacherName = userMapper.getUsernameById(course.getTeacherId());
+                dto.setTeacherName(teacherName);
+
+                // 获取已选人数
+                Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
+                dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+
+                resultList.add(dto);
             }
 
             return ResponseUtil.build(Result.success(resultList, "查询成功"));
