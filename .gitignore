@@ -59,3 +59,4 @@ src/main/resources/application.yml
 src/main/java/com/orbithy/cms/service/SDULogin.java
 /logs/
 src/main/resources/email-config.properties
+src/main/resources/application.yml.sdu

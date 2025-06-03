@@ -544,9 +544,18 @@ public class ClassService {
         List<ClassDTO> classSchedule = Collections.emptyList();
         if (permission == 1) {
             classSchedule = classMapper.getClassScheduleTea(id,term, week);
+            for (ClassDTO classDTO : classSchedule) {
+                String teacherName = userMapper.getUsernameById(Integer.parseInt(id));
+                classDTO.setTeacherName(teacherName);
+                classDTO.setClassroom(classroomMap.get(classDTO.getClassroomId()));
+            }
         } else if (permission == 2) {
             classSchedule = classMapper.getClassScheduleSdu(id,term,week);
-
+            for (ClassDTO classDTO : classSchedule) {
+                String teacherName = userMapper.getUsernameById(classDTO.getTeacherId());
+                classDTO.setTeacherName(teacherName);
+                classDTO.setClassroom(classroomMap.get(classDTO.getClassroomId()));
+            }
         }
         return ResponseUtil.build(Result.success(classSchedule,"获取成功"));
 
