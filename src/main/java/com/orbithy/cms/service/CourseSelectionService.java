@@ -143,7 +143,8 @@ public class CourseSelectionService {
             }
 
             // 检查总学分
-            Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId));
+            String term = getCurrentTerm();
+            Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId), term);
             if (currentPoints == null) currentPoints = 0;
             if (currentPoints + course.getPoint() > 35) {
                 throw new CustomException("总学分超过35分");
