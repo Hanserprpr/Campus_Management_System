@@ -20,8 +20,8 @@ public interface CourseSelectionMapper extends BaseMapper<CourseSelection> {
 
     @Select("SELECT SUM(c.point) FROM course_reg cr " +
             "JOIN classes c ON cr.course_id = c.id " +
-            "WHERE cr.student_id = #{studentId} ")
-    Integer getTotalPoints(@Param("studentId") Integer studentId);
+            "WHERE cr.student_id = #{studentId} AND c.term = #{term}")
+    Integer getTotalPoints(@Param("studentId") Integer studentId, String term);
 
 
 
