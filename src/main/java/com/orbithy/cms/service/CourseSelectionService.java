@@ -143,7 +143,6 @@ public class CourseSelectionService {
             }
 
             // 检查总学分
-            String term = getCurrentTerm();
             Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId), term);
             if (currentPoints == null) currentPoints = 0;
             if (currentPoints + course.getPoint() > 35) {

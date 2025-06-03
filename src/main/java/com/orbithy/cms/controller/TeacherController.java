@@ -60,7 +60,7 @@ public class TeacherController {
     @PostMapping("/getMessage")
     public ResponseEntity<Result> getMessage(String term) {
         String id = (String) request.getAttribute("userId");
-        return teacherService.getMessage(id,term);
+        return TeacherService.getMessage(id,term);
     }
 
 }
