@@ -6,10 +6,7 @@ import com.orbithy.cms.data.dto.GradeTermDTO;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
-import com.orbithy.cms.mapper.ClassMapper;
-import com.orbithy.cms.mapper.CourseSelectionMapper;
-import com.orbithy.cms.mapper.GradeMapper;
-import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,10 @@ public class GradeService {
     private CourseSelectionMapper courseSelectionMapper;
     @Autowired
     private ClassService classService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private SectionMapper sectionMapper;
 
     /**
      * 添加成绩
@@ -126,6 +127,8 @@ public class GradeService {
         gradeMapper.releaseGrade(courseId);
 
         classService.updateRank(courseId);//自动更新排名
+        int grade = sectionMapper.getGradeByClassId(courseId);
+        classService.updatePointRank(grade);
 
         return ResponseUtil.build(Result.ok());
     }
