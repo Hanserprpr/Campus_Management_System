@@ -140,15 +140,7 @@ public class GradeService {
         return ResponseUtil.build(Result.success(grade, "获取成绩成功"));
     }
 
-    public ResponseEntity<Result> getMessage(String id,String term) {
-        int finish  = gradeMapper.finish(id,term);
-        int unFinish = gradeMapper.unFinish(id,term);
-        Map<String, Integer> result = new HashMap<>();
-        result.put("finish", finish);
-        result.put("unFinish", unFinish);
 
-        return ResponseUtil.build(Result.success(result,"获取成功"));
-    }
 
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
         int totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);
