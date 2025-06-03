@@ -3,6 +3,7 @@ package com.orbithy.cms.service;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.dto.GradeTermDTO;
+import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
@@ -127,8 +128,9 @@ public class GradeService {
         gradeMapper.releaseGrade(courseId);
 
         classService.updateRank(courseId);//自动更新排名
-        int grade = sectionMapper.getGradeByClassId(courseId);
-        classService.updatePointRank(grade);
+
+
+
 
         return ResponseUtil.build(Result.ok());
     }
