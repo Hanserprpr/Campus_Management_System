@@ -10,11 +10,11 @@
         IFNULL(g.final_score, 0) AS final_score,
         sec.number,
         sec.major AS sectionNumber
-        FROM cms.user u
-        JOIN cms.status s ON u.id = s.id
-        JOIN cms.section sec ON s.section = sec.id
+        FROM user u
+        JOIN status s ON u.id = s.id
+        JOIN section sec ON s.section = sec.id
         LEFT JOIN (
-        SELECT * FROM cms.grade
+        SELECT * FROM grade
         <where>
             <if test="courseId != null">
                 course_id = #{courseId}

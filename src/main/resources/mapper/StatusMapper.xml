@@ -6,7 +6,7 @@
             resultType="com.orbithy.cms.data.dto.SectionCountDTO"
             parameterType="list">
         SELECT section, COUNT(*) AS studentCount
-        FROM cms.status
+        FROM status
         WHERE section IN
         <foreach collection="sectionIds" item="id" open="(" separator="," close=")">
             #{id}
