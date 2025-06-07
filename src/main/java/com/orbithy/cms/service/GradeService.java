@@ -3,13 +3,11 @@ package com.orbithy.cms.service;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.orbithy.cms.data.dto.GradeDTO;
 import com.orbithy.cms.data.dto.GradeTermDTO;
+import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.Grade;
 import com.orbithy.cms.data.po.User;
 import com.orbithy.cms.data.vo.Result;
-import com.orbithy.cms.mapper.ClassMapper;
-import com.orbithy.cms.mapper.CourseSelectionMapper;
-import com.orbithy.cms.mapper.GradeMapper;
-import com.orbithy.cms.mapper.UserMapper;
+import com.orbithy.cms.mapper.*;
 import com.orbithy.cms.utils.ResponseUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,10 @@ public class GradeService {
     private CourseSelectionMapper courseSelectionMapper;
     @Autowired
     private ClassService classService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private SectionMapper sectionMapper;
 
     /**
      * 添加成绩
@@ -127,6 +129,9 @@ public class GradeService {
 
         classService.updateRank(courseId);//自动更新排名
 
+
+
+
         return ResponseUtil.build(Result.ok());
     }
 
@@ -135,15 +140,7 @@ public class GradeService {
         return ResponseUtil.build(Result.success(grade, "获取成绩成功"));
     }
 
-    public ResponseEntity<Result> getMessage(String id,String term) {
-        int finish  = gradeMapper.finish(id,term);
-        int unFinish = gradeMapper.unFinish(id,term);
-        Map<String, Integer> result = new HashMap<>();
-        result.put("finish", finish);
-        result.put("unFinish", unFinish);
 
-        return ResponseUtil.build(Result.success(result,"获取成功"));
-    }
 
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
         int totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);

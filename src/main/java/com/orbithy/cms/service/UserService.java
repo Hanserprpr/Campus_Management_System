@@ -48,9 +48,6 @@ public class UserService {
         }
         String SDUId = user.getSDUId();
         String password = user.getPassword();
-        if (user.getEmail() == null) {
-            user.setEmail("汉族");
-        }
         if (user.getNation() == null) {
             user.setNation("China");
         }

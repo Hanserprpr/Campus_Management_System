@@ -1,9 +1,7 @@
 package com.orbithy.cms.service;
 
 import com.orbithy.cms.data.dto.CSSearchCourseDTO;
-import com.orbithy.cms.data.dto.ClassDTO;
 import com.orbithy.cms.data.dto.CourseSelectionResultDTO;
-import com.orbithy.cms.data.dto.StudentListDTO;
 import com.orbithy.cms.data.po.*;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.exception.CustomException;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,6 +113,7 @@ public class CourseSelectionService {
      */
     public ResponseEntity<Result> selectCourse(String studentId, Integer courseId) {
         try {
+            String term = getCurrentTerm();
             // 验证课程是否存在
             Classes course = classMapper.getCourseById(courseId);
             if (course == null) {
@@ -145,7 +143,7 @@ public class CourseSelectionService {
             }
 
             // 检查总学分
-            Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId));
+            Integer currentPoints = courseSelectionMapper.getTotalPoints(Integer.parseInt(studentId), term);
             if (currentPoints == null) currentPoints = 0;
             if (currentPoints + course.getPoint() > 35) {
                 throw new CustomException("总学分超过35分");
@@ -153,7 +151,7 @@ public class CourseSelectionService {
 
             // 检查时间冲突
             List<CourseSelection> studentSelections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
-            checkTimeConflict(course, studentSelections);
+            checkTimeConflict(course, studentSelections, term);
 
             // 创建选课记录
             CourseSelection selection = new CourseSelection();
@@ -174,14 +172,14 @@ public class CourseSelectionService {
      * 检查时间冲突
      * 考虑课程的周次范围和时间段
      */
-    private void checkTimeConflict(Classes newCourse, List<CourseSelection> existingSelections) {
+    private void checkTimeConflict(Classes newCourse, List<CourseSelection> existingSelections, String term) {
         // 获取新课程的时间段和周次范围
         List<Integer> newTimeSlots = parseTimeSlots(newCourse.getTime());
         int newStartWeek = newCourse.getWeekStart();
         int newEndWeek = newCourse.getWeekEnd();
 
         for (CourseSelection selection : existingSelections) {
-            Classes existingCourse = classMapper.getCourseById(selection.getCourseId());
+            Classes existingCourse = classMapper.getCourseByTermId(selection.getCourseId(),term);
             if (existingCourse == null) continue;
 
             // 检查周次是否有重叠
@@ -228,34 +226,37 @@ public class CourseSelectionService {
      */
     public ResponseEntity<Result> getSelectionResults(String studentId) {
         try {
+            String term = getCurrentTerm();
             List<CourseSelection> selections = courseSelectionMapper.getStudentSelections(Integer.parseInt(studentId));
             List<CourseSelectionResultDTO> resultList = new ArrayList<>();
 
             // 获取课程详情
             for (CourseSelection selection : selections) {
                 Classes course = classMapper.getCourseById(selection.getCourseId());
-                if (course != null) {
-                    CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
-                    dto.setId(course.getId());
-                    dto.setClassNum(course.getClassNum());
-                    dto.setName(course.getName());
-                    dto.setPoint(course.getPoint());
-                    dto.setType(String.valueOf(course.getType()));
-                    dto.setTime(course.getTime());
-                    dto.setClassroom(classroomMap.get(course.getClassroomId()));
-                    dto.setCapacity(course.getCapacity());
-                    dto.setCategory(course.getCategory());
-
-                    // 获取教师名称
-                    String teacherName = userMapper.getUsernameById(course.getTeacherId());
-                    dto.setTeacherName(teacherName);
-
-                    // 获取已选人数
-                    Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
-                    dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
-
-                    resultList.add(dto);
+                if (!course.getTerm().equals(term)) {
+                    // 如果课程不在当前学期，则跳过
+                    continue;
                 }
+                CourseSelectionResultDTO dto = new CourseSelectionResultDTO();
+                dto.setId(course.getId());
+                dto.setClassNum(course.getClassNum());
+                dto.setName(course.getName());
+                dto.setPoint(course.getPoint());
+                dto.setType(String.valueOf(course.getType()));
+                dto.setTime(course.getTime());
+                dto.setClassroom(classroomMap.get(course.getClassroomId()));
+                dto.setCapacity(course.getCapacity());
+                dto.setCategory(course.getCategory());
+
+                // 获取教师名称
+                String teacherName = userMapper.getUsernameById(course.getTeacherId());
+                dto.setTeacherName(teacherName);
+
+                // 获取已选人数
+                Integer selectedCount = classMapper.countCourseByCourseId(course.getId());
+                dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+
+                resultList.add(dto);
             }
 
             return ResponseUtil.build(Result.success(resultList, "查询成功"));

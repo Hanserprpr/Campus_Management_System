@@ -3,6 +3,7 @@ package com.orbithy.cms.service;
 import com.orbithy.cms.data.po.Rooms;
 import com.orbithy.cms.data.vo.Result;
 import com.orbithy.cms.mapper.ClassMapper;
+import com.orbithy.cms.mapper.GradeMapper;
 import com.orbithy.cms.mapper.RoomMapper;
 import com.orbithy.cms.mapper.UserMapper;
 import com.orbithy.cms.utils.ResponseUtil;
@@ -24,6 +25,8 @@ public class TeacherService {
     private ClassMapper classMapper;
     @Resource
     private RoomMapper roomMapper;
+    @Resource
+    private GradeMapper gradeMapper;
 
     public ResponseEntity<Result> getMessage(String id) throws IOException {
         if (userMapper.getPermission(id) !=1){
@@ -57,5 +60,14 @@ public class TeacherService {
             return ResponseUtil.build(Result.error(404, "没有教室信息"));
         }
         return ResponseUtil.build(Result.success(rooms, "获取教室信息成功"));
+    }
+    public ResponseEntity<Result> getMessage(String id,String term) {
+        int finish  = gradeMapper.finish(id,term);
+        int unFinish = gradeMapper.unFinish(id,term);
+        Map<String, Integer> result = new HashMap<>();
+        result.put("finish", finish);
+        result.put("unFinish", unFinish);
+
+        return ResponseUtil.build(Result.success(result,"获取成功"));
     }
 }

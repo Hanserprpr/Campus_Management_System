@@ -20,8 +20,8 @@ public interface GradeMapper extends BaseMapper<Grade> {
 
 
 
-    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
-            "ON gr.course_id = c.id WHERE c.publish = 0 AND c.teacher_id = #{id} AND term = #{term}")
+    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c " +
+            "ON gr.course_id = c.id WHERE c.published = 0 AND c.teacher_id = #{id} AND c.term = #{term}")
     Integer unFinish(String id,String term);
 
     @Select("SELECT g.id, g.course_id, g.regular, g.final_score, g.grade, g.rank, c.class_num, c.point, c.teacher_id, c.type, c.name AS className, u.username AS teacher " +
@@ -50,7 +50,7 @@ public interface GradeMapper extends BaseMapper<Grade> {
     Double getTotalTermGrade(String id, String term);
 
 
-    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c" +
+    @Select("SELECT COUNT(*) FROM grade gr JOIN classes c " +
             " ON gr.course_id = c.id WHERE c.published = 1 AND c.teacher_id = #{id} AND c.term = #{term}")
     Integer finish(String id,String term);
 
