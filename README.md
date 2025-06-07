@@ -26,34 +26,43 @@
 
 ---
 
-## 📁 项目结构（后端）
+## 📦 项目结构说明
+
+本项目遵循标准的 Maven + Spring Boot 多模块分层设计，结构如下：
 
 ```yaml
 Campus_Management_System/
-├── documents/           # 项目文档（设计说明、数据库文档等）
-├── logs/                # 日志输出目录
+├── documents/               # 项目文档（设计说明、数据库设计等）
+├── logs/                    # 日志输出目录
 ├── src/
-│   └── main/
-│       ├── java/com.orbithy.cms/
-│       │   ├── annotation/        # 自定义注解（如权限控制）
-│       │   ├── aspect/            # AOP 切面处理
-│       │   ├── cache/             # Redis 缓存封装
-│       │   ├── config/            # 项目配置类（拦截器、跨域等）
-│       │   ├── controller/        # 控制器，处理请求
-│       │   ├── data/
-│       │   │   ├── dto/           # 数据传输对象
-│       │   │   ├── po/            # 持久化对象（数据库映射）
-│       │   │   └── vo/            # 返回前端的封装对象
-│       │   ├── exception/         # 自定义异常
-│       │   ├── mapper/            # MyBatis Mapper 接口
-│       │   ├── service/           # 业务逻辑层
-│       │   └── utils/             # 工具类（如统一返回格式、密码加密）
-│       └── resources/
-│           ├── mapper/            # Mapper XML 文件
-│           ├── application.yml    # 主配置文件
-│           └── application.properties（备用）
-├── test/                 # 单元测试（可选）
-└── target/               # 编译生成目录（可忽略）
+│   ├── main/
+│   │   ├── java/com/orbithy/cms/
+│   │   │   ├── annotation/        # 自定义注解（如权限控制等）
+│   │   │   ├── aspect/            # AOP 切面处理类（如日志、权限校验）
+│   │   │   ├── cache/             # 缓存接口封装（Redis）
+│   │   │   │   └── impl/          # 缓存实现类
+│   │   │   ├── config/            # 项目配置（拦截器、CORS等）
+│   │   │   ├── controller/        # 控制器（处理前端请求）
+│   │   │   ├── data/
+│   │   │   │   ├── dto/           # Data Transfer Object，数据传输对象
+│   │   │   │   ├── enums/         # 枚举类
+│   │   │   │   │   └── handler/   # 枚举相关处理器（转换器等）
+│   │   │   │   ├── po/            # Persistence Object，实体类，数据库映射
+│   │   │   │   └── vo/            # View Object，封装返回前端的数据
+│   │   │   ├── domain/            # 领域模型层（用于业务建模与封装）
+│   │   │   ├── exception/         # 自定义异常处理（如全局异常、业务异常等）
+│   │   │   ├── mapper/            # MyBatis-Plus Mapper 接口
+│   │   │   ├── service/           # 业务逻辑接口及实现类
+│   │   │   ├── solver/            # 排课算法相关类（如约束解算器）
+│   │   │   └── utils/             # 工具类（如统一返回封装、加密工具等）
+│   │   └── resources/
+│   │       ├── mapper/            # MyBatis XML 映射文件
+│   │       └── application.yml    # 项目配置文件
+├── src/test/java/com/orbithy/cms/ # 测试类目录
+├── .github/workflows/            # GitHub Actions 工作流配置
+├── .mvn/wrapper/                 # Maven Wrapper 支持文件
+├── .idea/                        # IntelliJ IDEA 项目配置目录（可忽略）
+└── target/                       # Maven 编译输出目录（可忽略）
 ```
 
 ---
@@ -68,7 +77,7 @@ Campus_Management_System/
 ### 📘 学籍管理
 
 - 学籍状态变更（休学、复学、转学、退学）
-- 自动生成学籍卡片（PDF 或系统页面）
+- ~~自动生成学籍卡片（PDF 或系统页面）~~
 
 ### 📊 成绩管理
 
@@ -98,7 +107,7 @@ Campus_Management_System/
 
 ### 🏫 课程与教室管理
 
-- 教师创建课程后，教务管理员点击自动分配教室（计划）
+- 教师创建课程后，教务管理员点击自动排课与分配教室
 
 ---
 
