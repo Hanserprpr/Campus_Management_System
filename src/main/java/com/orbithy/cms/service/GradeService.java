@@ -157,11 +157,11 @@ public class GradeService {
         }
 
         int pointRank = userMapper.getGPARankById(id);
-        Map<String, Double> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("totalPoint", (double) totalPoint);
         result.put("totalClass", (double) totalClass);
         result.put("averCredits", averCredits);
-        result.put("pointRank", (double)pointRank);
+        result.put("pointRank", pointRank);
         return ResponseUtil.build(Result.success(result,"获取成功"));
     }
 }
