@@ -1,7 +1,6 @@
 package com.orbithy.cms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.orbithy.cms.config.GlobalExceptionHandler;
 import com.orbithy.cms.data.dto.*;
 import com.orbithy.cms.data.enums.CourseType;
 import com.orbithy.cms.data.po.*;
@@ -564,7 +563,10 @@ public class ClassService {
     public ResponseEntity<Result> getTeacherCourses(String id, String term, Integer pageNum, Integer pageSize, String keyword) {
         int offset = (pageNum - 1) * pageSize;
         List<ClassListDTO> classList = classMapper.searchTeacherCourses(Integer.parseInt(id), term, offset, pageSize, keyword);
-        int total = classMapper.countTeacherCoursesByTerm(Integer.parseInt(id), term);
+        QueryWrapper<Classes> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher_id", id);
+        wrapper.eq(term != null, "term", term);
+        int total = Math.toIntExact(classMapper.selectCount(wrapper));
 
         return getResultResponseEntity(pageNum, pageSize, classList, total);
     }
