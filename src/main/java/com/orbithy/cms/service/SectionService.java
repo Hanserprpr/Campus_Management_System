@@ -133,7 +133,10 @@ public class SectionService {
     }
 
     public ResponseEntity<Result> searchSection(String grade ,Integer major, Integer number) {
-        return ResponseUtil.build(Result.success(sectionMapper.searchSection(grade, major, number), "获取成功"));
+        List<Section> sectionList = sectionMapper.searchSection(grade, major, number);
+        int count = sectionList.size();
+        int pages = count / 10 + (count % 10 == 0 ? 0 : 1);
+        return ResponseUtil.build(Result.success(setAdvisorName(sectionList, pages), "获取成功"));
     }
 
     public ResponseEntity<Result> getSectionMember(Integer id) {

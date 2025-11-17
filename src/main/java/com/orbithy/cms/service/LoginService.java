@@ -45,7 +45,7 @@ public class LoginService {
     public Map<String, String> getToken(String id) {
         String token;
         String refreshToken;
-        refreshToken = jwtUtil.getToken(id, JWTUtil.REFRESH_EXPIRE_TIME, REFRESH_SECRET_KEY);
+        refreshToken = jwtUtil.getToken(id, JWTUtil.REFRESH_EXPIRE_TIME, JWTUtil.REFRESH_SECRET_KEY);
 
         token = jwtUtil.getToken(id, JWTUtil.EXPIRE_TIME, JWTUtil.SECRET_KEY);
 

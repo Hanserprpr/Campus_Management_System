@@ -143,14 +143,19 @@ public class GradeService {
 
 
     public ResponseEntity<Result> getStudentMessage(String id, String term) {
-        int totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);
+        Integer totalPoint = courseSelectionMapper.sumAllPointByTermId(id,term);
+        if (totalPoint == null) {
+            totalPoint = 0;
+        }
         int totalClass = courseSelectionMapper.countAllCoursesById(id,term);
-        int totalGradePoint = courseSelectionMapper.sumAllGradePointByTermId(id,term);
+        Integer totalGradePoint = courseSelectionMapper.sumAllGradePointByTermId(id,term);
+        Double totalTermGrade = gradeMapper.getTotalTermGrade(id, term);
+
         double averCredits;
-        if (totalPoint == 0){
-             averCredits = 0;
-        } else  {
-             averCredits = gradeMapper.getTotalTermGrade(id, term)  / totalGradePoint;
+        if (totalPoint == 0 || totalTermGrade == null) {
+            averCredits = 0;
+        } else {
+            averCredits = totalTermGrade / totalGradePoint;
         }
 
         int pointRank = userMapper.getGPARankById(id);

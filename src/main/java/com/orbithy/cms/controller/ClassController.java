@@ -203,7 +203,7 @@ public class ClassController {
     @Admin
     @PostMapping("/adUpdate/{classId}")
     public ResponseEntity<Result> adUpdate(@PathVariable Integer classId,
-                                           @RequestParam ChangeClassDTO ChangeClassDTO) {
+                                           @RequestBody ChangeClassDTO ChangeClassDTO) {
         String id = (String) request.getAttribute("userId");
         return  classService.adUpdate(id,classId,ChangeClassDTO);
     }

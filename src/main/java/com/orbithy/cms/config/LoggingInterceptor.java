@@ -16,17 +16,27 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
+
+        String ip = request.getHeader("X-Forwarded-For");
+
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            // 多个 IP 时，取第一个
+            if (ip.contains(",")) {
+                ip = ip.split(",")[0].trim();
+            }
+        }
+
         // 获取客户端 IP 地址
-        String ipAddress = request.getRemoteAddr();
+        String ipAddress = ip;
         // 获取请求方法（GET、POST 等）
         String method = request.getMethod();
         // 获取请求 URI
         String uri = request.getRequestURI();
         // 获取查询参数
-        String queryString = request.getQueryString();
+String queryString = request.getQueryString();
 
-        // 记录日志
+// 记录日志
         logger.info("IP: {}, Method: {}, URI: {}, Query: {}", ipAddress, method, uri, queryString);
         return true;
-    }
-}
+                }
+                }
