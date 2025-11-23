@@ -42,7 +42,7 @@ public class UserImportService {
 
         for (int i = 1; i <= sheet.getLastRowNum(); i++) { // 跳过标题行
             Row row = sheet.getRow(i);
-            if (row == null) continue;
+            if (row == null || row.getCell(0) == null) break;
 
             User user = new User();
             user.setUsername(getCellValue(row.getCell(0)));
