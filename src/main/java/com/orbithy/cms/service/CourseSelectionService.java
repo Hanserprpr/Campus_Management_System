@@ -97,6 +97,10 @@ public class CourseSelectionService {
                 String teacherName = userMapper.getUsernameById(classes.getTeacherId());
                 dto.setTeacherName(teacherName);
 
+                // 获取已选人数
+                Integer selectedCount = classMapper.countCourseByCourseId(classes.getId());
+                dto.setSelectedCount(selectedCount != null ? selectedCount : 0);
+
                 courseDTOList.add(dto);
             }
             return ResponseUtil.build(Result.success(courseDTOList, "搜索成功"));
@@ -247,6 +251,8 @@ public class CourseSelectionService {
                 dto.setClassroom(classroomMap.get(course.getClassroomId()));
                 dto.setCapacity(course.getCapacity());
                 dto.setCategory(course.getCategory());
+                dto.setWeekStart(course.getWeekStart());
+                dto.setWeekEnd(course.getWeekEnd());
 
                 // 获取教师名称
                 String teacherName = userMapper.getUsernameById(course.getTeacherId());

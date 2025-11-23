@@ -32,5 +32,6 @@ public class CSSearchCourseDTO {
     private Boolean published;
     private BigDecimal regularRatio;
     private BigDecimal finalRatio;
+    private Integer selectedCount;
 
 }

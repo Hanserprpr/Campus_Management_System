@@ -14,7 +14,7 @@ public class GradeTermDTO {
     private int finalScore;
     private int grade;
     private Byte rank;
-    private int classNum;
+    private String classNum;
     private int point;
     private int teacherId;
     private CourseType type;

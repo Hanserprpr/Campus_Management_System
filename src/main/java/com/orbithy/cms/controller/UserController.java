@@ -17,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {

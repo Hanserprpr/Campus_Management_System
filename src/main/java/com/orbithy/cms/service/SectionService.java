@@ -136,7 +136,7 @@ public class SectionService {
         List<Section> sectionList = sectionMapper.searchSection(grade, major, number);
         int count = sectionList.size();
         int pages = count / 10 + (count % 10 == 0 ? 0 : 1);
-        return ResponseUtil.build(Result.success(setAdvisorName(sectionList, pages), "获取成功"));
+        return setAdvisorName(sectionList, pages);
     }
 
     public ResponseEntity<Result> getSectionMember(Integer id) {
