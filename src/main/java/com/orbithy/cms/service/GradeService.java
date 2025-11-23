@@ -40,6 +40,7 @@ public class GradeService {
      */
     @Transactional
     public ResponseEntity<Result> setGrade(String id, Grade gradeDTO) {
+        gradeDTO.setId(null);
         // 检查教师权限
         if (userMapper.getPermission(id) == 0) {
             return ResponseUtil.build(Result.error(401, "无权限"));
