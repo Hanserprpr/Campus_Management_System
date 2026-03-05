@@ -134,7 +134,7 @@ Campus_Management_System/
 
 本项目的前端使用 JavaFX 实现，代码托管于独立仓库：
 
-👉 [Tans-hub/Campus_Management_System_front](https://github.com/Tans-hub/Campus_Management_System_front)
+👉 [PyCmgMagic/Campus_Management_System_front](https://github.com/PyCmgMagic/Campus_Management_System_front)
 
 请参考该仓库中的 `README.md` 获取前端的构建与运行方式。
 
@@ -161,4 +161,5 @@ Campus_Management_System/
 本项目不用于商业用途，代码中部分功能和逻辑为课设简化实现。
 
 ---
+
 
